@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-slate-900">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audit Accessibilité ERP - PWA Pixel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- PWA Manifest embedded via Data URI / Blob or standard offline structure -->
+  <link rel="manifest" id="dynamicManifest">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  
+  <style>
+    body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    @media print {
+      .no-print { display: none !important; }
+      .print-only { display: block !important; }
+      body { background: #fff !important; color: #000 !important; font-size: 10pt; }
+      .card-box { border: 1px solid #cbd5e1 !important; box-shadow: none !important; break-inside: avoid; margin-bottom: 10px; }
+      .page-break { page-break-before: always; }
+      input, textarea, select { border: none !important; background: transparent !important; resize: none; }
+      .print-img { max-height: 120px !important; width: auto !important; border: 1px solid #94a3b8; border-radius: 4px; margin-top: 4px; }
+    }
+    .print-only { display: none; }
+  </style>
+</head>
+<body class="min-h-full flex flex-col text-slate-100 bg-slate-900">
+
+  <!-- Top Navbar -->
+  <header class="bg-slate-800/90 backdrop-blur-md border-b border-slate-700/80 sticky top-0 z-40 no-print shadow-lg">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold shadow-md ring-2 ring-blue-400/30">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-bold tracking-tight text-white leading-tight">Audit ERP • Pixel Edition</h1>
+          <p class="text-[11px] text-blue-400 font-medium">Arrêtés 20/04/2017 & 08/12/2014</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="exportJSON()" class="p-2 rounded-xl bg-slate-700/80 hover:bg-slate-700 text-slate-200 border border-slate-600 transition flex items-center gap-1.5 text-xs font-semibold" title="Exporter JSON">
+          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+          <span class="hidden sm:inline">Export</span>
+        </button>
+        <button onclick="window.print()" class="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white shadow-md flex items-center gap-1.5 text-xs font-semibold transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          <span class="hidden sm:inline">Rapport PDF</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 py-5 w-full flex-grow space-y-5">
+    
+    <!-- Print Header -->
+    <div class="print-only mb-6 border-b-2 border-slate-900 pb-4 text-slate-900">
+      <div class="flex justify-between items-start">
+        <div>
+          <h1 class="text-2xl font-black tracking-tight">RAPPORT D'AUDIT D'ACCESSIBILITÉ ERP</h1>
+          <p class="text-xs text-slate-600 mt-1">Conformité réglementaire PMR • Application Pixel PWA</p>
+        </div>
+        <div class="text-right">
+          <span id="printDate" class="text-xs font-medium text-slate-700"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Regulatory Profile Selector Card -->
+    <div class="bg-slate-800/90 rounded-2xl border border-slate-700/80 shadow-lg p-4 sm:p-5 card-box">
+      <div class="flex flex-col gap-3 mb-4">
+        <div>
+          <span class="text-[10px] uppercase tracking-wider font-bold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-500/20">Cadre réglementaire</span>
+          <h2 class="text-lg font-bold text-white mt-1">Sélection du profil d'établissement</h2>
+          <p class="text-xs text-slate-400">Les tolérances dimensionnelles s'ajustent instantanément.</p>
+        </div>
+        
+        <!-- Profile Buttons Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 p-1 bg-slate-900/80 rounded-xl border border-slate-700/60 no-print">
+          <button type="button" onclick="setProfile('neuf')" id="prof-btn-neuf" class="prof-btn px-3 py-2.5 rounded-lg text-xs font-semibold transition text-left bg-slate-800 text-white border border-slate-600 shadow-sm">
+            <span class="block font-bold">🏢 ERP Neuf</span>
+            <span class="text-[10px] text-slate-400 font-normal">Arrêté 20/04/2017</span>
+          </button>
+          <button type="button" onclick="setProfile('existant14')" id="prof-btn-existant14" class="prof-btn px-3 py-2.5 rounded-lg text-xs font-semibold transition text-left text-slate-400 hover:text-white">
+            <span class="block font-bold">🏛️ Existant (Cat. 1-4)</span>
+            <span class="text-[10px] text-slate-500 font-normal">Arrêté 08/12/2014</span>
+          </button>
+          <button type="button" onclick="setProfile('existant5')" id="prof-btn-existant5" class="prof-btn px-3 py-2.5 rounded-lg text-xs font-semibold transition text-left text-slate-400 hover:text-white">
+            <span class="block font-bold">🏬 Existant (5e Cat.)</span>
+            <span class="text-[10px] text-slate-500 font-normal">Petits établissements</span>
+          </button>
+        </div>
+
+        <div class="print-only">
+          <p class="text-sm font-semibold text-slate-800">Profil appliqué : <span id="printProfileName" class="text-blue-700 font-bold"></span></p>
+        </div>
+      </div>
+
+      <!-- Metadata Fields -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-slate-700/60 text-xs">
+        <div>
+          <label class="block font-medium text-slate-300 mb-1">Nom de l'établissement</label>
+          <input type="text" id="metaName" placeholder="Ex: Mairie annexe, Cabinet médical..." onchange="saveToLocalStorage()" class="w-full px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div>
+          <label class="block font-medium text-slate-300 mb-1">Adresse / Ville</label>
+          <input type="text" id="metaAddress" placeholder="Ex: 15 rue de la République, Aubagne" onchange="saveToLocalStorage()" class="w-full px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div>
+          <label class="block font-medium text-slate-300 mb-1">Auditeur / Référent</label>
+          <input type="text" id="metaAuditor" placeholder="Ex: R. Dupont" onchange="saveToLocalStorage()" class="w-full px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div>
+          <label class="block font-medium text-slate-300 mb-1">Date d'audit</label>
+          <input type="date" id="metaDate" onchange="saveToLocalStorage()" class="w-full px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+      </div>
+    </div>
+
+    <!-- Live KPI Scoreboard -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div class="bg-slate-800/90 rounded-2xl p-4 border border-slate-700/80 shadow-md card-box col-span-2 sm:col-span-1">
+        <span class="text-xs font-semibold text-slate-400">Conformité globale</span>
+        <div class="flex items-baseline gap-2 mt-1">
+          <span id="scorePercentage" class="text-3xl font-extrabold text-blue-400">0%</span>
+        </div>
+        <div class="w-full bg-slate-700/80 rounded-full h-2 mt-2 overflow-hidden">
+          <div id="scoreBar" class="bg-blue-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div class="bg-slate-800/90 rounded-2xl p-3.5 border border-slate-700/80 shadow-md card-box">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-emerald-400">Conformes</span>
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        </div>
+        <span id="countC" class="text-2xl font-bold text-emerald-300 mt-1 block">0</span>
+        <span class="text-[10px] text-slate-400">Points validés</span>
+      </div>
+
+      <div class="bg-slate-800/90 rounded-2xl p-3.5 border border-slate-700/80 shadow-md card-box">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-red-400">Non conformes</span>
+          <span class="w-2 h-2 rounded-full bg-red-500"></span>
+        </div>
+        <span id="countNC" class="text-2xl font-bold text-red-300 mt-1 block">0</span>
+        <span class="text-[10px] text-slate-400">Écarts constatés</span>
+      </div>
+
+      <div class="bg-slate-800/90 rounded-2xl p-3.5 border border-slate-700/80 shadow-md card-box">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-400">Sans Objet / S.O.</span>
+          <span class="w-2 h-2 rounded-full bg-slate-500"></span>
+        </div>
+        <span id="countSO" class="text-2xl font-bold text-slate-200 mt-1 block">0</span>
+        <span class="text-[10px] text-slate-400">Dispensés / Autre</span>
+      </div>
+    </div>
+
+    <!-- Filter & Reset Toolbar -->
+    <div class="flex flex-wrap items-center justify-between gap-2 no-print pt-1">
+      <div class="flex items-center gap-1.5">
+        <div class="inline-flex rounded-xl border border-slate-700 bg-slate-800 p-1 text-xs">
+          <button onclick="setFilter('all')" id="filter-all" class="filter-btn px-3 py-1.5 rounded-lg font-semibold bg-blue-600 text-white transition">Tous</button>
+          <button onclick="setFilter('NC')" id="filter-NC" class="filter-btn px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition">Non conformes</button>
+          <button onclick="setFilter('pending')" id="filter-pending" class="filter-btn px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition">À vérifier</button>
+        </div>
+      </div>
+
+      <button onclick="resetAuditConfirm()" class="text-xs font-medium text-red-400 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 px-3 py-2 rounded-xl transition flex items-center gap-1">
+        ↺ Réinitialiser
+      </button>
+    </div>
+
+    <!-- Main Dynamic Checklist Container -->
+    <div id="checklistContainer" class="space-y-4">
+      <!-- Injected by JavaScript -->
+    </div>
+
+    <!-- Print Summary Table -->
+    <div class="print-only page-break mt-8 text-slate-900">
+      <h3 class="text-lg font-bold border-b-2 border-slate-900 pb-2 mb-4">SYNTHÈSE TECHNIQUE PAR PÔLE</h3>
+      <table class="w-full text-left border-collapse text-xs">
+        <thead>
+          <tr class="border-b-2 border-slate-800 text-slate-800">
+            <th class="py-2">Pôle d'analyse</th>
+            <th class="py-2 text-center">Conformes</th>
+            <th class="py-2 text-center">Non conformes</th>
+            <th class="py-2 text-center">Sans Objet</th>
+            <th class="py-2 text-right">Taux</th>
+          </tr>
+        </thead>
+        <tbody id="printSummaryTableBody"></tbody>
+      </table>
+      
+      <div class="mt-10 pt-6 border-t border-slate-300 flex justify-between items-end text-xs">
+        <div>
+          <p class="font-bold text-slate-900">Signature et visa de l'auditeur :</p>
+          <div class="h-24 w-52 border border-dashed border-slate-400 mt-2 rounded-lg"></div>
+        </div>
+        <div class="text-right text-slate-600">
+          <p>Rapport généré le <span id="printFooterDate"></span></p>
+          <p>Conforme aux exigences du code de la construction et de l'habitation.</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // Embedded PWA Manifest Generation via Blob URL
+    function setupManifest() {
+      const manifestData = {
+        name: "Audit Accessibilité ERP",
+        short_name: "Audit ERP",
+        start_url: window.location.href,
+        display: "standalone",
+        background_color: "#0f172a",
+        theme_color: "#0f172a",
+        icons: [{ src: "https://placehold.co/192x192/1e293b/ffffff?text=ERP", sizes: "192x192", type: "image/png" }]
+      };
+      const stringBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
+      document.getElementById('dynamicManifest').setAttribute('href', URL.createObjectURL(stringBlob));
+    }
+
+    // Complete regulatory database
+    const auditDatabase = [
+      {
+        id: "cat_acces",
+        title: "1. Cheminement extérieur & Abords",
+        icon: "M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z",
+        items: [
+          {
+            id: "ext_parking",
+            label: "Stationnement PMR réservé",
+            desc: "2% du total de places minimum. Largeur 3,30 m.",
+            rules: {
+              neuf: "Largeur min. 3,30 m, pente nulle ou ≤ 2%, raccordement de plain-pied.",
+              existant14: "Largeur min. 3,30 m. En cas d'impossibilité technique avérée, place la plus proche.",
+              existant5: "1 place min. de 3,30 m si stationnement client existant. Sans objet sinon."
+            }
+          },
+          {
+            id: "ext_cheminement",
+            label: "Pente du cheminement d'accès",
+            desc: "Pente longitudinale et dévers vers l'entrée du bâtiment.",
+            rules: {
+              neuf: "Pente max 5% (tolérances : 8% sur 2m, 10% sur 0,5m avec paliers de repos). Dévers ≤ 2%.",
+              existant14: "Pente max 5% (tolérance jusqu'à 12% sur 0,50m en contrainte avérée).",
+              existant5: "Pente max 5% (tolérance 12% sur 0,5m). Rampe amovible tolérée avec signalétique d'appel."
+            }
+          }
+        ]
+      },
+      {
+        id: "cat_entree",
+        title: "2. Entrée & Accueil",
+        icon: "M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z",
+        items: [
+          {
+            id: "ent_porte",
+            label: "Largeur de passage de la porte d'entrée",
+            desc: "Passage utile de la porte principale.",
+            rules: {
+              neuf: "Largeur utile minimale de 0,83 m (porte nominale de 0,90 m).",
+              existant14: "Largeur utile minimale de 0,77 m (porte nominale de 0,80 m).",
+              existant5: "Largeur utile minimale de 0,77 m admise."
+            }
+          },
+          {
+            id: "ent_banque",
+            label: "Banque d'accueil & Boucle auditive (BIM)",
+            desc: "Hauteur de comptoir et dispositif pour malentendants.",
+            rules: {
+              neuf: "Hauteur max. 0,80 m avec vide genoux (0,70m haut, 0,60m larg). BIM fixe obligatoire.",
+              existant14: "Banque surbaissée ou tablette d'accueil adaptée. BIM fixe obligatoire.",
+              existant5: "Tablette amovible ou partie surbaissée. BIM mobile tolérée."
+            }
+          }
+        ]
+      },
+      {
+        id: "cat_circulations",
+        title: "3. Circulations intérieures horizontales",
+        icon: "M4 6h16M4 10h16M4 14h16M4 18h16",
+        items: [
+          {
+            id: "circ_largeur",
+            label: "Largeur des couloirs et dégagements",
+            desc: "Possibilité de croisement et circulation fauteuil.",
+            rules: {
+              neuf: "Largeur utile min. 1,40 m continu (croisement de 2 fauteuils).",
+              existant14: "Largeur min. 1,20 m (0,90m à 1,00m ponctuel avec zones de croisement à 1,40m).",
+              existant5: "Largeur min. 1,20 m (ou 0,90 m ponctuel sur circulations secondaires)."
+            }
+          },
+          {
+            id: "circ_vitrage",
+            label: "Signalisation des parois vitrées",
+            desc: "Repérage visuel des portes et cloisons transparentes.",
+            rules: {
+              neuf: "Bandes contrastées visuelles à 1,10 m et 1,60 m de hauteur.",
+              existant14: "Bandes contrastées obligatoires à 1,10 m et 1,60 m.",
+              existant5: "Bandes contrastées obligatoires sur toute surface vitrée."
+            }
+          }
+        ]
+      },
+      {
+        id: "cat_niveaux",
+        title: "4. Escaliers & Niveaux",
+        icon: "M13 7h8m0 0v8m0-8l-8 8-4-4-6 6",
+        items: [
+          {
+            id: "niv_ascenseur",
+            label: "Desserte verticale / Ascenseur",
+            desc: "Accès aux étages supérieurs.",
+            rules: {
+              neuf: "Ascenseur obligatoire dès 50 personnes en étage ou prestations non équivalentes.",
+              existant14: "Ascenseur obligatoire sauf impossibilité technique ou disproportion financière.",
+              existant5: "PAS d'ascenseur obligatoire si la totalité des prestations est assurée au rez-de-chaussée."
+            }
+          },
+          {
+            id: "niv_escalier",
+            label: "Sécurité escaliers (BEV, Nez de marche, Mains courantes)",
+            desc: "Éléments podotactiles et rampes.",
+            rules: {
+              neuf: "BEV à 50 cm de la première marche, nez contrastés, 1ère/dernière contremarches contrastées, 2 mains courantes.",
+              existant14: "BEV, nez contrastés, contremarches contrastées. 1 seule main courante tolérée si largeur < 1m.",
+              existant5: "BEV en haut, nez contrastés et contremarches repérées obligatoires."
+            }
+          }
+        ]
+      },
+      {
+        id: "cat_sanitaires",
+        title: "5. Sanitaires adaptés (PMR)",
+        icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4",
+        items: [
+          {
+            id: "san_pmr",
+            label: "Cabinet d'aisances PMR conforme",
+            desc: "Espace de manœuvre et barres d'appui.",
+            rules: {
+              neuf: "Diamètre Ø 1,50m hors débattement de porte. Espace latéral cuvette 0,80x1,30m. Lavabo ergonomique.",
+              existant14: "Espace Ø 1,50m (porte pouvant empiéter si ouverture extérieure). Barre d'appui et lavabo adaptés.",
+              existant5: "SANS OBJET si les sanitaires existants sont strictement réservés à l'usage interne du personnel."
+            }
+          }
+        ]
+      },
+      {
+        id: "cat_rpa",
+        title: "6. Signalétique & Registre Public d'Accessibilité",
+        icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
+        items: [
+          {
+            id: "rpa_registre",
+            label: "Registre Public d'Accessibilité (RPA)",
+            desc: "Document d'information et attestations à disposition du public.",
+            rules: {
+              neuf: "Obligatoire à l'accueil (attestation d'achèvement, fiches de formation du personnel).",
+              existant14: "Obligatoire (attestation de conformité ou agenda Ad'AP approuvé, arrêtés de dérogation).",
+              existant5: "OBLIGATOIRE en 5e catégorie ! Fiche synthétique des prestations et modalités d'accueil."
+            }
+          },
+          {
+            id: "sec_alarme",
+            label: "Alarme visuelle (Flashs d'évacuation)",
+            desc: "Alerte pour personnes malentendantes en zones isolées.",
+            rules: {
+              neuf: "Diffuseurs lumineux d'alarme dans les sanitaires et locaux isolés.",
+              existant14: "Flash lumineux d'alarme dans les sanitaires accessibles.",
+              existant5: "Requis dans les sanitaires PMR si l'établissement est doté d'un SSI."
+            }
+          }
+        ]
+      }
+    ];
+
+    // State
+    let currentProfile = "neuf";
+    let activeFilter = "all";
+    let auditState = {};
+
+    function initApp() {
+      setupManifest();
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('metaDate').value = today;
+      document.getElementById('printDate').innerText = "Date : " + new Date().toLocaleDateString('fr-FR');
+      document.getElementById('printFooterDate').innerText = new Date().toLocaleDateString('fr-FR');
+
+      // Load LocalStorage
+      const saved = localStorage.getItem('pixel_audit_erp_data');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          currentProfile = parsed.profile || 'neuf';
+          auditState = parsed.items || {};
+          if (parsed.meta) {
+            document.getElementById('metaName').value = parsed.meta.name || '';
+            document.getElementById('metaAddress').value = parsed.meta.address || '';
+            document.getElementById('metaAuditor').value = parsed.meta.auditor || '';
+            document.getElementById('metaDate').value = parsed.meta.date || today;
+          }
+        } catch(e) { console.error(e); }
+      }
+
+      setProfile(currentProfile, false);
+      renderChecklist();
+      updateCalculations();
+    }
+
+    function setProfile(profileKey, save = true) {
+      currentProfile = profileKey;
+      ['neuf', 'existant14', 'existant5'].forEach(pk => {
+        const btn = document.getElementById(`prof-btn-${pk}`);
+        if (pk === profileKey) {
+          btn.className = "prof-btn px-3 py-2.5 rounded-lg text-xs font-semibold transition text-left bg-slate-800 text-white border border-blue-500 shadow-md ring-1 ring-blue-500";
+        } else {
+          btn.className = "prof-btn px-3 py-2.5 rounded-lg text-xs font-semibold transition text-left text-slate-400 hover:text-white bg-slate-950/40 border border-slate-800";
+        }
+      });
+
+      const labels = {
+        neuf: "ERP Neuf (Arrêté 20/04/2017)",
+        existant14: "Bâti Existant Cat. 1 à 4 (Arrêté 08/12/2014)",
+        existant5: "Bâti Existant 5e Catégorie (Petits établissements)"
+      };
+      document.getElementById('printProfileName').innerText = labels[profileKey];
+
+      renderChecklist();
+      updateCalculations();
+      if (save) saveToLocalStorage();
+    }
+
+    function setFilter(filterType) {
+      activeFilter = filterType;
+      ['all', 'NC', 'pending'].forEach(f => {
+        const btn = document.getElementById(`filter-${f}`);
+        if (f === filterType) {
+          btn.className = "filter-btn px-3 py-1.5 rounded-lg font-semibold bg-blue-600 text-white transition";
+        } else {
+          btn.className = "filter-btn px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition";
+        }
+      });
+      renderChecklist();
+    }
+
+    function renderChecklist() {
+      const container = document.getElementById('checklistContainer');
+      container.innerHTML = '';
+
+      auditDatabase.forEach(category => {
+        const visibleItems = category.items.filter(item => {
+          const st = auditState[item.id] || { status: 'pending' };
+          if (activeFilter === 'NC') return st.status === 'NC';
+          if (activeFilter === 'pending') return st.status === 'pending';
+          return true;
+        });
+
+        if (visibleItems.length === 0 && activeFilter !== 'all') return;
+
+        const catBlock = document.createElement('div');
+        catBlock.className = "bg-slate-800/90 rounded-2xl border border-slate-700/80 shadow-lg overflow-hidden card-box";
+        
+        catBlock.innerHTML = `
+          <div class="bg-slate-900/70 px-4 py-3 border-b border-slate-700/80 flex items-center justify-between">
+            <div class="flex items-center space-x-2.5">
+              <span class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${category.icon}"/></svg>
+              </span>
+              <h3 class="font-bold text-white text-xs sm:text-sm">${category.title}</h3>
+            </div>
+            <span id="cat-badge-${category.id}" class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-700 text-slate-300">0/${category.items.length}</span>
+          </div>
+          <div class="p-3 sm:p-4 space-y-3.5" id="cat-items-${category.id}"></div>
+        `;
+        container.appendChild(catBlock);
+
+        const itemsContainer = catBlock.querySelector(`#cat-items-${category.id}`);
+
+        visibleItems.forEach(item => {
+          const data = auditState[item.id] || { status: 'pending', note: '', photo: null };
+          const ruleText = item.rules[currentProfile];
+
+          const itemEl = document.createElement('div');
+          itemEl.className = "p-3.5 rounded-xl border border-slate-700/60 bg-slate-900/50 space-y-3";
+          
+          itemEl.innerHTML = `
+            <div class="space-y-1">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <h4 class="font-bold text-slate-100 text-xs sm:text-sm">${item.label}</h4>
+                <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded ${getStatusBadgeClass(data.status)} print-only">
+                  ${getStatusLabel(data.status)}
+                </span>
+              </div>
+              <p class="text-[11px] text-slate-400">${item.desc}</p>
+              
+              <!-- Regulatory Rule Box -->
+              <div class="p-2 rounded-lg bg-blue-950/30 border border-blue-800/40 text-blue-200 text-[11px] flex items-start gap-1.5">
+                <svg class="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <div><span class="font-semibold text-white">Règle [${currentProfile}] :</span> ${ruleText}</div>
+              </div>
+            </div>
+
+            <!-- Action Buttons & Camera Trigger -->
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+              <!-- Touch status buttons -->
+              <div class="inline-flex rounded-xl border border-slate-700 bg-slate-900 p-1 shadow-inner no-print">
+                <button onclick="setItemStatus('${item.id}', 'C')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${data.status === 'C' ? 'bg-emerald-600 text-white shadow' : 'text-slate-400 hover:text-emerald-400'}">✓ C</button>
+                <button onclick="setItemStatus('${item.id}', 'NC')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${data.status === 'NC' ? 'bg-red-600 text-white shadow' : 'text-slate-400 hover:text-red-400'}">✗ NC</button>
+                <button onclick="setItemStatus('${item.id}', 'SO')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${data.status === 'SO' ? 'bg-slate-700 text-white shadow' : 'text-slate-400 hover:text-white'}">S.O.</button>
+              </div>
+
+              <!-- Camera Capture Input for Pixel Phone -->
+              <div class="no-print">
+                <label class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition">
+                  <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                  <span>Photo</span>
+                  <input type="file" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoCapture(event, '${item.id}')">
+                </label>
+              </div>
+            </div>
+
+            <!-- Photo Preview Container -->
+            <div id="photo-preview-${item.id}" class="${data.photo ? 'block' : 'hidden'} pt-2">
+              <div class="relative inline-block">
+                <img src="${data.photo || ''}" alt="Preuve photo" class="h-20 w-auto rounded-lg border border-slate-700 object-cover print-img">
+                <button onclick="removePhoto('${item.id}')" class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 text-[10px] shadow no-print" title="Supprimer la photo">✕</button>
+              </div>
+            </div>
+
+            <!-- Notes Field -->
+            <div class="pt-1 flex items-center gap-2">
+              <input type="text" value="${escapeHtml(data.note || '')}" onchange="setItemNote('${item.id}', this.value)" placeholder="Cotes relevées, observations terrain..." class="w-full text-xs px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500">
+            </div>
+          `;
+          itemsContainer.appendChild(itemEl);
+        });
+      });
+    }
+
+    function getStatusLabel(st) {
+      if (st === 'C') return 'Conforme';
+      if (st === 'NC') return 'Non Conforme';
+      if (st === 'SO') return 'Sans Objet';
+      return 'Non évalué';
+    }
+
+    function getStatusBadgeClass(st) {
+      if (st === 'C') return 'text-emerald-300 bg-emerald-950/80 border border-emerald-800';
+      if (st === 'NC') return 'text-red-300 bg-red-950/80 border border-red-800';
+      if (st === 'SO') return 'text-slate-300 bg-slate-800 border border-slate-700';
+      return 'text-amber-300 bg-amber-950/80';
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/"/g, '&quot;');
+    }
+
+    function setItemStatus(id, st) {
+      if (!auditState[id]) auditState[id] = { note: '', photo: null };
+      auditState[id].status = (auditState[id].status === st) ? 'pending' : st;
+      renderChecklist();
+      updateCalculations();
+      saveToLocalStorage();
+    }
+
+    function setItemNote(id, noteVal) {
+      if (!auditState[id]) auditState[id] = { status: 'pending', photo: null };
+      auditState[id].note = noteVal;
+      saveToLocalStorage();
+    }
+
+    function handlePhotoCapture(event, id) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        // Compress image slightly using canvas to avoid localStorage quota overflow
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 800;
+          const scaleSize = MAX_WIDTH / img.width;
+          canvas.width = MAX_WIDTH;
+          canvas.height = img.height * scaleSize;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          if (!auditState[id]) auditState[id] = { status: 'pending', note: '' };
+          auditState[id].photo = dataUrl;
+          
+          renderChecklist();
+          saveToLocalStorage();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removePhoto(id) {
+      if (auditState[id]) {
+        auditState[id].photo = null;
+        renderChecklist();
+        saveToLocalStorage();
+      }
+    }
+
+    function resetAuditConfirm() {
+      if (confirm("Réinitialiser toutes les données de l'audit en cours ?")) {
+        auditState = {};
+        renderChecklist();
+        updateCalculations();
+        saveToLocalStorage();
+      }
+    }
+
+    function updateCalculations() {
+      let c = 0, nc = 0, so = 0, total = 0;
+      const summaryBody = document.getElementById('printSummaryTableBody');
+      summaryBody.innerHTML = '';
+
+      auditDatabase.forEach(cat => {
+        let catC = 0, catNC = 0, catSO = 0;
+        cat.items.forEach(item => {
+          total++;
+          const st = auditState[item.id] ? auditState[item.id].status : 'pending';
+          if (st === 'C') { c++; catC++; }
+          else if (st === 'NC') { nc++; catNC++; }
+          else if (st === 'SO') { so++; catSO++; }
+        });
+
+        // Update badge
+        const badge = document.getElementById(`cat-badge-${cat.id}`);
+        if (badge) {
+          const ev = catC + catNC + catSO;
+          badge.innerText = `${ev}/${cat.items.length}`;
+        }
+
+        // Print table summary
+        const evCat = catC + catNC;
+        const scoreCat = evCat > 0 ? Math.round((catC / evCat) * 100) : '-';
+        const tr = document.createElement('tr');
+        tr.className = "border-b border-slate-300 py-1";
+        tr.innerHTML = `
+          <td class="py-1.5 font-medium">${cat.title}</td>
+          <td class="py-1.5 text-center text-emerald-700 font-bold">${catC}</td>
+          <td class="py-1.5 text-center text-red-600 font-bold">${catNC}</td>
+          <td class="py-1.5 text-center text-slate-600">${catSO}</td>
+          <td class="py-1.5 text-right font-bold">${scoreCat !== '-' ? scoreCat + '%' : 'N/A'}</td>
+        `;
+        summaryBody.appendChild(tr);
+      });
+
+      const evaluated = c + nc;
+      const pct = evaluated > 0 ? Math.round((c / evaluated) * 100) : 0;
+
+      document.getElementById('countC').innerText = c;
+      document.getElementById('countNC').innerText = nc;
+      document.getElementById('countSO').innerText = so;
+      document.getElementById('scorePercentage').innerText = `${pct}%`;
+      
+      const bar = document.getElementById('scoreBar');
+      bar.style.width = `${pct}%`;
+    }
+
+    function saveToLocalStorage() {
+      const payload = {
+        profile: currentProfile,
+        items: auditState,
+        meta: {
+          name: document.getElementById('metaName').value,
+          address: document.getElementById('metaAddress').value,
+          auditor: document.getElementById('metaAuditor').value,
+          date: document.getElementById('metaDate').value
+        }
+      };
+      localStorage.setItem('pixel_audit_erp_data', JSON.stringify(payload));
+    }
+
+    function exportJSON() {
+      saveToLocalStorage();
+      const raw = localStorage.getItem('pixel_audit_erp_data');
+      const blob = new Blob([raw], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `audit_erp_${(document.getElementById('metaName').value || 'batiment').replace(/\s+/g, '_')}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
+```
+eof
+
+---
+
+### Instructions pour installer l'application sur votre Google Pixel :
+1. Enregistrez ce code complet dans un fichier nommé **`index.html`**.
+2. Envoyez-le sur votre Pixel (par câble USB, partage de fichiers ou hébergement rapide sur Vercel/GitHub Pages).
+3. Ouvrez le fichier dans **Google Chrome** sur votre Pixel.
+4. Appuyez sur le menu (trois points verticaux en haut à droite) et sélectionnez **"Installer l'application"** (ou "Ajouter à l'écran d'accueil").
+5. L'application s'installera comme une application native avec son icône, fonctionnera **100 % hors-ligne** (idéal pour les visites en sous-sol ou en zones blanches) et vous permettra d'utiliser directement l'appareil photo du Pixel pour documenter chaque point de contrôle.
