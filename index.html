@@ -1,719 +1,1507 @@
 <!DOCTYPE html>
-<html lang="fr" class="h-full bg-slate-900">
+<html lang="fr" class="h-full bg-slate-950 text-slate-100">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Audit Accessibilité ERP - PWA Pixel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Audit Accessibilité ERP • Gestion de Parc PWA</title>
+
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- PWA Manifest embedded via Data URI / Blob or standard offline structure -->
-  <link rel="manifest" id="dynamicManifest">
-  <meta name="theme-color" content="#0f172a">
+
+  <!-- Configuration PWA Complète (Android / Pixel & iOS / Safari) -->
+  <meta name="theme-color" content="#090d16">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Audit ERP">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230f172a'/%3E%3Cpath fill='%2314b8a6' d='M50 18a10 10 0 100 20 10 10 0 000-20zm15 28H35a7 7 0 00-7 7v16a4 4 0 008 0V58h6v26a4 4 0 008 0V58h6v12a4 4 0 008 0V53a7 7 0 00-7-7z'/%3E%3C/svg%3E">
+  <link rel="manifest" id="manifestLink">
+
   <style>
-    body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    input, textarea, select {
+      user-select: text;
+    }
+    /* Touch target dimensions */
+    .touch-btn {
+      min-height: 48px;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
     @media print {
       .no-print { display: none !important; }
       .print-only { display: block !important; }
-      body { background: #fff !important; color: #000 !important; font-size: 10pt; }
-      .card-box { border: 1px solid #cbd5e1 !important; box-shadow: none !important; break-inside: avoid; margin-bottom: 10px; }
+      body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        font-size: 10pt;
+        padding: 0 !important;
+      }
       .page-break { page-break-before: always; }
-      input, textarea, select { border: none !important; background: transparent !important; resize: none; }
-      .print-img { max-height: 120px !important; width: auto !important; border: 1px solid #94a3b8; border-radius: 4px; margin-top: 4px; }
+      .avoid-break { break-inside: avoid; }
+      .print-box {
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 6px !important;
+        padding: 10px !important;
+        margin-bottom: 8px !important;
+      }
+      .print-img {
+        max-height: 120px !important;
+        object-fit: cover !important;
+        border: 1px solid #cbd5e1 !important;
+      }
     }
     .print-only { display: none; }
   </style>
 </head>
-<body class="min-h-full flex flex-col text-slate-100 bg-slate-900">
+<body class="min-h-full flex flex-col bg-slate-950 text-slate-100 antialiased selection:bg-teal-500 selection:text-white pb-12">
 
-  <!-- Top Navbar -->
-  <header class="bg-slate-800/90 backdrop-blur-md border-b border-slate-700/80 sticky top-0 z-40 no-print shadow-lg">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold shadow-md ring-2 ring-blue-400/30">
+  <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-md no-print">
+    <div class="max-w-6xl mx-auto px-3 sm:px-6 py-2.5 flex items-center justify-between gap-2">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-9 h-9 rounded-xl bg-teal-500/20 text-teal-400 border border-teal-500/40 flex items-center justify-center font-black">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
           </svg>
         </div>
         <div>
-          <h1 class="text-sm sm:text-base font-bold tracking-tight text-white leading-tight">Audit ERP • Pixel Edition</h1>
-          <p class="text-[11px] text-blue-400 font-medium">Arrêtés 20/04/2017 & 08/12/2014</p>
+          <h1 class="text-sm sm:text-base font-bold text-white tracking-tight flex items-center gap-1.5 leading-none">
+            Audit ERP Pro <span class="text-[10px] font-semibold uppercase px-1.5 py-0.5 bg-teal-500/20 text-teal-300 rounded border border-teal-500/30">Parc & Étages</span>
+          </h1>
+          <p class="text-[11px] text-slate-400 mt-0.5">Arrêtés du 20/04/2017 & 08/12/2014</p>
         </div>
       </div>
 
-      <div class="flex items-center gap-2">
-        <button onclick="exportJSON()" class="p-2 rounded-xl bg-slate-700/80 hover:bg-slate-700 text-slate-200 border border-slate-600 transition flex items-center gap-1.5 text-xs font-semibold" title="Exporter JSON">
-          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-          <span class="hidden sm:inline">Export</span>
+      <div class="flex items-center gap-1.5">
+        <button onclick="toggleParcModal()" class="touch-btn px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition active:scale-95 shadow-sm" title="Gérer le parc municipal">
+          <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          <span class="hidden sm:inline">Parc ERP</span>
+          <span id="badgeParcCount" class="text-[10px] px-1.5 py-0.5 rounded-full bg-teal-500/30 text-teal-300 font-mono">0</span>
         </button>
-        <button onclick="window.print()" class="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white shadow-md flex items-center gap-1.5 text-xs font-semibold transition">
+
+        <button onclick="exportCurrentJSON()" class="touch-btn px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition active:scale-95 shadow-sm" title="Exporter cet audit en JSON">
+          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+          <span class="hidden md:inline">Sauvegarder</span>
+        </button>
+
+        <button onclick="triggerPrintPDF()" class="touch-btn px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 shadow-md shadow-teal-950/40">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-          <span class="hidden sm:inline">Rapport PDF</span>
+          <span>PDF</span>
         </button>
       </div>
     </div>
   </header>
 
-  <main class="max-w-4xl mx-auto px-4 py-5 w-full flex-grow space-y-5">
-    
-    <!-- Print Header -->
-    <div class="print-only mb-6 border-b-2 border-slate-900 pb-4 text-slate-900">
+  <main class="max-w-6xl mx-auto px-3 sm:px-6 py-4 w-full flex-grow space-y-4">
+
+    <div class="print-only text-slate-950 border-b-2 border-slate-900 pb-3 mb-4">
       <div class="flex justify-between items-start">
         <div>
-          <h1 class="text-2xl font-black tracking-tight">RAPPORT D'AUDIT D'ACCESSIBILITÉ ERP</h1>
-          <p class="text-xs text-slate-600 mt-1">Conformité réglementaire PMR • Application Pixel PWA</p>
+          <h1 class="text-xl font-black uppercase tracking-tight">RAPPORT OFFICIEL D'ACCESSIBILITÉ ERP</h1>
+          <p class="text-xs text-slate-600">Application des Arrêtés du 20 avril 2017 et du 8 décembre 2014</p>
         </div>
-        <div class="text-right">
-          <span id="printDate" class="text-xs font-medium text-slate-700"></span>
+        <div class="text-right text-xs">
+          <p class="font-bold">Généré le : <span id="printDatePlaceholder"></span></p>
+          <p class="text-slate-500">Auditeur PWA certifié</p>
         </div>
+      </div>
+      <div class="mt-3 grid grid-cols-2 gap-2 text-xs bg-slate-100 p-2.5 rounded border border-slate-300">
+        <div><strong>Établissement :</strong> <span id="printERPName">-</span></div>
+        <div><strong>Adresse :</strong> <span id="printERPAddress">-</span></div>
+        <div><strong>Auditeur :</strong> <span id="printERPAuditor">-</span></div>
+        <div><strong>Cadre normatif :</strong> <span id="printERPProfile">-</span></div>
       </div>
     </div>
 
-    <!-- Regulatory Profile Selector Card -->
-    <div class="bg-slate-800/90 rounded-2xl border border-slate-700/80 shadow-lg p-4 sm:p-5 card-box">
-      <div class="flex flex-col gap-3 mb-4">
-        <div>
-          <span class="text-[10px] uppercase tracking-wider font-bold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-500/20">Cadre réglementaire</span>
-          <h2 class="text-lg font-bold text-white mt-1">Sélection du profil d'établissement</h2>
-          <p class="text-xs text-slate-400">Les tolérances dimensionnelles s'ajustent instantanément.</p>
+    <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-4 shadow-xl no-print space-y-3.5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-slate-800 pb-3">
+        <div class="flex-grow">
+          <label class="text-[10px] font-bold uppercase tracking-wider text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">
+            Établissement actif
+          </label>
+          <div class="mt-1 flex items-center gap-2">
+            <select id="erpSelectDropdown" onchange="onSelectERPChange(this.value)" class="touch-btn w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white font-semibold text-sm focus:outline-none focus:border-teal-500">
+              <!-- Dynamically populated -->
+            </select>
+          </div>
         </div>
-        
-        <!-- Profile Buttons Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 p-1 bg-slate-900/80 rounded-xl border border-slate-700/60 no-print">
-          <button type="button" onclick="setProfile('neuf')" id="prof-btn-neuf" class="prof-btn px-3 py-2.5 rounded-lg text-xs font-semibold transition text-left bg-slate-800 text-white border border-slate-600 shadow-sm">
-            <span class="block font-bold">🏢 ERP Neuf</span>
-            <span class="text-[10px] text-slate-400 font-normal">Arrêté 20/04/2017</span>
+        <div class="flex items-center gap-2 shrink-0">
+          <button onclick="createNewERP()" class="touch-btn px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition active:scale-95">
+            <span>+ Nouvel ERP</span>
           </button>
-          <button type="button" onclick="setProfile('existant14')" id="prof-btn-existant14" class="prof-btn px-3 py-2.5 rounded-lg text-xs font-semibold transition text-left text-slate-400 hover:text-white">
-            <span class="block font-bold">🏛️ Existant (Cat. 1-4)</span>
-            <span class="text-[10px] text-slate-500 font-normal">Arrêté 08/12/2014</span>
-          </button>
-          <button type="button" onclick="setProfile('existant5')" id="prof-btn-existant5" class="prof-btn px-3 py-2.5 rounded-lg text-xs font-semibold transition text-left text-slate-400 hover:text-white">
-            <span class="block font-bold">🏬 Existant (5e Cat.)</span>
-            <span class="text-[10px] text-slate-500 font-normal">Petits établissements</span>
-          </button>
-        </div>
-
-        <div class="print-only">
-          <p class="text-sm font-semibold text-slate-800">Profil appliqué : <span id="printProfileName" class="text-blue-700 font-bold"></span></p>
         </div>
       </div>
 
-      <!-- Metadata Fields -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-slate-700/60 text-xs">
-        <div>
-          <label class="block font-medium text-slate-300 mb-1">Nom de l'établissement</label>
-          <input type="text" id="metaName" placeholder="Ex: Mairie annexe, Cabinet médical..." onchange="saveToLocalStorage()" class="w-full px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-        <div>
-          <label class="block font-medium text-slate-300 mb-1">Adresse / Ville</label>
-          <input type="text" id="metaAddress" placeholder="Ex: 15 rue de la République, Aubagne" onchange="saveToLocalStorage()" class="w-full px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-        <div>
-          <label class="block font-medium text-slate-300 mb-1">Auditeur / Référent</label>
-          <input type="text" id="metaAuditor" placeholder="Ex: R. Dupont" onchange="saveToLocalStorage()" class="w-full px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-        <div>
-          <label class="block font-medium text-slate-300 mb-1">Date d'audit</label>
-          <input type="date" id="metaDate" onchange="saveToLocalStorage()" class="w-full px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-      </div>
-    </div>
-
-    <!-- Live KPI Scoreboard -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      <div class="bg-slate-800/90 rounded-2xl p-4 border border-slate-700/80 shadow-md card-box col-span-2 sm:col-span-1">
-        <span class="text-xs font-semibold text-slate-400">Conformité globale</span>
-        <div class="flex items-baseline gap-2 mt-1">
-          <span id="scorePercentage" class="text-3xl font-extrabold text-blue-400">0%</span>
-        </div>
-        <div class="w-full bg-slate-700/80 rounded-full h-2 mt-2 overflow-hidden">
-          <div id="scoreBar" class="bg-blue-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
-        </div>
-      </div>
-
-      <div class="bg-slate-800/90 rounded-2xl p-3.5 border border-slate-700/80 shadow-md card-box">
+      <!-- Regulatory Profile Selector -->
+      <div class="space-y-1.5">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-semibold text-emerald-400">Conformes</span>
+          <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">Cadre Réglementaire :</span>
+          <span id="saveBadge" class="text-[11px] text-slate-500 flex items-center gap-1 font-mono">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Synchro active
+          </span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <button type="button" onclick="setProfile('neuf')" id="prof-btn-neuf" class="touch-btn p-2.5 rounded-xl border text-left transition flex flex-col justify-center">
+            <span class="text-xs font-bold">🏢 ERP Neuf</span>
+            <span class="text-[10px] text-slate-400">Arrêté 20/04/2017 • Exigences maximales</span>
+          </button>
+          <button type="button" onclick="setProfile('existant14')" id="prof-btn-existant14" class="touch-btn p-2.5 rounded-xl border text-left transition flex flex-col justify-center">
+            <span class="text-xs font-bold">🏛️ Existant (Cat. 1 à 4)</span>
+            <span class="text-[10px] text-slate-400">Arrêté 08/12/2014 • Tolérances bâti ancien</span>
+          </button>
+          <button type="button" onclick="setProfile('existant5')" id="prof-btn-existant5" class="touch-btn p-2.5 rounded-xl border text-left transition flex flex-col justify-center">
+            <span class="text-xs font-bold">🏬 Existant (5ᵉ Catégorie)</span>
+            <span class="text-[10px] text-slate-400">Petits ERP • Allègements d'ascenseur</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- General Info Inputs -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5 pt-1 text-xs">
+        <div>
+          <label class="block text-slate-400 font-medium mb-1">Nom du Bâtiment</label>
+          <input type="text" id="metaName" oninput="updateActiveERPMeta()" placeholder="Ex: École Jean Moulin" class="touch-btn w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-teal-500">
+        </div>
+        <div>
+          <label class="block text-slate-400 font-medium mb-1">Adresse</label>
+          <input type="text" id="metaAddress" oninput="updateActiveERPMeta()" placeholder="Ex: 14 Av. des Écoles" class="touch-btn w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-teal-500">
+        </div>
+        <div>
+          <label class="block text-slate-400 font-medium mb-1">Auditeur / Diagnostiqueur</label>
+          <input type="text" id="metaAuditor" oninput="updateActiveERPMeta()" placeholder="Ex: M. Dupont" class="touch-btn w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-teal-500">
+        </div>
+        <div>
+          <label class="block text-slate-400 font-medium mb-1">Date d'inspection</label>
+          <input type="date" id="metaDate" onchange="updateActiveERPMeta()" class="touch-btn w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-teal-500">
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 no-print">
+      <div class="bg-slate-900/90 rounded-2xl p-3.5 border border-slate-800 flex flex-col justify-between shadow-md">
+        <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Score Global ERP</span>
+        <div class="flex items-baseline gap-2 mt-1">
+          <span id="kpiScoreGlobal" class="text-3xl font-black text-teal-400">0%</span>
+        </div>
+        <div class="w-full bg-slate-800 rounded-full h-1.5 mt-2 overflow-hidden">
+          <div id="kpiBarGlobal" class="bg-teal-500 h-1.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/90 rounded-2xl p-3.5 border border-slate-800 shadow-md">
+        <div class="flex items-center justify-between">
+          <span class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Conformes (C)</span>
           <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
         </div>
-        <span id="countC" class="text-2xl font-bold text-emerald-300 mt-1 block">0</span>
-        <span class="text-[10px] text-slate-400">Points validés</span>
+        <span id="kpiCountC" class="text-2xl font-black text-emerald-300 mt-1 block">0</span>
+        <span class="text-[10px] text-slate-500">Critères validés</span>
       </div>
 
-      <div class="bg-slate-800/90 rounded-2xl p-3.5 border border-slate-700/80 shadow-md card-box">
+      <div class="bg-slate-900/90 rounded-2xl p-3.5 border border-slate-800 shadow-md">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-semibold text-red-400">Non conformes</span>
+          <span class="text-[11px] font-semibold text-red-400 uppercase tracking-wider">Non Conformes (NC)</span>
           <span class="w-2 h-2 rounded-full bg-red-500"></span>
         </div>
-        <span id="countNC" class="text-2xl font-bold text-red-300 mt-1 block">0</span>
-        <span class="text-[10px] text-slate-400">Écarts constatés</span>
+        <span id="kpiCountNC" class="text-2xl font-black text-red-300 mt-1 block">0</span>
+        <span class="text-[10px] text-slate-500">Points à corriger</span>
       </div>
 
-      <div class="bg-slate-800/90 rounded-2xl p-3.5 border border-slate-700/80 shadow-md card-box">
+      <div class="bg-slate-900/90 rounded-2xl p-3.5 border border-slate-800 shadow-md">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-semibold text-slate-400">Sans Objet / S.O.</span>
+          <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Sans Objet (SO)</span>
           <span class="w-2 h-2 rounded-full bg-slate-500"></span>
         </div>
-        <span id="countSO" class="text-2xl font-bold text-slate-200 mt-1 block">0</span>
-        <span class="text-[10px] text-slate-400">Dispensés / Autre</span>
+        <span id="kpiCountSO" class="text-2xl font-black text-slate-300 mt-1 block">0</span>
+        <span class="text-[10px] text-slate-500">Dispensés / Non soumis</span>
       </div>
     </div>
 
-    <!-- Filter & Reset Toolbar -->
+    <div class="no-print space-y-2">
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Niveaux & Troncs d'inspection</span>
+        <button onclick="promptAddFloor()" class="touch-btn px-3 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold flex items-center gap-1.5 transition shadow-sm active:scale-95">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+          <span>Ajouter un niveau</span>
+        </button>
+      </div>
+
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="floorTabsBar">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- Filter Buttons Bar -->
     <div class="flex flex-wrap items-center justify-between gap-2 no-print pt-1">
-      <div class="flex items-center gap-1.5">
-        <div class="inline-flex rounded-xl border border-slate-700 bg-slate-800 p-1 text-xs">
-          <button onclick="setFilter('all')" id="filter-all" class="filter-btn px-3 py-1.5 rounded-lg font-semibold bg-blue-600 text-white transition">Tous</button>
-          <button onclick="setFilter('NC')" id="filter-NC" class="filter-btn px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition">Non conformes</button>
-          <button onclick="setFilter('pending')" id="filter-pending" class="filter-btn px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition">À vérifier</button>
-        </div>
+      <div class="inline-flex rounded-xl border border-slate-800 bg-slate-900/90 p-1 text-xs">
+        <button onclick="setFilter('all')" id="fil-btn-all" class="px-3 py-1.5 rounded-lg font-semibold transition bg-teal-600 text-white">Tous</button>
+        <button onclick="setFilter('NC')" id="fil-btn-NC" class="px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition">Non conformes</button>
+        <button onclick="setFilter('pending')" id="fil-btn-pending" class="px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition">À contrôler</button>
       </div>
 
-      <button onclick="resetAuditConfirm()" class="text-xs font-medium text-red-400 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 px-3 py-2 rounded-xl transition flex items-center gap-1">
-        ↺ Réinitialiser
-      </button>
-    </div>
-
-    <!-- Main Dynamic Checklist Container -->
-    <div id="checklistContainer" class="space-y-4">
-      <!-- Injected by JavaScript -->
-    </div>
-
-    <!-- Print Summary Table -->
-    <div class="print-only page-break mt-8 text-slate-900">
-      <h3 class="text-lg font-bold border-b-2 border-slate-900 pb-2 mb-4">SYNTHÈSE TECHNIQUE PAR PÔLE</h3>
-      <table class="w-full text-left border-collapse text-xs">
-        <thead>
-          <tr class="border-b-2 border-slate-800 text-slate-800">
-            <th class="py-2">Pôle d'analyse</th>
-            <th class="py-2 text-center">Conformes</th>
-            <th class="py-2 text-center">Non conformes</th>
-            <th class="py-2 text-center">Sans Objet</th>
-            <th class="py-2 text-right">Taux</th>
-          </tr>
-        </thead>
-        <tbody id="printSummaryTableBody"></tbody>
-      </table>
-      
-      <div class="mt-10 pt-6 border-t border-slate-300 flex justify-between items-end text-xs">
-        <div>
-          <p class="font-bold text-slate-900">Signature et visa de l'auditeur :</p>
-          <div class="h-24 w-52 border border-dashed border-slate-400 mt-2 rounded-lg"></div>
-        </div>
-        <div class="text-right text-slate-600">
-          <p>Rapport généré le <span id="printFooterDate"></span></p>
-          <p>Conforme aux exigences du code de la construction et de l'habitation.</p>
-        </div>
+      <div class="flex items-center gap-2">
+        <button onclick="markCurrentScopeAllConform()" class="touch-btn text-xs font-medium text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 px-3 py-1.5 rounded-xl transition">
+          ✓ Valider cet écran
+        </button>
+        <button onclick="deleteCurrentFloor()" id="btnDeleteLevel" class="hidden touch-btn text-xs font-medium text-red-400 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 px-3 py-1.5 rounded-xl transition">
+          🗑 Supprimer ce niveau
+        </button>
       </div>
+    </div>
+
+    <div id="checklistItemsContainer" class="space-y-3.5 no-print">
+      <!-- Injected via JavaScript -->
+    </div>
+
+    <!-- Printable Full Report Container -->
+    <div id="printFullReportContainer" class="print-only text-slate-950 space-y-6">
+      <!-- Injected via JavaScript before printing -->
     </div>
 
   </main>
 
+  <div id="parcModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 no-print">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <!-- Modal Header -->
+      <div class="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <span>🏛️ Gestionnaire de Parc ERP</span>
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">Import CSV municipal & suivi d'avancement</p>
+        </div>
+        <button onclick="toggleParcModal()" class="text-slate-400 hover:text-white p-2 rounded-xl bg-slate-800 transition">✕</button>
+      </div>
+
+      <!-- Actions Bar -->
+      <div class="p-4 border-b border-slate-800 bg-slate-900/50 flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-2">
+          <label class="touch-btn px-3 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold cursor-pointer flex items-center gap-1.5 transition shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            <span>Importer CSV</span>
+            <input type="file" id="csvFileInput" accept=".csv, .txt" class="hidden" onchange="handleCSVImport(event)">
+          </label>
+
+          <button onclick="exportParcCSV()" class="touch-btn px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold flex items-center gap-1.5 transition">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+            <span>Bilan Parc (CSV)</span>
+          </button>
+        </div>
+
+        <button onclick="downloadCSVTemplate()" class="text-xs text-teal-400 hover:underline">
+          Télécharger modèle CSV
+        </button>
+      </div>
+
+      <!-- Search and List -->
+      <div class="p-4 border-b border-slate-800 bg-slate-950/40">
+        <input type="text" id="parcSearchInput" oninput="filterParcList(this.value)" placeholder="Rechercher par nom, catégorie, adresse..." class="touch-btn w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:outline-none focus:border-teal-500">
+      </div>
+
+      <div class="flex-grow overflow-y-auto p-4 divide-y divide-slate-800/80 space-y-2" id="parcListItemsContainer">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-3 border-t border-slate-800 bg-slate-950/60 flex items-center justify-between text-xs">
+        <span id="parcTotalCount" class="text-slate-400 font-mono">0 établissement(s)</span>
+        <button onclick="toggleParcModal()" class="touch-btn px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold transition">Fermer</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // Embedded PWA Manifest Generation via Blob URL
-    function setupManifest() {
-      const manifestData = {
-        name: "Audit Accessibilité ERP",
-        short_name: "Audit ERP",
-        start_url: window.location.href,
-        display: "standalone",
-        background_color: "#0f172a",
-        theme_color: "#0f172a",
-        icons: [{ src: "https://placehold.co/192x192/1e293b/ffffff?text=ERP", sizes: "192x192", type: "image/png" }]
-      };
-      const stringBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
-      document.getElementById('dynamicManifest').setAttribute('href', URL.createObjectURL(stringBlob));
-    }
+    /* =========================================================================
+       1. BASE DE DONNÉES RÉGLEMENTAIRE (ARRETES 2017 & 2014)
+       ========================================================================= */
+    const auditNorms = {
+      // Points du TRONC COMMUN (Extérieurs, Entrée, RPA)
+      common: [
+        {
+          id: "com_stationnement",
+          cat: "Stationnement & Abords",
+          label: "Stationnement réservé PMR",
+          desc: "Au moins 2 % du total des places réservé (min. 1 place). Raccordement de plain-pied.",
+          rules: {
+            neuf: "Largeur min. 3,30 m (dont bande latérale de 0,80 m). Pente ≤ 2 %. Signalétique sol et panneau B6d + M6h.",
+            existant14: "Largeur min. 3,30 m. Pente ≤ 2 %. Place la plus proche possible de l'accès principal.",
+            existant5: "1 place PMR de 3,30 m si stationnement privé réservé à la clientèle. SANS OBJET si aucun parking dédié."
+          }
+        },
+        {
+          id: "com_cheminement",
+          cat: "Stationnement & Abords",
+          label: "Pente du cheminement d'accès extérieur",
+          desc: "Pente longitudinale et dévers reliant la voirie ou le parking à l'entrée.",
+          rules: {
+            neuf: "Pente ≤ 5 % (tolérance : 8 % sur 2 m, 10 % sur 0,5 m avec palier de repos 1,40 × 1,20 m tous les 10 m). Dévers ≤ 2 %.",
+            existant14: "Pente max. 5 %. Tolérance jusqu'à 12 % sur 0,50 m en contrainte topographique avérée. Dévers ≤ 2 %.",
+            existant5: "Pente 5 % (tolérance 12 % sur 0,5 m). Rampe amovible avec bouton d'appel autorisée avec dérogation/accord."
+          }
+        },
+        {
+          id: "com_entree_porte",
+          cat: "Entrée & Accueil Principal",
+          label: "Largeur de passage utile de la porte d'entrée",
+          desc: "Largeur libre mesurée avec la porte ouverte à 90°.",
+          rules: {
+            neuf: "Largeur utile minimale de 0,83 m (porte nominale 0,90 m requise).",
+            existant14: "Largeur utile minimale de 0,77 m admise (porte nominale 0,80 m).",
+            existant5: "Largeur utile de 0,77 m admise. Si vantaux asymétriques, le vantail principal doit atteindre 0,77 m min."
+          }
+        },
+        {
+          id: "com_entree_seuil",
+          cat: "Entrée & Accueil Principal",
+          label: "Seuil de porte & Aire de rotation",
+          desc: "Franchissement sans ressaut et manœuvre de porte.",
+          rules: {
+            neuf: "Seuil ≤ 2 cm chanfreiné. Aire de manœuvre de Ø 1,50 m libre de tout obstacle. Effort d'ouverture manuel ≤ 50 N.",
+            existant14: "Seuil ≤ 2 cm (ou chanfreiné 4 cm à 33 %). Empiètement de la porte admis sur le cercle de rotation.",
+            existant5: "Seuil ≤ 2 cm ou plan incliné d'appoint avec carillon d'appel si marche conservée."
+          }
+        },
+        {
+          id: "com_accueil_banque",
+          cat: "Entrée & Accueil Principal",
+          label: "Banque d'accueil & Boucle auditive (BIM)",
+          desc: "Comptoir adapté pour personne assise/debout et équipement malentendants.",
+          rules: {
+            neuf: "Hauteur max. 0,80 m (vide sous table : haut. ≥ 0,70 m, larg. ≥ 0,60 m, prof. ≥ 0,30 m). Boucle BIM fixe obligatoire.",
+            existant14: "Banque surbaissée requise ou tablette rabattable aux normes (0,80 m). Boucle BIM fixe requise.",
+            existant5: "Partie surbaissée ou tablette amovible. BIM mobile tolérée (obligatoire uniquement si service public)."
+          }
+        },
+        {
+          id: "com_rpa",
+          cat: "Registre Public d'Accessibilité",
+          label: "Mise à disposition du Registre (RPA)",
+          desc: "Obligation légale pour TOUS les ERP (Décret n° 2017-431).",
+          rules: {
+            neuf: "Registre consultable sur place (attestation d'achèvement, fiche de formation du personnel d'accueil).",
+            existant14: "Registre à disposition : attestation de conformité ou agenda Ad'AP approuvé, arrêtés de dérogations éventuels.",
+            existant5: "OBLIGATOIRE même en 5ᵉ catégorie ! Format allégé : notice d'accessibilité et attestation de sensibilisation."
+          }
+        }
+      ],
 
-    // Complete regulatory database
-    const auditDatabase = [
-      {
-        id: "cat_acces",
-        title: "1. Cheminement extérieur & Abords",
-        icon: "M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z",
-        items: [
-          {
-            id: "ext_parking",
-            label: "Stationnement PMR réservé",
-            desc: "2% du total de places minimum. Largeur 3,30 m.",
-            rules: {
-              neuf: "Largeur min. 3,30 m, pente nulle ou ≤ 2%, raccordement de plain-pied.",
-              existant14: "Largeur min. 3,30 m. En cas d'impossibilité technique avérée, place la plus proche.",
-              existant5: "1 place min. de 3,30 m si stationnement client existant. Sans objet sinon."
-            }
-          },
-          {
-            id: "ext_cheminement",
-            label: "Pente du cheminement d'accès",
-            desc: "Pente longitudinale et dévers vers l'entrée du bâtiment.",
-            rules: {
-              neuf: "Pente max 5% (tolérances : 8% sur 2m, 10% sur 0,5m avec paliers de repos). Dévers ≤ 2%.",
-              existant14: "Pente max 5% (tolérance jusqu'à 12% sur 0,50m en contrainte avérée).",
-              existant5: "Pente max 5% (tolérance 12% sur 0,5m). Rampe amovible tolérée avec signalétique d'appel."
-            }
+      // Points RÉPÉTÉS pour chaque ÉTAGE / NIVEAU
+      floor: [
+        {
+          id: "fl_desserte",
+          cat: "Circulation Verticale vers ce niveau",
+          label: "Ascenseur ou appareil élévateur",
+          desc: "Continuité mécanique de déplacement vers ce niveau.",
+          rules: {
+            neuf: "Ascenseur obligatoire dès 50 pers. en étage ou prestations non équivalentes au RDC. Norme EN 81-70.",
+            existant14: "Ascenseur obligatoire sauf impossibilité technique ou disproportion manifeste validée par la CCDSA.",
+            existant5: "DISPENSE TOTALE si la prestation ouverte au public est disponible de plain-pied au rez-de-chaussée."
           }
-        ]
-      },
-      {
-        id: "cat_entree",
-        title: "2. Entrée & Accueil",
-        icon: "M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z",
-        items: [
-          {
-            id: "ent_porte",
-            label: "Largeur de passage de la porte d'entrée",
-            desc: "Passage utile de la porte principale.",
-            rules: {
-              neuf: "Largeur utile minimale de 0,83 m (porte nominale de 0,90 m).",
-              existant14: "Largeur utile minimale de 0,77 m (porte nominale de 0,80 m).",
-              existant5: "Largeur utile minimale de 0,77 m admise."
-            }
-          },
-          {
-            id: "ent_banque",
-            label: "Banque d'accueil & Boucle auditive (BIM)",
-            desc: "Hauteur de comptoir et dispositif pour malentendants.",
-            rules: {
-              neuf: "Hauteur max. 0,80 m avec vide genoux (0,70m haut, 0,60m larg). BIM fixe obligatoire.",
-              existant14: "Banque surbaissée ou tablette d'accueil adaptée. BIM fixe obligatoire.",
-              existant5: "Tablette amovible ou partie surbaissée. BIM mobile tolérée."
-            }
+        },
+        {
+          id: "fl_escalier_secu",
+          cat: "Circulation Verticale vers ce niveau",
+          label: "Sécurité de l'escalier (BEV, Nez, Contremarches)",
+          desc: "Avertissement podotactile et contraste visuel.",
+          rules: {
+            neuf: "BEV podotactile à 50 cm de la première marche descendante. Nez contrastés et non glissants. Première et dernière contremarches contrastées (10 cm). Deux mains courantes.",
+            existant14: "BEV en haut de chaque volée. Nez et contremarches contrastés. Une main courante tolérée si largeur < 1,00 m.",
+            existant5: "BEV obligatoire en haut. Nez contrastés antidérapants. Au moins une main courante rigide continue."
           }
-        ]
-      },
-      {
-        id: "cat_circulations",
-        title: "3. Circulations intérieures horizontales",
-        icon: "M4 6h16M4 10h16M4 14h16M4 18h16",
-        items: [
-          {
-            id: "circ_largeur",
-            label: "Largeur des couloirs et dégagements",
-            desc: "Possibilité de croisement et circulation fauteuil.",
-            rules: {
-              neuf: "Largeur utile min. 1,40 m continu (croisement de 2 fauteuils).",
-              existant14: "Largeur min. 1,20 m (0,90m à 1,00m ponctuel avec zones de croisement à 1,40m).",
-              existant5: "Largeur min. 1,20 m (ou 0,90 m ponctuel sur circulations secondaires)."
-            }
-          },
-          {
-            id: "circ_vitrage",
-            label: "Signalisation des parois vitrées",
-            desc: "Repérage visuel des portes et cloisons transparentes.",
-            rules: {
-              neuf: "Bandes contrastées visuelles à 1,10 m et 1,60 m de hauteur.",
-              existant14: "Bandes contrastées obligatoires à 1,10 m et 1,60 m.",
-              existant5: "Bandes contrastées obligatoires sur toute surface vitrée."
-            }
+        },
+        {
+          id: "fl_couloirs",
+          cat: "Circulations Horizontales",
+          label: "Largeur utile des couloirs & Dégagements",
+          desc: "Aisance de passage et croisement des fauteuils roulants.",
+          rules: {
+            neuf: "Largeur utile minimale de 1,40 m continu (croisement de 2 personnes en fauteuil).",
+            existant14: "Largeur min. 1,20 m en principal (0,90 m à 1,00 m ponctuel admis avec zones de croisement tous les 10 m).",
+            existant5: "Largeur min. 1,20 m (ou 0,90 m ponctuel sur circulations secondaires sans prestation majeure)."
           }
-        ]
-      },
-      {
-        id: "cat_niveaux",
-        title: "4. Escaliers & Niveaux",
-        icon: "M13 7h8m0 0v8m0-8l-8 8-4-4-6 6",
-        items: [
-          {
-            id: "niv_ascenseur",
-            label: "Desserte verticale / Ascenseur",
-            desc: "Accès aux étages supérieurs.",
-            rules: {
-              neuf: "Ascenseur obligatoire dès 50 personnes en étage ou prestations non équivalentes.",
-              existant14: "Ascenseur obligatoire sauf impossibilité technique ou disproportion financière.",
-              existant5: "PAS d'ascenseur obligatoire si la totalité des prestations est assurée au rez-de-chaussée."
-            }
-          },
-          {
-            id: "niv_escalier",
-            label: "Sécurité escaliers (BEV, Nez de marche, Mains courantes)",
-            desc: "Éléments podotactiles et rampes.",
-            rules: {
-              neuf: "BEV à 50 cm de la première marche, nez contrastés, 1ère/dernière contremarches contrastées, 2 mains courantes.",
-              existant14: "BEV, nez contrastés, contremarches contrastées. 1 seule main courante tolérée si largeur < 1m.",
-              existant5: "BEV en haut, nez contrastés et contremarches repérées obligatoires."
-            }
+        },
+        {
+          id: "fl_portes",
+          cat: "Circulations Horizontales",
+          label: "Portes intérieures & Poignées",
+          desc: "Passage utile et manœuvrabilité.",
+          rules: {
+            neuf: "Largeur utile min. 0,83 m. Poignées entre 0,90 m et 1,30 m. Effort d'ouverture ≤ 50 N.",
+            existant14: "Largeur utile min. 0,77 m admise. Poignées préhensibles en position debout ou assise.",
+            existant5: "Largeur utile de 0,77 m admise sur les portes d'accès aux prestations publiques."
           }
-        ]
-      },
-      {
-        id: "cat_sanitaires",
-        title: "5. Sanitaires adaptés (PMR)",
-        icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4",
-        items: [
-          {
-            id: "san_pmr",
-            label: "Cabinet d'aisances PMR conforme",
-            desc: "Espace de manœuvre et barres d'appui.",
-            rules: {
-              neuf: "Diamètre Ø 1,50m hors débattement de porte. Espace latéral cuvette 0,80x1,30m. Lavabo ergonomique.",
-              existant14: "Espace Ø 1,50m (porte pouvant empiéter si ouverture extérieure). Barre d'appui et lavabo adaptés.",
-              existant5: "SANS OBJET si les sanitaires existants sont strictement réservés à l'usage interne du personnel."
-            }
+        },
+        {
+          id: "fl_vitrage",
+          cat: "Circulations Horizontales",
+          label: "Repérage des parois et portes vitrées",
+          desc: "Bandes de contraste anti-heurt à hauteur des yeux.",
+          rules: {
+            neuf: "Bandes visuelles contrastées à 1,10 m et 1,60 m de hauteur sur chaque baie vitrée.",
+            existant14: "Bandes contrastées indispensables à 1,10 m et 1,60 m (largeur min. 5 cm).",
+            existant5: "Repérage visuel contrasté indispensable sur toute paroi vitrée transparente."
           }
-        ]
-      },
-      {
-        id: "cat_rpa",
-        title: "6. Signalétique & Registre Public d'Accessibilité",
-        icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
-        items: [
-          {
-            id: "rpa_registre",
-            label: "Registre Public d'Accessibilité (RPA)",
-            desc: "Document d'information et attestations à disposition du public.",
-            rules: {
-              neuf: "Obligatoire à l'accueil (attestation d'achèvement, fiches de formation du personnel).",
-              existant14: "Obligatoire (attestation de conformité ou agenda Ad'AP approuvé, arrêtés de dérogation).",
-              existant5: "OBLIGATOIRE en 5e catégorie ! Fiche synthétique des prestations et modalités d'accueil."
-            }
-          },
-          {
-            id: "sec_alarme",
-            label: "Alarme visuelle (Flashs d'évacuation)",
-            desc: "Alerte pour personnes malentendantes en zones isolées.",
-            rules: {
-              neuf: "Diffuseurs lumineux d'alarme dans les sanitaires et locaux isolés.",
-              existant14: "Flash lumineux d'alarme dans les sanitaires accessibles.",
-              existant5: "Requis dans les sanitaires PMR si l'établissement est doté d'un SSI."
-            }
+        },
+        {
+          id: "fl_wc_pmr",
+          cat: "Sanitaires du niveau",
+          label: "Cabinet d'aisances adapté PMR",
+          desc: "Espace de manœuvre, aire de transfert et équipements.",
+          rules: {
+            neuf: "Au moins 1 WC adapté si sanitaires présents. Espace Ø 1,50 m strictement hors débattement. Espace latéral 0,80 × 1,30 m. Barre à 0,70-0,80 m.",
+            existant14: "Espace Ø 1,50 m et latéral 0,80 × 1,30 m. Débattement de porte sur l'espace admis si ouvrant ext. ou coulissant.",
+            existant5: "SANS OBJET si les sanitaires sont strictement réservés à l'usage interne du personnel."
           }
-        ]
-      }
-    ];
+        },
+        {
+          id: "fl_alarme_flash",
+          cat: "Sécurité & Évacuation",
+          label: "Alarme visuelle (Flashs) & Espaces d'Attente (EAS)",
+          desc: "Signalisation bimodal et zone refuge temporaire.",
+          rules: {
+            neuf: "Flashs d'alarme dans les sanitaires et locaux isolés. EAS obligatoire à chaque étage accessible.",
+            existant14: "Flash lumineux dans sanitaires PMR. EAS ou zone d'évacuation différée validée avec les pompiers.",
+            existant5: "Flash d'alarme si sanitaires isolés et présence d'un SSI. EAS requis uniquement si public hébergé en étage sans sortie directe."
+          }
+        }
+      ]
+    };
 
-    // State
-    let currentProfile = "neuf";
-    let activeFilter = "all";
-    let auditState = {};
+    /* =========================================================================
+       2. ÉTAT DU PARC & STRUCTURE DE DONNÉES PERSISTANTE
+       ========================================================================= */
+    let parkState = {
+      activeERPId: "erp_1",
+      erps: [
+        {
+          id: "erp_1",
+          name: "Mairie Annexe & CCAS",
+          address: "12 Place de la République",
+          category: "5",
+          constructionYear: "1988",
+          profile: "existant5",
+          auditor: "M. Delacroix (Technicien)",
+          date: new Date().toISOString().split('T')[0],
+          activeTab: "common",
+          commonScope: { items: {} },
+          floors: [
+            { id: "fl_rdc", name: "Rez-de-chaussée (RDC)", isGroundFloor: true, prestationAtRdc: true, items: {} },
+            { id: "fl_r1", name: "1er Étage (R+1)", isGroundFloor: false, prestationAtRdc: true, items: {} }
+          ]
+        },
+        {
+          id: "erp_2",
+          name: "Groupe Scolaire Pasteur",
+          address: "5 Boulevard des Écoliers",
+          category: "4",
+          constructionYear: "1974",
+          profile: "existant14",
+          auditor: "M. Delacroix (Technicien)",
+          date: new Date().toISOString().split('T')[0],
+          activeTab: "common",
+          commonScope: { items: {} },
+          floors: [
+            { id: "fl_rdc", name: "Rez-de-chaussée", isGroundFloor: true, prestationAtRdc: false, items: {} }
+          ]
+        }
+      ]
+    };
+
+    let activeFilter = 'all';
 
     function initApp() {
-      setupManifest();
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('metaDate').value = today;
-      document.getElementById('printDate').innerText = "Date : " + new Date().toLocaleDateString('fr-FR');
-      document.getElementById('printFooterDate').innerText = new Date().toLocaleDateString('fr-FR');
+      // 1. Configurer manifest PWA dynamique
+      const manifest = {
+        name: "Audit Accessibilité ERP",
+        short_name: "Audit ERP",
+        description: "Application professionnelle d'audit d'accessibilité multi-niveaux et gestion de parc",
+        start_url: window.location.href,
+        display: "standalone",
+        background_color: "#020617",
+        theme_color: "#0f172a",
+        orientation: "portrait-primary",
+        icons: [{
+          src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230f172a'/%3E%3Cpath fill='%2314b8a6' d='M50 18a10 10 0 100 20 10 10 0 000-20zm15 28H35a7 7 0 00-7 7v16a4 4 0 008 0V58h6v26a4 4 0 008 0V58h6v12a4 4 0 008 0V53a7 7 0 00-7-7z'/%3E%3C/svg%3E",
+          sizes: "192x192 512x512",
+          type: "image/svg+xml"
+        }]
+      };
+      const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+      document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(manifestBlob));
 
-      // Load LocalStorage
-      const saved = localStorage.getItem('pixel_audit_erp_data');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          currentProfile = parsed.profile || 'neuf';
-          auditState = parsed.items || {};
-          if (parsed.meta) {
-            document.getElementById('metaName').value = parsed.meta.name || '';
-            document.getElementById('metaAddress').value = parsed.meta.address || '';
-            document.getElementById('metaAuditor').value = parsed.meta.auditor || '';
-            document.getElementById('metaDate').value = parsed.meta.date || today;
-          }
-        } catch(e) { console.error(e); }
+      // 2. Service Worker Inline pour fonctionnement hors-ligne immédiat
+      if ('serviceWorker' in navigator) {
+        const swScript = `
+          self.addEventListener('install', e => self.skipWaiting());
+          self.addEventListener('activate', e => self.clients.claim());
+          self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
+        `;
+        const swBlob = new Blob([swScript], { type: 'text/javascript' });
+        navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(err => console.log('SW Note:', err));
       }
 
-      setProfile(currentProfile, false);
+      // 3. Charger depuis localStorage
+      const savedPark = localStorage.getItem('erp_municipal_park_v1');
+      if (savedPark) {
+        try {
+          const parsed = JSON.parse(savedPark);
+          if (parsed && parsed.erps && parsed.erps.length > 0) {
+            parkState = parsed;
+          }
+        } catch (e) {
+          console.error("Erreur de chargement du stockage local", e);
+        }
+      }
+
+      refreshDropdownAndMeta();
+      renderFloorTabs();
       renderChecklist();
       updateCalculations();
+      updateParcBadge();
     }
 
-    function setProfile(profileKey, save = true) {
-      currentProfile = profileKey;
+    function saveState() {
+      try {
+        localStorage.setItem('erp_municipal_park_v1', JSON.stringify(parkState));
+        const badge = document.getElementById('saveBadge');
+        if (badge) {
+          badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Synchro ${new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}`;
+        }
+      } catch (e) {
+        console.warn("Stockage local saturé :", e);
+      }
+    }
+
+    function getActiveERP() {
+      return parkState.erps.find(e => e.id === parkState.activeERPId) || parkState.erps[0];
+    }
+
+    function refreshDropdownAndMeta() {
+      const erp = getActiveERP();
+      const dropdown = document.getElementById('erpSelectDropdown');
+      dropdown.innerHTML = '';
+
+      parkState.erps.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item.id;
+        const score = getERPGlobalScore(item);
+        opt.text = `${item.name} (${item.category ? 'Cat ' + item.category : 'ERP'}) - ${score}%`;
+        if (item.id === erp.id) opt.selected = true;
+        dropdown.appendChild(opt);
+      });
+
+      document.getElementById('metaName').value = erp.name || '';
+      document.getElementById('metaAddress').value = erp.address || '';
+      document.getElementById('metaAuditor').value = erp.auditor || '';
+      document.getElementById('metaDate').value = erp.date || new Date().toISOString().split('T')[0];
+
+      setProfile(erp.profile || 'neuf', false);
+    }
+
+    function onSelectERPChange(newId) {
+      parkState.activeERPId = newId;
+      refreshDropdownAndMeta();
+      renderFloorTabs();
+      renderChecklist();
+      updateCalculations();
+      saveState();
+    }
+
+    function updateActiveERPMeta() {
+      const erp = getActiveERP();
+      erp.name = document.getElementById('metaName').value;
+      erp.address = document.getElementById('metaAddress').value;
+      erp.auditor = document.getElementById('metaAuditor').value;
+      erp.date = document.getElementById('metaDate').value;
+      saveState();
+      updateDropdownLabelOnly();
+    }
+
+    function updateDropdownLabelOnly() {
+      const erp = getActiveERP();
+      const opt = document.getElementById('erpSelectDropdown').querySelector(`option[value="${erp.id}"]`);
+      if (opt) {
+        const score = getERPGlobalScore(erp);
+        opt.text = `${erp.name} - ${score}%`;
+      }
+    }
+
+    function setProfile(profileKey, doSave = true) {
+      const erp = getActiveERP();
+      erp.profile = profileKey;
+
       ['neuf', 'existant14', 'existant5'].forEach(pk => {
         const btn = document.getElementById(`prof-btn-${pk}`);
         if (pk === profileKey) {
-          btn.className = "prof-btn px-3 py-2.5 rounded-lg text-xs font-semibold transition text-left bg-slate-800 text-white border border-blue-500 shadow-md ring-1 ring-blue-500";
+          btn.className = "touch-btn p-2.5 rounded-xl border border-teal-500 bg-teal-950/40 text-left transition flex flex-col justify-center shadow-lg ring-1 ring-teal-500";
         } else {
-          btn.className = "prof-btn px-3 py-2.5 rounded-lg text-xs font-semibold transition text-left text-slate-400 hover:text-white bg-slate-950/40 border border-slate-800";
+          btn.className = "touch-btn p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 text-left transition flex flex-col justify-center hover:border-slate-700 opacity-75";
         }
       });
 
-      const labels = {
-        neuf: "ERP Neuf (Arrêté 20/04/2017)",
-        existant14: "Bâti Existant Cat. 1 à 4 (Arrêté 08/12/2014)",
-        existant5: "Bâti Existant 5e Catégorie (Petits établissements)"
-      };
-      document.getElementById('printProfileName').innerText = labels[profileKey];
-
       renderChecklist();
       updateCalculations();
-      if (save) saveToLocalStorage();
+      if (doSave) saveState();
     }
 
-    function setFilter(filterType) {
-      activeFilter = filterType;
-      ['all', 'NC', 'pending'].forEach(f => {
-        const btn = document.getElementById(`filter-${f}`);
-        if (f === filterType) {
-          btn.className = "filter-btn px-3 py-1.5 rounded-lg font-semibold bg-blue-600 text-white transition";
+    function createNewERP() {
+      const newId = `erp_${Date.now()}`;
+      const newERP = {
+        id: newId,
+        name: `Nouvel ERP #${parkState.erps.length + 1}`,
+        address: "Adresse à renseigner",
+        category: "5",
+        constructionYear: "1990",
+        profile: "existant5",
+        auditor: document.getElementById('metaAuditor').value || "Diagnostiqueur",
+        date: new Date().toISOString().split('T')[0],
+        activeTab: "common",
+        commonScope: { items: {} },
+        floors: [
+          { id: `fl_${Date.now()}_rdc`, name: "Rez-de-chaussée (RDC)", isGroundFloor: true, prestationAtRdc: true, items: {} }
+        ]
+      };
+      parkState.erps.push(newERP);
+      parkState.activeERPId = newId;
+      refreshDropdownAndMeta();
+      renderFloorTabs();
+      renderChecklist();
+      updateCalculations();
+      updateParcBadge();
+      saveState();
+    }
+
+    function renderFloorTabs() {
+      const erp = getActiveERP();
+      const container = document.getElementById('floorTabsBar');
+      container.innerHTML = '';
+
+      if (!erp.activeTab) erp.activeTab = 'common';
+
+      // 1. Onglet Tronc Commun
+      const isCommonActive = erp.activeTab === 'common';
+      const commonBtn = document.createElement('button');
+      commonBtn.className = `touch-btn px-3.5 py-2 rounded-xl text-xs font-bold shrink-0 transition flex items-center gap-1.5 ${
+        isCommonActive 
+          ? 'bg-teal-500 text-slate-950 shadow-md ring-2 ring-teal-400/50' 
+          : 'bg-slate-900 text-slate-400 border border-slate-800 hover:text-white'
+      }`;
+      commonBtn.innerHTML = `<span>🏛️️ Tronc Commun</span> <span class="text-[10px] px-1.5 py-0.5 rounded-full ${isCommonActive ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-800 text-slate-300'}">${getScopeProgress(erp, 'common')}</span>`;
+      commonBtn.onclick = () => switchTab('common');
+      container.appendChild(commonBtn);
+
+      // 2. Onglets des étages
+      erp.floors.forEach(floor => {
+        const isFloorActive = erp.activeTab === floor.id;
+        const floorBtn = document.createElement('button');
+        floorBtn.className = `touch-btn px-3.5 py-2 rounded-xl text-xs font-bold shrink-0 transition flex items-center gap-1.5 ${
+          isFloorActive 
+            ? 'bg-teal-500 text-slate-950 shadow-md ring-2 ring-teal-400/50' 
+            : 'bg-slate-900 text-slate-400 border border-slate-800 hover:text-white'
+        }`;
+        floorBtn.innerHTML = `<span>📍 ${floor.name}</span> <span class="text-[10px] px-1.5 py-0.5 rounded-full ${isFloorActive ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-800 text-slate-300'}">${getScopeProgress(erp, floor.id)}</span>`;
+        floorBtn.onclick = () => switchTab(floor.id);
+        container.appendChild(floorBtn);
+      });
+
+      // Gestion visibilité bouton supprimer
+      const btnDelete = document.getElementById('btnDeleteLevel');
+      if (erp.activeTab !== 'common' && erp.floors.length > 1) {
+        btnDelete.classList.remove('hidden');
+      } else {
+        btnDelete.classList.add('hidden');
+      }
+    }
+
+    function switchTab(tabId) {
+      const erp = getActiveERP();
+      erp.activeTab = tabId;
+      renderFloorTabs();
+      renderChecklist();
+      saveState();
+    }
+
+    function promptAddFloor() {
+      const erp = getActiveERP();
+      const defaultName = `Niveau R+${erp.floors.length}`;
+      const name = prompt("Désignation du niveau à ajouter :", defaultName);
+      if (!name) return;
+
+      const newFloorId = `fl_${Date.now()}`;
+      erp.floors.push({
+        id: newFloorId,
+        name: name.trim(),
+        isGroundFloor: false,
+        prestationAtRdc: true,
+        items: {}
+      });
+
+      erp.activeTab = newFloorId;
+      renderFloorTabs();
+      renderChecklist();
+      updateCalculations();
+      saveState();
+    }
+
+    function deleteCurrentFloor() {
+      const erp = getActiveERP();
+      if (erp.activeTab === 'common') return;
+      const index = erp.floors.findIndex(f => f.id === erp.activeTab);
+      if (index === -1) return;
+
+      if (confirm(`Confirmez-vous la suppression du niveau "${erp.floors[index].name}" ?`)) {
+        erp.floors.splice(index, 1);
+        erp.activeTab = erp.floors[0] ? erp.floors[0].id : 'common';
+        renderFloorTabs();
+        renderChecklist();
+        updateCalculations();
+        saveState();
+      }
+    }
+
+    function togglePrestationAtRdc(checked) {
+      const erp = getActiveERP();
+      const currentFloor = erp.floors.find(f => f.id === erp.activeTab);
+      if (currentFloor) {
+        currentFloor.prestationAtRdc = checked;
+        // Si 5e catégorie et prestation au RDC -> ascenseur passe automatiquement en Sans Objet (SO)
+        if (checked && erp.profile === 'existant5') {
+          if (!currentFloor.items['fl_desserte']) currentFloor.items['fl_desserte'] = {};
+          currentFloor.items['fl_desserte'].status = 'SO';
+          currentFloor.items['fl_desserte'].note = "Dispense d'ascenseur : prestations fournies au rez-de-chaussée.";
+        }
+        renderChecklist();
+        updateCalculations();
+        saveState();
+      }
+    }
+
+    function setFilter(f) {
+      activeFilter = f;
+      ['all', 'NC', 'pending'].forEach(btnKey => {
+        const btn = document.getElementById(`fil-btn-${btnKey}`);
+        if (btnKey === f) {
+          btn.className = "px-3 py-1.5 rounded-lg font-semibold transition bg-teal-600 text-white";
         } else {
-          btn.className = "filter-btn px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition";
+          btn.className = "px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition";
         }
       });
       renderChecklist();
     }
 
     function renderChecklist() {
-      const container = document.getElementById('checklistContainer');
+      const erp = getActiveERP();
+      const container = document.getElementById('checklistItemsContainer');
       container.innerHTML = '';
 
-      auditDatabase.forEach(category => {
-        const visibleItems = category.items.filter(item => {
-          const st = auditState[item.id] || { status: 'pending' };
-          if (activeFilter === 'NC') return st.status === 'NC';
-          if (activeFilter === 'pending') return st.status === 'pending';
+      const isCommon = erp.activeTab === 'common';
+      const criteria = isCommon ? auditNorms.common : auditNorms.floor;
+      const currentScopeObj = isCommon ? erp.commonScope : erp.floors.find(f => f.id === erp.activeTab);
+
+      if (!currentScopeObj) return;
+
+      // Header Banner de la section
+      const banner = document.createElement('div');
+      banner.className = "p-3.5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2";
+      banner.innerHTML = `
+        <div>
+          <span class="text-[10px] font-bold text-teal-400 uppercase tracking-wider">Pôle en cours d'inspection</span>
+          <h3 class="text-base font-bold text-white">${isCommon ? "Tronc Commun (Abords, Accès principal & RPA)" : currentScopeObj.name}</h3>
+        </div>
+        <div class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-800 text-teal-300 border border-slate-700 w-fit">
+          Score du pôle : <span class="font-bold text-white">${getScopeScore(currentScopeObj, isCommon)}%</span>
+        </div>
+      `;
+      container.appendChild(banner);
+
+      // Question clé d'équivalence 5e catégorie
+      if (!isCommon && erp.profile === 'existant5') {
+        const questionBox = document.createElement('div');
+        questionBox.className = "p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs flex items-start gap-2.5";
+        questionBox.innerHTML = `
+          <svg class="w-5 h-5 text-amber-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div class="flex-grow">
+            <span class="font-bold text-amber-100">Souplesse Réglementaire 5ᵉ Catégorie : Prestations équivalentes</span>
+            <p class="text-[11px] text-amber-300/80 mt-0.5">Les prestations ou services dispensés à ce niveau sont-ils également délivrés de plain-pied au rez-de-chaussée ?</p>
+            <label class="inline-flex items-center gap-2 mt-2 cursor-pointer">
+              <input type="checkbox" ${currentScopeObj.prestationAtRdc ? 'checked' : ''} onchange="togglePrestationAtRdc(this.checked)" class="w-4 h-4 rounded text-teal-600 focus:ring-teal-500 bg-slate-900 border-slate-700">
+              <span class="font-semibold text-white">Oui, prestation identique au RDC (Dispense légale d'ascenseur)</span>
+            </label>
+          </div>
+        `;
+        container.appendChild(questionBox);
+      }
+
+      // Regroupement par catégories
+      const groups = {};
+      criteria.forEach(c => {
+        if (!groups[c.cat]) groups[c.cat] = [];
+        groups[c.cat].push(c);
+      });
+
+      Object.keys(groups).forEach(catName => {
+        const items = groups[catName];
+        const filtered = items.filter(item => {
+          const itemData = currentScopeObj.items[item.id] || { status: 'pending' };
+          if (activeFilter === 'NC') return itemData.status === 'NC';
+          if (activeFilter === 'pending') return itemData.status === 'pending';
           return true;
         });
 
-        if (visibleItems.length === 0 && activeFilter !== 'all') return;
+        if (filtered.length === 0 && activeFilter !== 'all') return;
 
-        const catBlock = document.createElement('div');
-        catBlock.className = "bg-slate-800/90 rounded-2xl border border-slate-700/80 shadow-lg overflow-hidden card-box";
-        
-        catBlock.innerHTML = `
-          <div class="bg-slate-900/70 px-4 py-3 border-b border-slate-700/80 flex items-center justify-between">
-            <div class="flex items-center space-x-2.5">
-              <span class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${category.icon}"/></svg>
-              </span>
-              <h3 class="font-bold text-white text-xs sm:text-sm">${category.title}</h3>
-            </div>
-            <span id="cat-badge-${category.id}" class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-700 text-slate-300">0/${category.items.length}</span>
+        const card = document.createElement('div');
+        card.className = "bg-slate-900/90 rounded-2xl border border-slate-800 shadow-lg overflow-hidden";
+        card.innerHTML = `
+          <div class="bg-slate-950/60 px-4 py-2.5 border-b border-slate-800 flex items-center justify-between">
+            <h4 class="text-xs font-bold text-teal-300 uppercase tracking-wider">${catName}</h4>
+            <span class="text-[10px] text-slate-400 font-mono">${filtered.length} point(s)</span>
           </div>
-          <div class="p-3 sm:p-4 space-y-3.5" id="cat-items-${category.id}"></div>
+          <div class="divide-y divide-slate-800/80 p-3 sm:p-4 space-y-3" id="cat_group_${catName.replace(/[^a-zA-Z0-9]/g, '_')}"></div>
         `;
-        container.appendChild(catBlock);
+        container.appendChild(card);
 
-        const itemsContainer = catBlock.querySelector(`#cat-items-${category.id}`);
+        const groupContent = card.querySelector(`#cat_group_${catName.replace(/[^a-zA-Z0-9]/g, '_')}`);
 
-        visibleItems.forEach(item => {
-          const data = auditState[item.id] || { status: 'pending', note: '', photo: null };
-          const ruleText = item.rules[currentProfile];
+        filtered.forEach(item => {
+          const itemData = currentScopeObj.items[item.id] || { status: 'pending', note: '', photo: null };
+          const ruleText = item.rules[erp.profile] || "Règle non spécifiée";
 
           const itemEl = document.createElement('div');
-          itemEl.className = "p-3.5 rounded-xl border border-slate-700/60 bg-slate-900/50 space-y-3";
-          
+          itemEl.className = "pt-3 first:pt-0 space-y-2.5";
           itemEl.innerHTML = `
             <div class="space-y-1">
-              <div class="flex items-center justify-between gap-2 flex-wrap">
-                <h4 class="font-bold text-slate-100 text-xs sm:text-sm">${item.label}</h4>
-                <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded ${getStatusBadgeClass(data.status)} print-only">
-                  ${getStatusLabel(data.status)}
+              <div class="flex items-start justify-between gap-2">
+                <h5 class="text-xs sm:text-sm font-bold text-white leading-tight">${item.label}</h5>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider shrink-0 ${getStatusBadgeClass(itemData.status)}">
+                  ${getStatusText(itemData.status)}
                 </span>
               </div>
-              <p class="text-[11px] text-slate-400">${item.desc}</p>
+              <p class="text-[11px] text-slate-400 leading-snug">${item.desc}</p>
               
-              <!-- Regulatory Rule Box -->
-              <div class="p-2 rounded-lg bg-blue-950/30 border border-blue-800/40 text-blue-200 text-[11px] flex items-start gap-1.5">
-                <svg class="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <div><span class="font-semibold text-white">Règle [${currentProfile}] :</span> ${ruleText}</div>
+              <!-- Règle de tolérance dynamique -->
+              <div class="p-2 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-300 flex items-start gap-1.5 mt-1.5">
+                <span class="text-teal-400 font-bold shrink-0">Norme [${getProfileShort(erp.profile)}] :</span>
+                <span class="text-slate-300 leading-tight">${ruleText}</span>
               </div>
             </div>
 
-            <!-- Action Buttons & Camera Trigger -->
+            <!-- Boutons de saisie tactile C, NC, SO & Caméra -->
             <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
-              <!-- Touch status buttons -->
-              <div class="inline-flex rounded-xl border border-slate-700 bg-slate-900 p-1 shadow-inner no-print">
-                <button onclick="setItemStatus('${item.id}', 'C')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${data.status === 'C' ? 'bg-emerald-600 text-white shadow' : 'text-slate-400 hover:text-emerald-400'}">✓ C</button>
-                <button onclick="setItemStatus('${item.id}', 'NC')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${data.status === 'NC' ? 'bg-red-600 text-white shadow' : 'text-slate-400 hover:text-red-400'}">✗ NC</button>
-                <button onclick="setItemStatus('${item.id}', 'SO')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${data.status === 'SO' ? 'bg-slate-700 text-white shadow' : 'text-slate-400 hover:text-white'}">S.O.</button>
+              <div class="inline-flex rounded-xl border border-slate-700 bg-slate-950 p-1 shadow-inner">
+                <button onclick="setItemStatus('${item.id}', 'C')" class="touch-btn px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 ${itemData.status === 'C' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:text-emerald-400'}">
+                  <span>✓</span> C
+                </button>
+                <button onclick="setItemStatus('${item.id}', 'NC')" class="touch-btn px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 ${itemData.status === 'NC' ? 'bg-red-600 text-white shadow-md' : 'text-slate-400 hover:text-red-400'}">
+                  <span>✗</span> NC
+                </button>
+                <button onclick="setItemStatus('${item.id}', 'SO')" class="touch-btn px-2.5 py-1.5 rounded-lg text-xs font-bold transition ${itemData.status === 'SO' ? 'bg-slate-700 text-white shadow-md' : 'text-slate-400 hover:text-white'}">
+                  S.O.
+                </button>
               </div>
 
-              <!-- Camera Capture Input for Pixel Phone -->
-              <div class="no-print">
-                <label class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition">
-                  <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                  <span>Photo</span>
-                  <input type="file" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoCapture(event, '${item.id}')">
+              <!-- Prise de photo terrain -->
+              <div>
+                <label class="touch-btn px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition active:scale-95 shadow-sm">
+                  <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                  <span>${itemData.photo ? 'Modifier Photo' : 'Prendre Photo'}</span>
+                  <input type="file" accept="image/*" capture="environment" class="hidden" onchange="capturePhoto(event, '${item.id}')">
                 </label>
               </div>
             </div>
 
-            <!-- Photo Preview Container -->
-            <div id="photo-preview-${item.id}" class="${data.photo ? 'block' : 'hidden'} pt-2">
-              <div class="relative inline-block">
-                <img src="${data.photo || ''}" alt="Preuve photo" class="h-20 w-auto rounded-lg border border-slate-700 object-cover print-img">
-                <button onclick="removePhoto('${item.id}')" class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 text-[10px] shadow no-print" title="Supprimer la photo">✕</button>
+            <!-- Aperçu Photo -->
+            ${itemData.photo ? `
+              <div class="relative inline-block mt-2">
+                <img src="${itemData.photo}" alt="Preuve" class="h-20 w-auto rounded-xl border border-slate-700 object-cover shadow-sm">
+                <button onclick="removePhoto('${item.id}')" class="absolute -top-1.5 -right-1.5 bg-red-600 hover:bg-red-500 text-white rounded-full p-1 text-[10px] shadow-md transition" title="Supprimer la photo">✕</button>
               </div>
-            </div>
+            ` : ''}
 
-            <!-- Notes Field -->
-            <div class="pt-1 flex items-center gap-2">
-              <input type="text" value="${escapeHtml(data.note || '')}" onchange="setItemNote('${item.id}', this.value)" placeholder="Cotes relevées, observations terrain..." class="w-full text-xs px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500">
+            <!-- Notes & Cotes relevées -->
+            <div class="pt-1">
+              <input type="text" value="${escapeHtml(itemData.note || '')}" oninput="setItemNote('${item.id}', this.value)" placeholder="Cotes mesurées (cm), observations de visite, motif dérogation..." class="touch-btn w-full text-xs px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 focus:outline-none focus:border-teal-500">
             </div>
           `;
-          itemsContainer.appendChild(itemEl);
+          groupContent.appendChild(itemEl);
         });
       });
     }
 
-    function getStatusLabel(st) {
-      if (st === 'C') return 'Conforme';
-      if (st === 'NC') return 'Non Conforme';
-      if (st === 'SO') return 'Sans Objet';
-      return 'Non évalué';
-    }
+    function setItemStatus(itemId, status) {
+      const erp = getActiveERP();
+      const scope = erp.activeTab === 'common' ? erp.commonScope : erp.floors.find(f => f.id === erp.activeTab);
+      if (!scope) return;
+      if (!scope.items[itemId]) scope.items[itemId] = { note: '', photo: null };
 
-    function getStatusBadgeClass(st) {
-      if (st === 'C') return 'text-emerald-300 bg-emerald-950/80 border border-emerald-800';
-      if (st === 'NC') return 'text-red-300 bg-red-950/80 border border-red-800';
-      if (st === 'SO') return 'text-slate-300 bg-slate-800 border border-slate-700';
-      return 'text-amber-300 bg-amber-950/80';
-    }
+      scope.items[itemId].status = (scope.items[itemId].status === status) ? 'pending' : status;
 
-    function escapeHtml(str) {
-      return str.replace(/"/g, '&quot;');
-    }
-
-    function setItemStatus(id, st) {
-      if (!auditState[id]) auditState[id] = { note: '', photo: null };
-      auditState[id].status = (auditState[id].status === st) ? 'pending' : st;
       renderChecklist();
+      renderFloorTabs();
       updateCalculations();
-      saveToLocalStorage();
+      updateDropdownLabelOnly();
+      saveState();
     }
 
-    function setItemNote(id, noteVal) {
-      if (!auditState[id]) auditState[id] = { status: 'pending', photo: null };
-      auditState[id].note = noteVal;
-      saveToLocalStorage();
+    function setItemNote(itemId, note) {
+      const erp = getActiveERP();
+      const scope = erp.activeTab === 'common' ? erp.commonScope : erp.floors.find(f => f.id === erp.activeTab);
+      if (!scope) return;
+      if (!scope.items[itemId]) scope.items[itemId] = { status: 'pending', photo: null };
+      scope.items[itemId].note = note;
+      saveState();
     }
 
-    function handlePhotoCapture(event, id) {
+    function capturePhoto(event, itemId) {
       const file = event.target.files[0];
       if (!file) return;
 
       const reader = new FileReader();
       reader.onload = function(e) {
-        // Compress image slightly using canvas to avoid localStorage quota overflow
         const img = new Image();
         img.onload = function() {
+          // Compression Canvas pour réduire la mémoire et optimiser le JSON
           const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 800;
-          const scaleSize = MAX_WIDTH / img.width;
-          canvas.width = MAX_WIDTH;
-          canvas.height = img.height * scaleSize;
+          const MAX_W = 800;
+          const scale = MAX_W / img.width;
+          canvas.width = (img.width > MAX_W) ? MAX_W : img.width;
+          canvas.height = (img.width > MAX_W) ? (img.height * scale) : img.height;
+
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-          if (!auditState[id]) auditState[id] = { status: 'pending', note: '' };
-          auditState[id].photo = dataUrl;
-          
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.65);
+
+          const erp = getActiveERP();
+          const scope = erp.activeTab === 'common' ? erp.commonScope : erp.floors.find(f => f.id === erp.activeTab);
+          if (!scope.items[itemId]) scope.items[itemId] = { status: 'pending', note: '' };
+          scope.items[itemId].photo = compressedDataUrl;
+
           renderChecklist();
-          saveToLocalStorage();
+          saveState();
         };
         img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
 
-    function removePhoto(id) {
-      if (auditState[id]) {
-        auditState[id].photo = null;
+    function removePhoto(itemId) {
+      const erp = getActiveERP();
+      const scope = erp.activeTab === 'common' ? erp.commonScope : erp.floors.find(f => f.id === erp.activeTab);
+      if (scope && scope.items[itemId]) {
+        scope.items[itemId].photo = null;
         renderChecklist();
-        saveToLocalStorage();
+        saveState();
       }
     }
 
-    function resetAuditConfirm() {
-      if (confirm("Réinitialiser toutes les données de l'audit en cours ?")) {
-        auditState = {};
-        renderChecklist();
-        updateCalculations();
-        saveToLocalStorage();
-      }
+    function markCurrentScopeAllConform() {
+      const erp = getActiveERP();
+      const isCommon = erp.activeTab === 'common';
+      const criteria = isCommon ? auditNorms.common : auditNorms.floor;
+      const scope = isCommon ? erp.commonScope : erp.floors.find(f => f.id === erp.activeTab);
+
+      criteria.forEach(c => {
+        if (!scope.items[c.id]) scope.items[c.id] = { note: '', photo: null };
+        scope.items[c.id].status = 'C';
+      });
+
+      renderChecklist();
+      renderFloorTabs();
+      updateCalculations();
+      updateDropdownLabelOnly();
+      saveState();
+    }
+
+    function getScopeProgress(erp, scopeId) {
+      const isCommon = scopeId === 'common';
+      const criteria = isCommon ? auditNorms.common : auditNorms.floor;
+      const scope = isCommon ? erp.commonScope : erp.floors.find(f => f.id === scopeId);
+      if (!scope) return "0/0";
+
+      let done = 0;
+      criteria.forEach(c => {
+        const item = scope.items[c.id];
+        if (item && (item.status === 'C' || item.status === 'NC' || item.status === 'SO')) {
+          done++;
+        }
+      });
+      return `${done}/${criteria.length}`;
+    }
+
+    function getScopeScore(scopeObj, isCommon) {
+      const criteria = isCommon ? auditNorms.common : auditNorms.floor;
+      let c = 0, nc = 0;
+      criteria.forEach(crit => {
+        const it = scopeObj.items[crit.id];
+        if (it) {
+          if (it.status === 'C') c++;
+          if (it.status === 'NC') nc++;
+        }
+      });
+      const tot = c + nc;
+      return tot > 0 ? Math.round((c / tot) * 100) : 0;
+    }
+
+    function getERPGlobalScore(erp) {
+      let totalC = 0;
+      let totalNC = 0;
+
+      // Tronc commun
+      auditNorms.common.forEach(c => {
+        const it = erp.commonScope.items[c.id];
+        if (it) {
+          if (it.status === 'C') totalC++;
+          if (it.status === 'NC') totalNC++;
+        }
+      });
+
+      // Étages
+      erp.floors.forEach(fl => {
+        auditNorms.floor.forEach(c => {
+          const it = fl.items[c.id];
+          if (it) {
+            if (it.status === 'C') totalC++;
+            if (it.status === 'NC') totalNC++;
+          }
+        });
+      });
+
+      const evaluated = totalC + totalNC;
+      return evaluated > 0 ? Math.round((totalC / evaluated) * 100) : 0;
     }
 
     function updateCalculations() {
-      let c = 0, nc = 0, so = 0, total = 0;
-      const summaryBody = document.getElementById('printSummaryTableBody');
-      summaryBody.innerHTML = '';
+      const erp = getActiveERP();
+      let totalC = 0, totalNC = 0, totalSO = 0;
 
-      auditDatabase.forEach(cat => {
-        let catC = 0, catNC = 0, catSO = 0;
-        cat.items.forEach(item => {
-          total++;
-          const st = auditState[item.id] ? auditState[item.id].status : 'pending';
-          if (st === 'C') { c++; catC++; }
-          else if (st === 'NC') { nc++; catNC++; }
-          else if (st === 'SO') { so++; catSO++; }
-        });
-
-        // Update badge
-        const badge = document.getElementById(`cat-badge-${cat.id}`);
-        if (badge) {
-          const ev = catC + catNC + catSO;
-          badge.innerText = `${ev}/${cat.items.length}`;
+      auditNorms.common.forEach(c => {
+        const it = erp.commonScope.items[c.id];
+        if (it) {
+          if (it.status === 'C') totalC++;
+          else if (it.status === 'NC') totalNC++;
+          else if (it.status === 'SO') totalSO++;
         }
-
-        // Print table summary
-        const evCat = catC + catNC;
-        const scoreCat = evCat > 0 ? Math.round((catC / evCat) * 100) : '-';
-        const tr = document.createElement('tr');
-        tr.className = "border-b border-slate-300 py-1";
-        tr.innerHTML = `
-          <td class="py-1.5 font-medium">${cat.title}</td>
-          <td class="py-1.5 text-center text-emerald-700 font-bold">${catC}</td>
-          <td class="py-1.5 text-center text-red-600 font-bold">${catNC}</td>
-          <td class="py-1.5 text-center text-slate-600">${catSO}</td>
-          <td class="py-1.5 text-right font-bold">${scoreCat !== '-' ? scoreCat + '%' : 'N/A'}</td>
-        `;
-        summaryBody.appendChild(tr);
       });
 
-      const evaluated = c + nc;
-      const pct = evaluated > 0 ? Math.round((c / evaluated) * 100) : 0;
+      erp.floors.forEach(fl => {
+        auditNorms.floor.forEach(c => {
+          const it = fl.items[c.id];
+          if (it) {
+            if (it.status === 'C') totalC++;
+            else if (it.status === 'NC') totalNC++;
+            else if (it.status === 'SO') totalSO++;
+          }
+        });
+      });
 
-      document.getElementById('countC').innerText = c;
-      document.getElementById('countNC').innerText = nc;
-      document.getElementById('countSO').innerText = so;
-      document.getElementById('scorePercentage').innerText = `${pct}%`;
-      
-      const bar = document.getElementById('scoreBar');
-      bar.style.width = `${pct}%`;
+      const evaluated = totalC + totalNC;
+      const score = evaluated > 0 ? Math.round((totalC / evaluated) * 100) : 0;
+
+      document.getElementById('kpiCountC').innerText = totalC;
+      document.getElementById('kpiCountNC').innerText = totalNC;
+      document.getElementById('kpiCountSO').innerText = totalSO;
+      document.getElementById('kpiScoreGlobal').innerText = `${score}%`;
+
+      const bar = document.getElementById('kpiBarGlobal');
+      bar.style.width = `${score}%`;
+      if (score >= 80) bar.className = "bg-emerald-500 h-1.5 rounded-full transition-all duration-300";
+      else if (score >= 50) bar.className = "bg-amber-500 h-1.5 rounded-full transition-all duration-300";
+      else bar.className = "bg-red-500 h-1.5 rounded-full transition-all duration-300";
     }
 
-    function saveToLocalStorage() {
-      const payload = {
-        profile: currentProfile,
-        items: auditState,
-        meta: {
-          name: document.getElementById('metaName').value,
-          address: document.getElementById('metaAddress').value,
-          auditor: document.getElementById('metaAuditor').value,
-          date: document.getElementById('metaDate').value
+    function toggleParcModal() {
+      const modal = document.getElementById('parcModal');
+      const isHidden = modal.classList.contains('hidden');
+      if (isHidden) {
+        renderParcList(parkState.erps);
+        modal.classList.remove('hidden');
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    function updateParcBadge() {
+      document.getElementById('badgeParcCount').innerText = parkState.erps.length;
+    }
+
+    function renderParcList(list) {
+      const container = document.getElementById('parcListItemsContainer');
+      container.innerHTML = '';
+      document.getElementById('parcTotalCount').innerText = `${list.length} établissement(s)`;
+
+      list.forEach(erp => {
+        const score = getERPGlobalScore(erp);
+        const isActive = erp.id === parkState.activeERPId;
+
+        const row = document.createElement('div');
+        row.className = `p-3 rounded-2xl flex items-center justify-between gap-2 transition ${
+          isActive ? 'bg-teal-950/40 border border-teal-500/50' : 'bg-slate-900/60 border border-slate-800 hover:bg-slate-900'
+        }`;
+
+        row.innerHTML = `
+          <div class="flex-grow">
+            <div class="flex items-center gap-2">
+              <h5 class="text-xs font-bold text-white">${erp.name}</h5>
+              <span class="text-[9px] px-1.5 py-0.5 rounded font-mono ${erp.category === '5' ? 'bg-amber-500/20 text-amber-300' : 'bg-blue-500/20 text-blue-300'}">
+                Cat. ${erp.category || '5'}
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-0.5">${erp.address || 'Sans adresse'} • ${erp.floors.length} niveau(x)</p>
+          </div>
+          <div class="text-right shrink-0 flex items-center gap-2">
+            <span class="text-xs font-black ${score >= 80 ? 'text-emerald-400' : (score >= 50 ? 'text-amber-400' : 'text-slate-400')}">
+              ${score}%
+            </span>
+            <button onclick="selectERPFromParc('${erp.id}')" class="touch-btn px-2.5 py-1 text-xs font-bold rounded-xl ${
+              isActive ? 'bg-teal-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:text-white'
+            }">
+              ${isActive ? 'Actif' : 'Ouvrir'}
+            </button>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function filterParcList(query) {
+      const q = query.toLowerCase();
+      const filtered = parkState.erps.filter(e => 
+        e.name.toLowerCase().includes(q) || 
+        (e.address && e.address.toLowerCase().includes(q)) ||
+        (e.category && e.category.includes(q))
+      );
+      renderParcList(filtered);
+    }
+
+    function selectERPFromParc(id) {
+      parkState.activeERPId = id;
+      refreshDropdownAndMeta();
+      renderFloorTabs();
+      renderChecklist();
+      updateCalculations();
+      saveState();
+      toggleParcModal();
+    }
+
+    function handleCSVImport(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const text = e.target.result;
+          const lines = text.split(/\r\n|\n/).filter(line => line.trim().length > 0);
+          if (lines.length < 2) {
+            alert("Fichier CSV trop court ou vide.");
+            return;
+          }
+
+          // Détecter séparateur (; ou ,)
+          const separator = lines[0].includes(';') ? ';' : ',';
+          let importedCount = 0;
+
+          // Ignorer l'en-tête (ligne 0)
+          for (let i = 1; i < lines.length; i++) {
+            const cols = lines[i].split(separator).map(s => s.trim().replace(/^"|"$/g, ''));
+            if (cols.length >= 1 && cols[0]) {
+              const name = cols[0];
+              const address = cols[1] || "";
+              const cat = cols[2] || "5";
+              const annee = cols[3] || "1990";
+              const rawLevels = cols[4] || "RDC";
+
+              // Déduire profil réglementaire
+              let prof = "existant5";
+              if (parseInt(cat) >= 1 && parseInt(cat) <= 4) prof = "existant14";
+              if (parseInt(annee) >= 2017) prof = "neuf";
+
+              // Niveaux
+              const floorNames = rawLevels.split(/[,/]/).map(fn => fn.trim()).filter(Boolean);
+              const generatedFloors = floorNames.length > 0 ? floorNames.map((fn, idx) => ({
+                id: `fl_csv_${Date.now()}_${idx}`,
+                name: fn,
+                isGroundFloor: idx === 0,
+                prestationAtRdc: true,
+                items: {}
+              })) : [{ id: `fl_csv_${Date.now()}_0`, name: "Rez-de-chaussée", isGroundFloor: true, prestationAtRdc: true, items: {} }];
+
+              parkState.erps.push({
+                id: `erp_csv_${Date.now()}_${i}`,
+                name: name,
+                address: address,
+                category: cat,
+                constructionYear: annee,
+                profile: prof,
+                auditor: document.getElementById('metaAuditor').value || "Auditeur",
+                date: new Date().toISOString().split('T')[0],
+                activeTab: "common",
+                commonScope: { items: {} },
+                floors: generatedFloors
+              });
+              importedCount++;
+            }
+          }
+
+          refreshDropdownAndMeta();
+          renderFloorTabs();
+          renderChecklist();
+          updateCalculations();
+          updateParcBadge();
+          renderParcList(parkState.erps);
+          saveState();
+          alert(`Succès : ${importedCount} établissement(s) importé(s) dans le parc !`);
+        } catch (err) {
+          alert("Erreur de parsing CSV : " + err.message);
         }
       };
-      localStorage.setItem('pixel_audit_erp_data', JSON.stringify(payload));
+      reader.readAsText(file, "UTF-8");
+      event.target.value = '';
     }
 
-    function exportJSON() {
-      saveToLocalStorage();
-      const raw = localStorage.getItem('pixel_audit_erp_data');
-      const blob = new Blob([raw], { type: 'application/json' });
+    function downloadCSVTemplate() {
+      const csvHeader = "nom;adresse;categorie;annee_construction;niveaux\n";
+      const sample1 = "École Jean Moulin;14 Rue des Écoles;5;1982;RDC,R+1\n";
+      const sample2 = "Mairie Annexe Centre;Place de l'Hôtel de Ville;4;1920;RDC,R+1,R+2\n";
+      const sample3 = "Complexe Sportif Municipal;Avenue du Stade;3;2018;RDC\n";
+      const blob = new Blob([csvHeader + sample1 + sample2 + sample3], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `audit_erp_${(document.getElementById('metaName').value || 'batiment').replace(/\s+/g, '_')}.json`;
+      a.download = "modele_parc_erp.csv";
       a.click();
       URL.revokeObjectURL(url);
     }
 
+    function exportParcCSV() {
+      let csv = "ID;Nom;Adresse;Categorie;Annee;Profil;Score;Conformes;Non_Conformes;Sans_Objet\n";
+      parkState.erps.forEach(erp => {
+        let c = 0, nc = 0, so = 0;
+        auditNorms.common.forEach(cr => {
+          const it = erp.commonScope.items[cr.id];
+          if (it) {
+            if (it.status === 'C') c++;
+            else if (it.status === 'NC') nc++;
+            else if (it.status === 'SO') so++;
+          }
+        });
+        erp.floors.forEach(fl => {
+          auditNorms.floor.forEach(cr => {
+            const it = fl.items[cr.id];
+            if (it) {
+              if (it.status === 'C') c++;
+              else if (it.status === 'NC') nc++;
+              else if (it.status === 'SO') so++;
+            }
+          });
+        });
+        const evalTotal = c + nc;
+        const score = evalTotal > 0 ? Math.round((c / evalTotal) * 100) : 0;
+        csv += `"${erp.id}";"${erp.name.replace(/"/g, '""')}";"${erp.address.replace(/"/g, '""')}";"${erp.category}";"${erp.constructionYear}";"${erp.profile}";"${score}%";${c};${nc};${so}\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `bilan_consolide_parc_erp_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportCurrentJSON() {
+      const erp = getActiveERP();
+      const blob = new Blob([JSON.stringify(erp, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Audit_${erp.name.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function triggerPrintPDF() {
+      const erp = getActiveERP();
+      document.getElementById('printERPName').innerText = erp.name || '-';
+      document.getElementById('printERPAddress').innerText = erp.address || '-';
+      document.getElementById('printERPAuditor').innerText = erp.auditor || '-';
+      document.getElementById('printERPProfile').innerText = getProfileFull(erp.profile);
+      document.getElementById('printDatePlaceholder').innerText = new Date().toLocaleDateString('fr-FR');
+
+      // Générer le tableau de synthèse pour l'impression
+      const printContainer = document.getElementById('printFullReportContainer');
+      printContainer.innerHTML = '';
+
+      // 1. Synthèse globale
+      let reportHTML = `
+        <div class="print-box">
+          <h3 class="text-sm font-bold text-slate-900 border-b pb-1 mb-2">SYNTHÈSE DES CONTRÔLES PAR PÔLE</h3>
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b text-slate-600">
+                <th class="py-1">Niveau / Pôle</th>
+                <th class="text-center">Conformes</th>
+                <th class="text-center">Non conformes</th>
+                <th class="text-center">Sans Objet</th>
+                <th class="text-right">Score</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+
+      // Tronc commun
+      const comScore = getScopeScore(erp.commonScope, true);
+      let comC = 0, comNC = 0, comSO = 0;
+      auditNorms.common.forEach(cr => {
+        const it = erp.commonScope.items[cr.id];
+        if (it?.status === 'C') comC++;
+        else if (it?.status === 'NC') comNC++;
+        else if (it?.status === 'SO') comSO++;
+      });
+      reportHTML += `
+        <tr class="border-b">
+          <td class="py-1 font-semibold">Tronc Commun (Abords, Accueil, RPA)</td>
+          <td class="text-center font-bold text-emerald-800">${comC}</td>
+          <td class="text-center font-bold text-red-800">${comNC}</td>
+          <td class="text-center text-slate-600">${comSO}</td>
+          <td class="text-right font-bold">${comScore}%</td>
+        </tr>
+      `;
+
+      // Étages
+      erp.floors.forEach(fl => {
+        const flScore = getScopeScore(fl, false);
+        let fC = 0, fNC = 0, fSO = 0;
+        auditNorms.floor.forEach(cr => {
+          const it = fl.items[cr.id];
+          if (it?.status === 'C') fC++;
+          else if (it?.status === 'NC') fNC++;
+          else if (it?.status === 'SO') fSO++;
+        });
+        reportHTML += `
+          <tr class="border-b">
+            <td class="py-1 font-semibold">${fl.name}</td>
+            <td class="text-center font-bold text-emerald-800">${fC}</td>
+            <td class="text-center font-bold text-red-800">${fNC}</td>
+            <td class="text-center text-slate-600">${fSO}</td>
+            <td class="text-right font-bold">${flScore}%</td>
+          </tr>
+        `;
+      });
+
+      const totalScore = getERPGlobalScore(erp);
+      reportHTML += `
+            </tbody>
+          </table>
+          <div class="mt-2 text-right text-xs font-black">
+            Taux de conformité global de l'établissement : ${totalScore}%
+          </div>
+        </div>
+      `;
+
+      // 2. Détail des constats et photos
+      reportHTML += `<h3 class="text-sm font-bold text-slate-900 mt-4 mb-2">RELEVÉ DÉTAILLÉ DES ANOMALIES & PHOTOS DE TERRAIN</h3>`;
+
+      // Fonction d'ajout des anomalies
+      function appendScopeAnomalies(title, scope, criteria) {
+        let block = `<div class="avoid-break mb-3"><h4 class="text-xs font-bold text-slate-800 border-b pb-0.5 mb-1.5">${title}</h4>`;
+        let hasAnomaly = false;
+
+        criteria.forEach(cr => {
+          const it = scope.items[cr.id];
+          if (it && it.status === 'NC') {
+            hasAnomaly = true;
+            block += `
+              <div class="print-box mb-2">
+                <div class="flex justify-between items-start">
+                  <span class="font-bold text-xs text-red-900">${cr.label}</span>
+                  <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-100 text-red-800 border border-red-300">NON CONFORME</span>
+                </div>
+                <p class="text-[11px] text-slate-700 mt-0.5 font-mono">Exigence réglementaire : ${cr.rules[erp.profile] || ''}</p>
+                ${it.note ? `<p class="text-xs text-slate-900 mt-1"><strong>Constat / Cotes :</strong> ${escapeHtml(it.note)}</p>` : ''}
+                ${it.photo ? `<div class="mt-2"><img src="${it.photo}" class="print-img rounded"></div>` : ''}
+              </div>
+            `;
+          }
+        });
+
+        if (!hasAnomaly) {
+          block += `<p class="text-xs text-emerald-800 italic">Aucune non-conformité relevée sur ce pôle.</p>`;
+        }
+        block += `</div>`;
+        return block;
+      }
+
+      reportHTML += appendScopeAnomalies("Tronc Commun", erp.commonScope, auditNorms.common);
+      erp.floors.forEach(fl => {
+        reportHTML += appendScopeAnomalies(`Niveau : ${fl.name}`, fl, auditNorms.floor);
+      });
+
+      // Cadre de signature
+      reportHTML += `
+        <div class="avoid-break mt-6 pt-4 border-t border-slate-300 flex justify-between items-end text-xs">
+          <div>
+            <p class="font-bold">Visa et signature du diagnostiqueur :</p>
+            <div class="h-16 w-48 border border-dashed border-slate-400 mt-1 rounded"></div>
+          </div>
+          <div class="text-right text-slate-500">
+            <p>Auditeur ERP PWA • Document opposable CCDSA</p>
+          </div>
+        </div>
+      `;
+
+      printContainer.innerHTML = reportHTML;
+      window.print();
+    }
+
+    function getProfileShort(profile) {
+      if (profile === 'neuf') return 'Neuf';
+      if (profile === 'existant14') return 'Existant 1-4';
+      return '5e Catégorie';
+    }
+
+    function getProfileFull(profile) {
+      if (profile === 'neuf') return 'ERP Neuf (Arrêté 20/04/2017)';
+      if (profile === 'existant14') return 'Bâti Existant Cat. 1 à 4 (Arrêté 08/12/2014)';
+      return 'Bâti Existant 5ᵉ Catégorie (Arrêté 08/12/2014 & allègements)';
+    }
+
+    function getStatusText(status) {
+      if (status === 'C') return 'Conforme';
+      if (status === 'NC') return 'Non Conforme';
+      if (status === 'SO') return 'Sans Objet';
+      return 'À vérifier';
+    }
+
+    function getStatusBadgeClass(status) {
+      if (status === 'C') return 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+      if (status === 'NC') return 'bg-red-500/20 text-red-300 border border-red-500/30';
+      if (status === 'SO') return 'bg-slate-700 text-slate-300';
+      return 'bg-amber-500/20 text-amber-300 border border-amber-500/30';
+    }
+
+    function escapeHtml(str) {
+      return (str || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // Initialisation au chargement de la fenêtre
     window.addEventListener('DOMContentLoaded', initApp);
   </script>
 </body>
 </html>
-```
-eof
-
----
-
-### Instructions pour installer l'application sur votre Google Pixel :
-1. Enregistrez ce code complet dans un fichier nommé **`index.html`**.
-2. Envoyez-le sur votre Pixel (par câble USB, partage de fichiers ou hébergement rapide sur Vercel/GitHub Pages).
-3. Ouvrez le fichier dans **Google Chrome** sur votre Pixel.
-4. Appuyez sur le menu (trois points verticaux en haut à droite) et sélectionnez **"Installer l'application"** (ou "Ajouter à l'écran d'accueil").
-5. L'application s'installera comme une application native avec son icône, fonctionnera **100 % hors-ligne** (idéal pour les visites en sous-sol ou en zones blanches) et vous permettra d'utiliser directement l'appareil photo du Pixel pour documenter chaque point de contrôle.
