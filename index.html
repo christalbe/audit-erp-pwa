@@ -1,1507 +1,670 @@
 <!DOCTYPE html>
-<html lang="fr" class="h-full bg-slate-950 text-slate-100">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Audit Accessibilité ERP • Gestion de Parc PWA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Audit Accessibilité ERP</title>
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Google Fonts Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <!-- Configuration PWA Complète (Android / Pixel & iOS / Safari) -->
-  <meta name="theme-color" content="#090d16">
-  <meta name="mobile-web-app-capable" content="yes">
+  <!-- Configuration PWA & Compatibilité iOS / Android -->
+  <meta name="theme-color" content="#1e293b">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Audit ERP">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230f172a'/%3E%3Cpath fill='%2314b8a6' d='M50 18a10 10 0 100 20 10 10 0 000-20zm15 28H35a7 7 0 00-7 7v16a4 4 0 008 0V58h6v26a4 4 0 008 0V58h6v12a4 4 0 008 0V53a7 7 0 00-7-7z'/%3E%3C/svg%3E">
-  <link rel="manifest" id="manifestLink">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%232563eb'><rect width='100' height='100' rx='20' fill='%230f172a'/><text x='50' y='65' font-size='50' text-anchor='middle' fill='%2360a5fa'>♿</text></svg>">
+  <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiQXVkaXQgQWNjZXNzaWJpbGl0w6kgRVJQIiwic2hvcnRfbmFtZSI6IkF1ZGl0IEVSUCIsInN0YXJ0X3VybCI6Ii4vaW5kZXguaHRtbCIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwZjE3MmEiLCJ0aGVtZV9jb2xvciI6IiMxZTI5M2IiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTAwIDEwMCc+PHJlY3Qgd2lkdGg9JzEwMCcgaGVpZ2h0PScxMDAnIHJ4PScyMCcgZmlsbD0nIzBmMTcyYScvPjx0ZXh0IHg9JzUwJyB5PSc2NScgZm9udC1zaXplPSc1MCcgdGV4dC1hbmNob3I9J21pZGRsZScgZmlsbD0nIzYwYTVmYSc+4pm/PC90ZXh0Pjwvc3ZnPiIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9zdmcreG1sIn1dfQ==">
 
   <style>
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-      padding-top: env(safe-area-inset-top);
-      padding-bottom: env(safe-area-inset-bottom);
-    }
-    input, textarea, select {
-      user-select: text;
-    }
-    /* Touch target dimensions */
-    .touch-btn {
-      min-height: 48px;
-    }
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+    :root {
+      --bg: #0b1120;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #2563eb;
+      --primary-light: #60a5fa;
+      --primary-dark: #1d4ed8;
+      --conform-color: #0284c7; /* Bleu océan pour Conforme - AUCUN VERT */
+      --nc-color: #dc2626;      /* Rouge pour Non Conforme */
+      --so-color: #64748b;      /* Ardoise pour Sans Objet */
+      --warn-color: #d97706;    /* Ambre pour Alerte */
     }
 
-    @media print {
-      .no-print { display: none !important; }
-      .print-only { display: block !important; }
-      body {
-        background: #ffffff !important;
-        color: #0f172a !important;
-        font-size: 10pt;
-        padding: 0 !important;
-      }
-      .page-break { page-break-before: always; }
-      .avoid-break { break-inside: avoid; }
-      .print-box {
-        border: 1px solid #cbd5e1 !important;
-        border-radius: 6px !important;
-        padding: 10px !important;
-        margin-bottom: 8px !important;
-      }
-      .print-img {
-        max-height: 120px !important;
-        object-fit: cover !important;
-        border: 1px solid #cbd5e1 !important;
-      }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
+
+    header {
+      background: #0f172a;
+      border-bottom: 1px solid var(--card-border);
+      padding: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    .print-only { display: none; }
+    .header-top { display: flex; justify-content: space-between; align-items: center; }
+    .header-title { font-size: 1.15rem; font-weight: 700; color: #fff; }
+    
+    .gauge-wrapper { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+    .gauge-bar-bg { flex: 1; height: 10px; background: #334155; border-radius: 5px; overflow: hidden; }
+    .gauge-bar-fill { height: 100%; width: 0%; background: var(--primary); transition: width 0.3s ease; }
+    .gauge-text { font-size: 0.85rem; font-weight: 700; color: var(--primary-light); min-width: 48px; text-align: right; }
+
+    .container { padding: 14px; max-width: 900px; margin: 0 auto; }
+
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
+    .card-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; color: var(--primary-light); display: flex; justify-content: space-between; align-items: center; }
+
+    label { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px; }
+    input, select, textarea {
+      width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: #fff; padding: 10px; font-size: 0.9rem; margin-bottom: 10px;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); }
+
+    /* Sélecteur de profil */
+    .profile-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
+    .profile-tab {
+      background: #0f172a; border: 1px solid #334155; color: var(--text-muted); padding: 8px 4px; font-size: 0.75rem; text-align: center; border-radius: 8px; cursor: pointer; font-weight: 600;
+    }
+    .profile-tab.active { background: var(--primary); color: #fff; border-color: var(--primary-light); }
+
+    /* Sélecteur d'étage */
+    .etage-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 12px; }
+    .etage-btn {
+      background: #0f172a; border: 1px solid #334155; color: #fff; padding: 6px 14px; font-size: 0.85rem; border-radius: 20px; white-space: nowrap; cursor: pointer; font-weight: 600;
+    }
+    .etage-btn.active { background: var(--primary-dark); border-color: var(--primary-light); color: #fff; }
+    .btn-add-etage { background: #334155; border: none; color: #fff; border-radius: 20px; padding: 6px 14px; font-size: 0.85rem; cursor: pointer; white-space: nowrap; }
+
+    /* Critères d'audit */
+    .criterion-item { background: #162032; border: 1px solid #2d3c52; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+    .crit-title { font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .crit-desc { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.3; }
+    
+    .status-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px; }
+    .status-btn {
+      background: #0f172a; border: 1px solid #334155; color: var(--text-muted); padding: 8px; font-size: 0.8rem; font-weight: 700; border-radius: 6px; cursor: pointer; text-align: center;
+    }
+    .status-btn.c.active { background: var(--conform-color); color: #fff; border-color: #38bdf8; }
+    .status-btn.nc.active { background: var(--nc-color); color: #fff; border-color: #f87171; }
+    .status-btn.so.active { background: var(--so-color); color: #fff; border-color: #94a3b8; }
+
+    .photo-preview-wrap { display: flex; gap: 8px; overflow-x: auto; margin-top: 6px; }
+    .photo-thumb { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; border: 1px solid #475569; }
+
+    /* Barre d'action fixe en bas */
+    .bottom-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; background: #0f172a; border-top: 1px solid var(--card-border); padding: 10px 14px; display: flex; gap: 8px; z-index: 100;
+    }
+    .btn-action {
+      flex: 1; background: #334155; color: #fff; border: 1px solid #475569; border-radius: 8px; padding: 10px; font-size: 0.8rem; font-weight: 600; text-align: center; cursor: pointer;
+    }
+    .btn-primary { background: var(--primary); border-color: var(--primary-light); }
+
+    /* Impression PDF */
+    @media print {
+      body { background: #fff !important; color: #000 !important; padding: 0 !important; }
+      header, .bottom-bar, .profile-tabs, .etage-scroll, .btn-add-etage, input[type="file"], .status-btns { display: none !important; }
+      .card, .criterion-item { background: #fff !important; border: 1px solid #ccc !important; color: #000 !important; break-inside: avoid; }
+      .crit-title { color: #000 !important; }
+      .print-status { display: block !important; font-weight: bold; margin-top: 4px; }
+    }
+    .print-status { display: none; font-size: 0.85rem; }
   </style>
 </head>
-<body class="min-h-full flex flex-col bg-slate-950 text-slate-100 antialiased selection:bg-teal-500 selection:text-white pb-12">
+<body>
 
-  <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-md no-print">
-    <div class="max-w-6xl mx-auto px-3 sm:px-6 py-2.5 flex items-center justify-between gap-2">
-      <div class="flex items-center space-x-2.5">
-        <div class="w-9 h-9 rounded-xl bg-teal-500/20 text-teal-400 border border-teal-500/40 flex items-center justify-center font-black">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-          </svg>
-        </div>
-        <div>
-          <h1 class="text-sm sm:text-base font-bold text-white tracking-tight flex items-center gap-1.5 leading-none">
-            Audit ERP Pro <span class="text-[10px] font-semibold uppercase px-1.5 py-0.5 bg-teal-500/20 text-teal-300 rounded border border-teal-500/30">Parc & Étages</span>
-          </h1>
-          <p class="text-[11px] text-slate-400 mt-0.5">Arrêtés du 20/04/2017 & 08/12/2014</p>
-        </div>
+  <header>
+    <div class="header-top">
+      <div class="header-title" id="displayErpNom">Audit Accessibilité ERP</div>
+      <div style="font-size: 0.8rem; color: var(--text-muted);" id="currentCategoryBadge">5e Catégorie</div>
+    </div>
+    <div class="gauge-wrapper">
+      <div class="gauge-bar-bg">
+        <div id="gaugeBar" class="gauge-bar-fill"></div>
       </div>
-
-      <div class="flex items-center gap-1.5">
-        <button onclick="toggleParcModal()" class="touch-btn px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition active:scale-95 shadow-sm" title="Gérer le parc municipal">
-          <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-          <span class="hidden sm:inline">Parc ERP</span>
-          <span id="badgeParcCount" class="text-[10px] px-1.5 py-0.5 rounded-full bg-teal-500/30 text-teal-300 font-mono">0</span>
-        </button>
-
-        <button onclick="exportCurrentJSON()" class="touch-btn px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition active:scale-95 shadow-sm" title="Exporter cet audit en JSON">
-          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
-          <span class="hidden md:inline">Sauvegarder</span>
-        </button>
-
-        <button onclick="triggerPrintPDF()" class="touch-btn px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95 shadow-md shadow-teal-950/40">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-          <span>PDF</span>
-        </button>
-      </div>
+      <div id="gaugeScore" class="gauge-text">0 %</div>
     </div>
   </header>
 
-  <main class="max-w-6xl mx-auto px-3 sm:px-6 py-4 w-full flex-grow space-y-4">
-
-    <div class="print-only text-slate-950 border-b-2 border-slate-900 pb-3 mb-4">
-      <div class="flex justify-between items-start">
+  <div class="container">
+    <!-- Sélection de l'ERP & Import Parc CSV -->
+    <div class="card">
+      <div class="card-title">
+        <span>Bâtiment audité</span>
+        <button type="button" class="btn-action" style="flex:none; padding:4px 8px; font-size:0.75rem;" onclick="document.getElementById('csvInput').click()">Importer Parc (CSV)</button>
+        <input type="file" id="csvInput" accept=".csv" style="display:none" onchange="importerParcCSV(event)">
+      </div>
+      <label>Sélectionner un bâtiment du parc :</label>
+      <select id="erpSelect" onchange="changerErpSelectionne(this.value)">
+        <option value="">-- Saisie manuelle ou choisir un ERP --</option>
+      </select>
+      <div style="display:grid; grid-template-columns: 2fr 1fr; gap:8px;">
         <div>
-          <h1 class="text-xl font-black uppercase tracking-tight">RAPPORT OFFICIEL D'ACCESSIBILITÉ ERP</h1>
-          <p class="text-xs text-slate-600">Application des Arrêtés du 20 avril 2017 et du 8 décembre 2014</p>
-        </div>
-        <div class="text-right text-xs">
-          <p class="font-bold">Généré le : <span id="printDatePlaceholder"></span></p>
-          <p class="text-slate-500">Auditeur PWA certifié</p>
-        </div>
-      </div>
-      <div class="mt-3 grid grid-cols-2 gap-2 text-xs bg-slate-100 p-2.5 rounded border border-slate-300">
-        <div><strong>Établissement :</strong> <span id="printERPName">-</span></div>
-        <div><strong>Adresse :</strong> <span id="printERPAddress">-</span></div>
-        <div><strong>Auditeur :</strong> <span id="printERPAuditor">-</span></div>
-        <div><strong>Cadre normatif :</strong> <span id="printERPProfile">-</span></div>
-      </div>
-    </div>
-
-    <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-4 shadow-xl no-print space-y-3.5">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-slate-800 pb-3">
-        <div class="flex-grow">
-          <label class="text-[10px] font-bold uppercase tracking-wider text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">
-            Établissement actif
-          </label>
-          <div class="mt-1 flex items-center gap-2">
-            <select id="erpSelectDropdown" onchange="onSelectERPChange(this.value)" class="touch-btn w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white font-semibold text-sm focus:outline-none focus:border-teal-500">
-              <!-- Dynamically populated -->
-            </select>
-          </div>
-        </div>
-        <div class="flex items-center gap-2 shrink-0">
-          <button onclick="createNewERP()" class="touch-btn px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition active:scale-95">
-            <span>+ Nouvel ERP</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Regulatory Profile Selector -->
-      <div class="space-y-1.5">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">Cadre Réglementaire :</span>
-          <span id="saveBadge" class="text-[11px] text-slate-500 flex items-center gap-1 font-mono">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Synchro active
-          </span>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-          <button type="button" onclick="setProfile('neuf')" id="prof-btn-neuf" class="touch-btn p-2.5 rounded-xl border text-left transition flex flex-col justify-center">
-            <span class="text-xs font-bold">🏢 ERP Neuf</span>
-            <span class="text-[10px] text-slate-400">Arrêté 20/04/2017 • Exigences maximales</span>
-          </button>
-          <button type="button" onclick="setProfile('existant14')" id="prof-btn-existant14" class="touch-btn p-2.5 rounded-xl border text-left transition flex flex-col justify-center">
-            <span class="text-xs font-bold">🏛️ Existant (Cat. 1 à 4)</span>
-            <span class="text-[10px] text-slate-400">Arrêté 08/12/2014 • Tolérances bâti ancien</span>
-          </button>
-          <button type="button" onclick="setProfile('existant5')" id="prof-btn-existant5" class="touch-btn p-2.5 rounded-xl border text-left transition flex flex-col justify-center">
-            <span class="text-xs font-bold">🏬 Existant (5ᵉ Catégorie)</span>
-            <span class="text-[10px] text-slate-400">Petits ERP • Allègements d'ascenseur</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- General Info Inputs -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5 pt-1 text-xs">
-        <div>
-          <label class="block text-slate-400 font-medium mb-1">Nom du Bâtiment</label>
-          <input type="text" id="metaName" oninput="updateActiveERPMeta()" placeholder="Ex: École Jean Moulin" class="touch-btn w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-teal-500">
+          <label>Nom de l'établissement :</label>
+          <input type="text" id="nomERP" placeholder="ex: Groupe Scolaire Curie" oninput="mettreAJourNom(this.value)">
         </div>
         <div>
-          <label class="block text-slate-400 font-medium mb-1">Adresse</label>
-          <input type="text" id="metaAddress" oninput="updateActiveERPMeta()" placeholder="Ex: 14 Av. des Écoles" class="touch-btn w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-teal-500">
-        </div>
-        <div>
-          <label class="block text-slate-400 font-medium mb-1">Auditeur / Diagnostiqueur</label>
-          <input type="text" id="metaAuditor" oninput="updateActiveERPMeta()" placeholder="Ex: M. Dupont" class="touch-btn w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-teal-500">
-        </div>
-        <div>
-          <label class="block text-slate-400 font-medium mb-1">Date d'inspection</label>
-          <input type="date" id="metaDate" onchange="updateActiveERPMeta()" class="touch-btn w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-teal-500">
+          <label>Date :</label>
+          <input type="date" id="dateAudit">
         </div>
       </div>
     </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 no-print">
-      <div class="bg-slate-900/90 rounded-2xl p-3.5 border border-slate-800 flex flex-col justify-between shadow-md">
-        <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Score Global ERP</span>
-        <div class="flex items-baseline gap-2 mt-1">
-          <span id="kpiScoreGlobal" class="text-3xl font-black text-teal-400">0%</span>
-        </div>
-        <div class="w-full bg-slate-800 rounded-full h-1.5 mt-2 overflow-hidden">
-          <div id="kpiBarGlobal" class="bg-teal-500 h-1.5 rounded-full transition-all duration-300" style="width: 0%"></div>
-        </div>
-      </div>
-
-      <div class="bg-slate-900/90 rounded-2xl p-3.5 border border-slate-800 shadow-md">
-        <div class="flex items-center justify-between">
-          <span class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Conformes (C)</span>
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-        </div>
-        <span id="kpiCountC" class="text-2xl font-black text-emerald-300 mt-1 block">0</span>
-        <span class="text-[10px] text-slate-500">Critères validés</span>
-      </div>
-
-      <div class="bg-slate-900/90 rounded-2xl p-3.5 border border-slate-800 shadow-md">
-        <div class="flex items-center justify-between">
-          <span class="text-[11px] font-semibold text-red-400 uppercase tracking-wider">Non Conformes (NC)</span>
-          <span class="w-2 h-2 rounded-full bg-red-500"></span>
-        </div>
-        <span id="kpiCountNC" class="text-2xl font-black text-red-300 mt-1 block">0</span>
-        <span class="text-[10px] text-slate-500">Points à corriger</span>
-      </div>
-
-      <div class="bg-slate-900/90 rounded-2xl p-3.5 border border-slate-800 shadow-md">
-        <div class="flex items-center justify-between">
-          <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Sans Objet (SO)</span>
-          <span class="w-2 h-2 rounded-full bg-slate-500"></span>
-        </div>
-        <span id="kpiCountSO" class="text-2xl font-black text-slate-300 mt-1 block">0</span>
-        <span class="text-[10px] text-slate-500">Dispensés / Non soumis</span>
+    <!-- Choix du Profil Réglementaire -->
+    <div class="card">
+      <label>Profil réglementaire appliqué :</label>
+      <div class="profile-tabs">
+        <div class="profile-tab active" id="prof_neuf" onclick="changerProfil('neuf')">Neuf (Arrêté 2017)</div>
+        <div class="profile-tab" id="prof_existant_1_4" onclick="changerProfil('existant_1_4')">Existant (Cat 1-4)</div>
+        <div class="profile-tab" id="prof_existant_5" onclick="changerProfil('existant_5')">Existant (5e Cat)</div>
       </div>
     </div>
 
-    <div class="no-print space-y-2">
-      <div class="flex items-center justify-between gap-2">
-        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Niveaux & Troncs d'inspection</span>
-        <button onclick="promptAddFloor()" class="touch-btn px-3 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold flex items-center gap-1.5 transition shadow-sm active:scale-95">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-          <span>Ajouter un niveau</span>
-        </button>
+    <!-- Navigation Niveaux / Étages -->
+    <div class="card">
+      <div class="card-title">
+        <span>Zone / Niveau évalué</span>
       </div>
-
-      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="floorTabsBar">
-        <!-- Rendered dynamically -->
+      <div class="etage-scroll" id="etagesConteneur">
+        <button type="button" class="etage-btn active" onclick="selectionnerEtage('tronc')">Extérieurs & Accueil</button>
+        <button type="button" class="etage-btn" onclick="selectionnerEtage('RDC')">RDC</button>
       </div>
+      <button type="button" class="btn-add-etage" onclick="ajouterEtage()">+ Ajouter un étage / sous-sol</button>
     </div>
 
-    <!-- Filter Buttons Bar -->
-    <div class="flex flex-wrap items-center justify-between gap-2 no-print pt-1">
-      <div class="inline-flex rounded-xl border border-slate-800 bg-slate-900/90 p-1 text-xs">
-        <button onclick="setFilter('all')" id="fil-btn-all" class="px-3 py-1.5 rounded-lg font-semibold transition bg-teal-600 text-white">Tous</button>
-        <button onclick="setFilter('NC')" id="fil-btn-NC" class="px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition">Non conformes</button>
-        <button onclick="setFilter('pending')" id="fil-btn-pending" class="px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition">À contrôler</button>
-      </div>
+    <!-- Liste des critères d'évaluation dynamique -->
+    <div id="listeCriteres"></div>
+  </div>
 
-      <div class="flex items-center gap-2">
-        <button onclick="markCurrentScopeAllConform()" class="touch-btn text-xs font-medium text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 px-3 py-1.5 rounded-xl transition">
-          ✓ Valider cet écran
-        </button>
-        <button onclick="deleteCurrentFloor()" id="btnDeleteLevel" class="hidden touch-btn text-xs font-medium text-red-400 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 px-3 py-1.5 rounded-xl transition">
-          🗑 Supprimer ce niveau
-        </button>
-      </div>
-    </div>
-
-    <div id="checklistItemsContainer" class="space-y-3.5 no-print">
-      <!-- Injected via JavaScript -->
-    </div>
-
-    <!-- Printable Full Report Container -->
-    <div id="printFullReportContainer" class="print-only text-slate-950 space-y-6">
-      <!-- Injected via JavaScript before printing -->
-    </div>
-
-  </main>
-
-  <div id="parcModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 no-print">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
-      <!-- Modal Header -->
-      <div class="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
-        <div>
-          <h3 class="text-base font-bold text-white flex items-center gap-2">
-            <span>🏛️ Gestionnaire de Parc ERP</span>
-          </h3>
-          <p class="text-xs text-slate-400 mt-0.5">Import CSV municipal & suivi d'avancement</p>
-        </div>
-        <button onclick="toggleParcModal()" class="text-slate-400 hover:text-white p-2 rounded-xl bg-slate-800 transition">✕</button>
-      </div>
-
-      <!-- Actions Bar -->
-      <div class="p-4 border-b border-slate-800 bg-slate-900/50 flex flex-wrap items-center justify-between gap-2 text-xs">
-        <div class="flex items-center gap-2">
-          <label class="touch-btn px-3 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold cursor-pointer flex items-center gap-1.5 transition shadow-sm">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-            <span>Importer CSV</span>
-            <input type="file" id="csvFileInput" accept=".csv, .txt" class="hidden" onchange="handleCSVImport(event)">
-          </label>
-
-          <button onclick="exportParcCSV()" class="touch-btn px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold flex items-center gap-1.5 transition">
-            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
-            <span>Bilan Parc (CSV)</span>
-          </button>
-        </div>
-
-        <button onclick="downloadCSVTemplate()" class="text-xs text-teal-400 hover:underline">
-          Télécharger modèle CSV
-        </button>
-      </div>
-
-      <!-- Search and List -->
-      <div class="p-4 border-b border-slate-800 bg-slate-950/40">
-        <input type="text" id="parcSearchInput" oninput="filterParcList(this.value)" placeholder="Rechercher par nom, catégorie, adresse..." class="touch-btn w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:outline-none focus:border-teal-500">
-      </div>
-
-      <div class="flex-grow overflow-y-auto p-4 divide-y divide-slate-800/80 space-y-2" id="parcListItemsContainer">
-        <!-- Rendered via JS -->
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="p-3 border-t border-slate-800 bg-slate-950/60 flex items-center justify-between text-xs">
-        <span id="parcTotalCount" class="text-slate-400 font-mono">0 établissement(s)</span>
-        <button onclick="toggleParcModal()" class="touch-btn px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold transition">Fermer</button>
-      </div>
-    </div>
+  <!-- Barre d'action fixe inférieure -->
+  <div class="bottom-bar">
+    <button type="button" class="btn-action" onclick="document.getElementById('jsonInput').click()">📂 Ouvrir</button>
+    <button type="button" class="btn-action" onclick="exporterAuditJSON()">💾 Enregistrer</button>
+    <button type="button" class="btn-action" onclick="exporterSyntheseCSV()">📊 Synthèse CSV</button>
+    <button type="button" class="btn-action btn-primary" onclick="window.print()">🖨 Rapport PDF</button>
+    <input type="file" id="jsonInput" accept=".json" style="display:none" onchange="importerAuditJSON(event)">
   </div>
 
   <script>
-    /* =========================================================================
-       1. BASE DE DONNÉES RÉGLEMENTAIRE (ARRETES 2017 & 2014)
-       ========================================================================= */
-    const auditNorms = {
-      // Points du TRONC COMMUN (Extérieurs, Entrée, RPA)
-      common: [
+    // --- 1. BASE DE DONNÉES DES CRITÈRES EXHAUSTIFS ---
+    const REFERENTIEL = {
+      tronc: [
         {
-          id: "com_stationnement",
-          cat: "Stationnement & Abords",
-          label: "Stationnement réservé PMR",
-          desc: "Au moins 2 % du total des places réservé (min. 1 place). Raccordement de plain-pied.",
-          rules: {
-            neuf: "Largeur min. 3,30 m (dont bande latérale de 0,80 m). Pente ≤ 2 %. Signalétique sol et panneau B6d + M6h.",
-            existant14: "Largeur min. 3,30 m. Pente ≤ 2 %. Place la plus proche possible de l'accès principal.",
-            existant5: "1 place PMR de 3,30 m si stationnement privé réservé à la clientèle. SANS OBJET si aucun parking dédié."
-          }
+          id: "stationnement",
+          titre: "Stationnement réservé PMR",
+          desc: "≥ 2 % des places (min 1). Largeur ≥ 3,30 m, pente ≤ 2 %. Raccordement direct sans ressaut.",
+          neuf: "Largeur stricte 3,30 m, pente max 2 %.",
+          existant_1_4: "Emplacement au plus proche de l'entrée, bateau d'accès sans ressaut > 2 cm.",
+          existant_5: "Si parking réservé au public : 1 place adaptée obligatoire sauf contrainte technique."
         },
         {
-          id: "com_cheminement",
-          cat: "Stationnement & Abords",
-          label: "Pente du cheminement d'accès extérieur",
-          desc: "Pente longitudinale et dévers reliant la voirie ou le parking à l'entrée.",
-          rules: {
-            neuf: "Pente ≤ 5 % (tolérance : 8 % sur 2 m, 10 % sur 0,5 m avec palier de repos 1,40 × 1,20 m tous les 10 m). Dévers ≤ 2 %.",
-            existant14: "Pente max. 5 %. Tolérance jusqu'à 12 % sur 0,50 m en contrainte topographique avérée. Dévers ≤ 2 %.",
-            existant5: "Pente 5 % (tolérance 12 % sur 0,5 m). Rampe amovible avec bouton d'appel autorisée avec dérogation/accord."
-          }
+          id: "cheminement_ext",
+          titre: "Cheminement d'accès extérieur",
+          desc: "Largeur libre ≥ 1,20 m. Absence d'obstacle au sol. Sol non meuble et antidérapant.",
+          neuf: "Pente ≤ 5 % (tolérance 8 % sur 2 m, 10 % sur 0,5 m). Paliers de repos de 1,40 × 1,20 m.",
+          existant_1_4: "Tolérance de pente jusqu'à 12 % sur 0,50 m si impossibilité topographique.",
+          existant_5: "Tolérance élargie et dérogation possible si dénivelé de voirie insurmontable."
         },
         {
-          id: "com_entree_porte",
-          cat: "Entrée & Accueil Principal",
-          label: "Largeur de passage utile de la porte d'entrée",
-          desc: "Largeur libre mesurée avec la porte ouverte à 90°.",
-          rules: {
-            neuf: "Largeur utile minimale de 0,83 m (porte nominale 0,90 m requise).",
-            existant14: "Largeur utile minimale de 0,77 m admise (porte nominale 0,80 m).",
-            existant5: "Largeur utile de 0,77 m admise. Si vantaux asymétriques, le vantail principal doit atteindre 0,77 m min."
-          }
+          id: "entree_seuil",
+          titre: "Porte d'entrée & Seuil",
+          desc: "Largeur utile minimale, manœuvre de porte Ø 1,50 m, seuil plat ou chanfreiné.",
+          neuf: "Largeur utile ≥ 0,83 m. Seuil ≤ 2 cm chanfreiné. Effort d'ouverture ≤ 50 N.",
+          existant_1_4: "Largeur utile ≥ 0,77 m admise. Dispositif d'appel extérieur si seuil non modifiable.",
+          existant_5: "Largeur utile ≥ 0,77 m admise. Visiophone/sonnette accessible entre 0,90 et 1,30 m."
         },
         {
-          id: "com_entree_seuil",
-          cat: "Entrée & Accueil Principal",
-          label: "Seuil de porte & Aire de rotation",
-          desc: "Franchissement sans ressaut et manœuvre de porte.",
-          rules: {
-            neuf: "Seuil ≤ 2 cm chanfreiné. Aire de manœuvre de Ø 1,50 m libre de tout obstacle. Effort d'ouverture manuel ≤ 50 N.",
-            existant14: "Seuil ≤ 2 cm (ou chanfreiné 4 cm à 33 %). Empiètement de la porte admis sur le cercle de rotation.",
-            existant5: "Seuil ≤ 2 cm ou plan incliné d'appoint avec carillon d'appel si marche conservée."
-          }
+          id: "accueil_banque",
+          titre: "Banque d'accueil & Sonorisation",
+          desc: "Poste abaissé avec vide pour les genoux. Boucle à Induction Magnétique (BIM).",
+          neuf: "Partie surbaissée hauteur ≤ 0,80 m, vide sous table 0,70×0,60 m. BIM fixe obligatoire.",
+          existant_1_4: "Hauteur ≤ 0,80 m ou tablette amovible. BIM fixe à l'accueil principal.",
+          existant_5: "Tablette ou guichet abaissé. BIM mobile tolérée si accueil ponctuel."
         },
         {
-          id: "com_accueil_banque",
-          cat: "Entrée & Accueil Principal",
-          label: "Banque d'accueil & Boucle auditive (BIM)",
-          desc: "Comptoir adapté pour personne assise/debout et équipement malentendants.",
-          rules: {
-            neuf: "Hauteur max. 0,80 m (vide sous table : haut. ≥ 0,70 m, larg. ≥ 0,60 m, prof. ≥ 0,30 m). Boucle BIM fixe obligatoire.",
-            existant14: "Banque surbaissée requise ou tablette rabattable aux normes (0,80 m). Boucle BIM fixe requise.",
-            existant5: "Partie surbaissée ou tablette amovible. BIM mobile tolérée (obligatoire uniquement si service public)."
-          }
+          id: "eclairage_ext_accueil",
+          titre: "Éclairage & Luxmétrie (Abords & Accueil)",
+          desc: "Éclairement minimal mesuré au sol et absence d'éblouissement.",
+          neuf: "≥ 20 lux sur cheminement ext., ≥ 100 lux sous abri, ≥ 200 lux au poste d'accueil.",
+          existant_1_4: "≥ 20 lux ext., ≥ 200 lux au poste d'accueil pour la lecture labiale.",
+          existant_5: "Éclairage direct suffisant sur le visage de l'agent sans contre-jour."
         },
         {
-          id: "com_rpa",
-          cat: "Registre Public d'Accessibilité",
-          label: "Mise à disposition du Registre (RPA)",
-          desc: "Obligation légale pour TOUS les ERP (Décret n° 2017-431).",
-          rules: {
-            neuf: "Registre consultable sur place (attestation d'achèvement, fiche de formation du personnel d'accueil).",
-            existant14: "Registre à disposition : attestation de conformité ou agenda Ad'AP approuvé, arrêtés de dérogations éventuels.",
-            existant5: "OBLIGATOIRE même en 5ᵉ catégorie ! Format allégé : notice d'accessibilité et attestation de sensibilisation."
-          }
+          id: "registre_rpa",
+          titre: "Registre Public d'Accessibilité (RPA)",
+          desc: "Mise à disposition du public des attestations, formation du personnel et fiches.",
+          neuf: "Document complet disponible à l'accueil et consultable en ligne ou sur place.",
+          existant_1_4: "Attestation de conformité ou calendrier d'agenda d'accessibilité (Ad'AP).",
+          existant_5: "RPA obligatoire sous format allégé (attestation, fiche synthétique, formation accueil)."
         }
       ],
-
-      // Points RÉPÉTÉS pour chaque ÉTAGE / NIVEAU
-      floor: [
+      etage: [
         {
-          id: "fl_desserte",
-          cat: "Circulation Verticale vers ce niveau",
-          label: "Ascenseur ou appareil élévateur",
-          desc: "Continuité mécanique de déplacement vers ce niveau.",
-          rules: {
-            neuf: "Ascenseur obligatoire dès 50 pers. en étage ou prestations non équivalentes au RDC. Norme EN 81-70.",
-            existant14: "Ascenseur obligatoire sauf impossibilité technique ou disproportion manifeste validée par la CCDSA.",
-            existant5: "DISPENSE TOTALE si la prestation ouverte au public est disponible de plain-pied au rez-de-chaussée."
-          }
+          id: "circulations_horiz",
+          titre: "Circulations horizontales intérieures",
+          desc: "Largeur utile des couloirs, passage sans obstacle et zones d'évitement.",
+          neuf: "Largeur nominale ≥ 1,40 m continu. Espaces de demi-tour (Ø 1,50 m) tous les 6 m.",
+          existant_1_4: "Largeur ≥ 1,20 m principal (0,90 m ponctuel admis avec zones de croisement).",
+          existant_5: "Largeur ≥ 1,20 m (0,90 m toléré en circulation secondaire)."
         },
         {
-          id: "fl_escalier_secu",
-          cat: "Circulation Verticale vers ce niveau",
-          label: "Sécurité de l'escalier (BEV, Nez, Contremarches)",
-          desc: "Avertissement podotactile et contraste visuel.",
-          rules: {
-            neuf: "BEV podotactile à 50 cm de la première marche descendante. Nez contrastés et non glissants. Première et dernière contremarches contrastées (10 cm). Deux mains courantes.",
-            existant14: "BEV en haut de chaque volée. Nez et contremarches contrastés. Une main courante tolérée si largeur < 1,00 m.",
-            existant5: "BEV obligatoire en haut. Nez contrastés antidérapants. Au moins une main courante rigide continue."
-          }
+          id: "portes_interieures",
+          titre: "Portes intérieures & Sas",
+          desc: "Largeur de passage utile, poignées facilement manœuvrables (0,90 m à 1,30 m).",
+          neuf: "Largeur libre ≥ 0,83 m. Espace de manœuvre rectangulaire hors débattement.",
+          existant_1_4: "Largeur utile ≥ 0,77 m admise. Poignées préhensibles sans serrage du poignet.",
+          existant_5: "Largeur utile ≥ 0,77 m admise."
         },
         {
-          id: "fl_couloirs",
-          cat: "Circulations Horizontales",
-          label: "Largeur utile des couloirs & Dégagements",
-          desc: "Aisance de passage et croisement des fauteuils roulants.",
-          rules: {
-            neuf: "Largeur utile minimale de 1,40 m continu (croisement de 2 personnes en fauteuil).",
-            existant14: "Largeur min. 1,20 m en principal (0,90 m à 1,00 m ponctuel admis avec zones de croisement tous les 10 m).",
-            existant5: "Largeur min. 1,20 m (ou 0,90 m ponctuel sur circulations secondaires sans prestation majeure)."
-          }
+          id: "escaliers_interieurs",
+          titre: "Escaliers intérieurs (si présents au niveau)",
+          desc: "Sécurisation tactile, visuelle et préhension des marches.",
+          neuf: "BEV à 50 cm du nez supérieur. 1re/dernière contremarches contrastées. 2 mains courantes.",
+          existant_1_4: "Idem neuf. 1 seule main courante admise si largeur utile < 1,00 m.",
+          existant_5: "BEV et nez de marches antidérapants obligatoires. 1 main courante tolérée."
         },
         {
-          id: "fl_portes",
-          cat: "Circulations Horizontales",
-          label: "Portes intérieures & Poignées",
-          desc: "Passage utile et manœuvrabilité.",
-          rules: {
-            neuf: "Largeur utile min. 0,83 m. Poignées entre 0,90 m et 1,30 m. Effort d'ouverture ≤ 50 N.",
-            existant14: "Largeur utile min. 0,77 m admise. Poignées préhensibles en position debout ou assise.",
-            existant5: "Largeur utile de 0,77 m admise sur les portes d'accès aux prestations publiques."
-          }
+          id: "ascenseur_desserte",
+          titre: "Ascenseur / Desserte verticale",
+          desc: "Cabine adaptée et annonces multisensorielles.",
+          neuf: "Obligatoire si étage > 50 personnes. Cabine 1,10×1,40 m, annonces vocales et visuelles.",
+          existant_1_4: "Ascenseur ou appareil élévateur obligatoire sauf dérogation technique ou disproportion.",
+          existant_5: "NON OBLIGATOIRE si l'ensemble des prestations délivrées est accessible au rez-de-chaussée."
         },
         {
-          id: "fl_vitrage",
-          cat: "Circulations Horizontales",
-          label: "Repérage des parois et portes vitrées",
-          desc: "Bandes de contraste anti-heurt à hauteur des yeux.",
-          rules: {
-            neuf: "Bandes visuelles contrastées à 1,10 m et 1,60 m de hauteur sur chaque baie vitrée.",
-            existant14: "Bandes contrastées indispensables à 1,10 m et 1,60 m (largeur min. 5 cm).",
-            existant5: "Repérage visuel contrasté indispensable sur toute paroi vitrée transparente."
-          }
+          id: "sanitaires_pmr",
+          titre: "Cabinet d'aisances adapté (PMR)",
+          desc: "Espace latéral de transfert, cuvette à hauteur et barre d'appui.",
+          neuf: "Espace d'usage 0,80×1,30 m à côté de la cuvette (0,45-0,50 m). Ø 1,50 m hors débattement.",
+          existant_1_4: "Débattement de porte empiétant sur le cercle admis si ouverture vers l'extérieur.",
+          existant_5: "SANS OBJET si les sanitaires sont exclusivement réservés au personnel."
         },
         {
-          id: "fl_wc_pmr",
-          cat: "Sanitaires du niveau",
-          label: "Cabinet d'aisances adapté PMR",
-          desc: "Espace de manœuvre, aire de transfert et équipements.",
-          rules: {
-            neuf: "Au moins 1 WC adapté si sanitaires présents. Espace Ø 1,50 m strictement hors débattement. Espace latéral 0,80 × 1,30 m. Barre à 0,70-0,80 m.",
-            existant14: "Espace Ø 1,50 m et latéral 0,80 × 1,30 m. Débattement de porte sur l'espace admis si ouvrant ext. ou coulissant.",
-            existant5: "SANS OBJET si les sanitaires sont strictement réservés à l'usage interne du personnel."
-          }
+          id: "acoustique_reverb",
+          titre: "Traitement acoustique & Réverbération",
+          desc: "Limitation de l'écho dans les espaces d'attente et salles de réunion.",
+          neuf: "Temps de réverbération Tr ≤ 0,8 s à 1,2 s selon volume (matériaux absorbants).",
+          existant_1_4: "Traitement obligatoire lors de travaux de rénovation de faux-plafonds ou revêtements.",
+          existant_5: "Vérifier l'intelligibilité de la parole dans les espaces d'entretien individuel."
         },
         {
-          id: "fl_alarme_flash",
-          cat: "Sécurité & Évacuation",
-          label: "Alarme visuelle (Flashs) & Espaces d'Attente (EAS)",
-          desc: "Signalisation bimodal et zone refuge temporaire.",
-          rules: {
-            neuf: "Flashs d'alarme dans les sanitaires et locaux isolés. EAS obligatoire à chaque étage accessible.",
-            existant14: "Flash lumineux dans sanitaires PMR. EAS ou zone d'évacuation différée validée avec les pompiers.",
-            existant5: "Flash d'alarme si sanitaires isolés et présence d'un SSI. EAS requis uniquement si public hébergé en étage sans sortie directe."
-          }
+          id: "obstacles_220",
+          titre: "Obstacles en saillie sous 2,20 m",
+          desc: "Détection des obstacles bas à la canne blanche pour les malvoyants.",
+          neuf: "Tout élément saillant sous 2,20 m doit comporter un rappel au sol à moins de 0,40 m.",
+          existant_1_4: "Équipements suspendus (écrans, sous-faces d'escaliers) sécurisés ou prolongés au sol.",
+          existant_5: "Vérifier les caissons et tableaux sous les montées d'escalier."
+        },
+        {
+          id: "signaletique_vitrages",
+          titre: "Signalétique & Vitrages",
+          desc: "Hauteurs de lisibilité, contraste visuel et repérage des baies vitrées.",
+          neuf: "Vitrages munis de bandes contrastées à 1,10 m et 1,60 m. Signalétique tactile/visuelle à 1,30 m.",
+          existant_1_4: "Vitrages transparents obligatoirement signalés. Contraste ≥ 70 % sur panneaux d'orientation.",
+          existant_5: "Vitrages repérés à hauteur des yeux et des enfants."
+        },
+        {
+          id: "securite_eas_alarmes",
+          titre: "Évacuation adaptée, EAS & Alarmes",
+          desc: "Espace d'Attente Sécurisé et bimodalité sonore/lumineuse de l'alarme.",
+          neuf: "EAS par étage accessible aux PMR avec interphone. Flashs lumineux dans les sanitaires.",
+          existant_1_4: "EAS aménagé dans les cages d'escaliers encloisonnées. Flash d'alarme dans les WC isolés.",
+          existant_5: "Vérification des diffuseurs lumineux d'alarme dans les locaux isolés."
         }
       ]
     };
 
-    /* =========================================================================
-       2. ÉTAT DU PARC & STRUCTURE DE DONNÉES PERSISTANTE
-       ========================================================================= */
-    let parkState = {
-      activeERPId: "erp_1",
-      erps: [
-        {
-          id: "erp_1",
-          name: "Mairie Annexe & CCAS",
-          address: "12 Place de la République",
-          category: "5",
-          constructionYear: "1988",
-          profile: "existant5",
-          auditor: "M. Delacroix (Technicien)",
-          date: new Date().toISOString().split('T')[0],
-          activeTab: "common",
-          commonScope: { items: {} },
-          floors: [
-            { id: "fl_rdc", name: "Rez-de-chaussée (RDC)", isGroundFloor: true, prestationAtRdc: true, items: {} },
-            { id: "fl_r1", name: "1er Étage (R+1)", isGroundFloor: false, prestationAtRdc: true, items: {} }
-          ]
-        },
-        {
-          id: "erp_2",
-          name: "Groupe Scolaire Pasteur",
-          address: "5 Boulevard des Écoliers",
-          category: "4",
-          constructionYear: "1974",
-          profile: "existant14",
-          auditor: "M. Delacroix (Technicien)",
-          date: new Date().toISOString().split('T')[0],
-          activeTab: "common",
-          commonScope: { items: {} },
-          floors: [
-            { id: "fl_rdc", name: "Rez-de-chaussée", isGroundFloor: true, prestationAtRdc: false, items: {} }
-          ]
-        }
-      ]
+    // --- 2. GESTION DE L'ÉTAT DE L'APPLICATION ---
+    let auditActuel = {
+      erpId: "",
+      nom: "Audit Sans Titre",
+      date: new Date().toISOString().slice(0, 10),
+      profil: "existant_5",
+      etageActif: "tronc",
+      etages: ["tronc", "RDC"],
+      evaluations: {}, // format: { [etage]: { [critId]: { status: 'C'|'NC'|'SO', note: '', photos: [] } } }
+      parc: []
     };
 
-    let activeFilter = 'all';
+    // Initialisation
+    window.addEventListener('load', () => {
+      document.getElementById('dateAudit').value = auditActuel.date;
+      chargerDonneesLocales();
+      rendreInterface();
+    });
 
-    function initApp() {
-      // 1. Configurer manifest PWA dynamique
-      const manifest = {
-        name: "Audit Accessibilité ERP",
-        short_name: "Audit ERP",
-        description: "Application professionnelle d'audit d'accessibilité multi-niveaux et gestion de parc",
-        start_url: window.location.href,
-        display: "standalone",
-        background_color: "#020617",
-        theme_color: "#0f172a",
-        orientation: "portrait-primary",
-        icons: [{
-          src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230f172a'/%3E%3Cpath fill='%2314b8a6' d='M50 18a10 10 0 100 20 10 10 0 000-20zm15 28H35a7 7 0 00-7 7v16a4 4 0 008 0V58h6v26a4 4 0 008 0V58h6v12a4 4 0 008 0V53a7 7 0 00-7-7z'/%3E%3C/svg%3E",
-          sizes: "192x192 512x512",
-          type: "image/svg+xml"
-        }]
-      };
-      const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-      document.getElementById('manifestLink').setAttribute('href', URL.createObjectURL(manifestBlob));
-
-      // 2. Service Worker Inline pour fonctionnement hors-ligne immédiat
-      if ('serviceWorker' in navigator) {
-        const swScript = `
-          self.addEventListener('install', e => self.skipWaiting());
-          self.addEventListener('activate', e => self.clients.claim());
-          self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
-        `;
-        const swBlob = new Blob([swScript], { type: 'text/javascript' });
-        navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(err => console.log('SW Note:', err));
-      }
-
-      // 3. Charger depuis localStorage
-      const savedPark = localStorage.getItem('erp_municipal_park_v1');
-      if (savedPark) {
+    function chargerDonneesLocales() {
+      const sauvegarde = localStorage.getItem('audit_erp_data');
+      if (sauvegarde) {
         try {
-          const parsed = JSON.parse(savedPark);
-          if (parsed && parsed.erps && parsed.erps.length > 0) {
-            parkState = parsed;
-          }
+          const parsed = JSON.parse(sauvegarde);
+          auditActuel = { ...auditActuel, ...parsed };
+          document.getElementById('nomERP').value = auditActuel.nom;
+          document.getElementById('dateAudit').value = auditActuel.date;
         } catch (e) {
-          console.error("Erreur de chargement du stockage local", e);
+          console.error("Erreur de chargement local", e);
         }
       }
-
-      refreshDropdownAndMeta();
-      renderFloorTabs();
-      renderChecklist();
-      updateCalculations();
-      updateParcBadge();
     }
 
-    function saveState() {
-      try {
-        localStorage.setItem('erp_municipal_park_v1', JSON.stringify(parkState));
-        const badge = document.getElementById('saveBadge');
-        if (badge) {
-          badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Synchro ${new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}`;
-        }
-      } catch (e) {
-        console.warn("Stockage local saturé :", e);
-      }
+    function sauvegarderLocal() {
+      localStorage.setItem('audit_erp_data', JSON.stringify(auditActuel));
+      calculerScore();
     }
 
-    function getActiveERP() {
-      return parkState.erps.find(e => e.id === parkState.activeERPId) || parkState.erps[0];
+    function mettreAJourNom(val) {
+      auditActuel.nom = val || "Audit Sans Titre";
+      document.getElementById('displayErpNom').innerText = auditActuel.nom;
+      sauvegarderLocal();
     }
 
-    function refreshDropdownAndMeta() {
-      const erp = getActiveERP();
-      const dropdown = document.getElementById('erpSelectDropdown');
-      dropdown.innerHTML = '';
+    function changerProfil(nouveauProfil) {
+      auditActuel.profil = nouveauProfil;
+      document.querySelectorAll('.profile-tab').forEach(el => el.classList.remove('active'));
+      document.getElementById(`prof_${nouveauProfil}`).classList.add('active');
+      
+      const badge = document.getElementById('currentCategoryBadge');
+      if (nouveauProfil === 'neuf') badge.innerText = "Neuf (Arrêté 2017)";
+      else if (nouveauProfil === 'existant_1_4') badge.innerText = "Existant (Cat 1 à 4)";
+      else badge.innerText = "Existant (5e Catégorie)";
 
-      parkState.erps.forEach(item => {
-        const opt = document.createElement('option');
-        opt.value = item.id;
-        const score = getERPGlobalScore(item);
-        opt.text = `${item.name} (${item.category ? 'Cat ' + item.category : 'ERP'}) - ${score}%`;
-        if (item.id === erp.id) opt.selected = true;
-        dropdown.appendChild(opt);
-      });
-
-      document.getElementById('metaName').value = erp.name || '';
-      document.getElementById('metaAddress').value = erp.address || '';
-      document.getElementById('metaAuditor').value = erp.auditor || '';
-      document.getElementById('metaDate').value = erp.date || new Date().toISOString().split('T')[0];
-
-      setProfile(erp.profile || 'neuf', false);
+      rendreCriteres();
+      sauvegarderLocal();
     }
 
-    function onSelectERPChange(newId) {
-      parkState.activeERPId = newId;
-      refreshDropdownAndMeta();
-      renderFloorTabs();
-      renderChecklist();
-      updateCalculations();
-      saveState();
+    function selectionnerEtage(etage) {
+      auditActuel.etageActif = etage;
+      document.querySelectorAll('.etage-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = Array.from(document.querySelectorAll('.etage-btn')).find(b => b.innerText.includes(etage === 'tronc' ? 'Extérieurs' : etage));
+      if (activeBtn) activeBtn.classList.add('active');
+      rendreCriteres();
     }
 
-    function updateActiveERPMeta() {
-      const erp = getActiveERP();
-      erp.name = document.getElementById('metaName').value;
-      erp.address = document.getElementById('metaAddress').value;
-      erp.auditor = document.getElementById('metaAuditor').value;
-      erp.date = document.getElementById('metaDate').value;
-      saveState();
-      updateDropdownLabelOnly();
+    function ajouterEtage() {
+      const nom = prompt("Désignation du niveau à ajouter (ex: R+1, Sous-sol, Mezzanine) :");
+      if (!nom || auditActuel.etages.includes(nom)) return;
+      auditActuel.etages.push(nom);
+      rendreOngletsEtages();
+      selectionnerEtage(nom);
+      sauvegarderLocal();
     }
 
-    function updateDropdownLabelOnly() {
-      const erp = getActiveERP();
-      const opt = document.getElementById('erpSelectDropdown').querySelector(`option[value="${erp.id}"]`);
-      if (opt) {
-        const score = getERPGlobalScore(erp);
-        opt.text = `${erp.name} - ${score}%`;
-      }
-    }
-
-    function setProfile(profileKey, doSave = true) {
-      const erp = getActiveERP();
-      erp.profile = profileKey;
-
-      ['neuf', 'existant14', 'existant5'].forEach(pk => {
-        const btn = document.getElementById(`prof-btn-${pk}`);
-        if (pk === profileKey) {
-          btn.className = "touch-btn p-2.5 rounded-xl border border-teal-500 bg-teal-950/40 text-left transition flex flex-col justify-center shadow-lg ring-1 ring-teal-500";
-        } else {
-          btn.className = "touch-btn p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 text-left transition flex flex-col justify-center hover:border-slate-700 opacity-75";
-        }
-      });
-
-      renderChecklist();
-      updateCalculations();
-      if (doSave) saveState();
-    }
-
-    function createNewERP() {
-      const newId = `erp_${Date.now()}`;
-      const newERP = {
-        id: newId,
-        name: `Nouvel ERP #${parkState.erps.length + 1}`,
-        address: "Adresse à renseigner",
-        category: "5",
-        constructionYear: "1990",
-        profile: "existant5",
-        auditor: document.getElementById('metaAuditor').value || "Diagnostiqueur",
-        date: new Date().toISOString().split('T')[0],
-        activeTab: "common",
-        commonScope: { items: {} },
-        floors: [
-          { id: `fl_${Date.now()}_rdc`, name: "Rez-de-chaussée (RDC)", isGroundFloor: true, prestationAtRdc: true, items: {} }
-        ]
-      };
-      parkState.erps.push(newERP);
-      parkState.activeERPId = newId;
-      refreshDropdownAndMeta();
-      renderFloorTabs();
-      renderChecklist();
-      updateCalculations();
-      updateParcBadge();
-      saveState();
-    }
-
-    function renderFloorTabs() {
-      const erp = getActiveERP();
-      const container = document.getElementById('floorTabsBar');
-      container.innerHTML = '';
-
-      if (!erp.activeTab) erp.activeTab = 'common';
-
-      // 1. Onglet Tronc Commun
-      const isCommonActive = erp.activeTab === 'common';
-      const commonBtn = document.createElement('button');
-      commonBtn.className = `touch-btn px-3.5 py-2 rounded-xl text-xs font-bold shrink-0 transition flex items-center gap-1.5 ${
-        isCommonActive 
-          ? 'bg-teal-500 text-slate-950 shadow-md ring-2 ring-teal-400/50' 
-          : 'bg-slate-900 text-slate-400 border border-slate-800 hover:text-white'
-      }`;
-      commonBtn.innerHTML = `<span>🏛️️ Tronc Commun</span> <span class="text-[10px] px-1.5 py-0.5 rounded-full ${isCommonActive ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-800 text-slate-300'}">${getScopeProgress(erp, 'common')}</span>`;
-      commonBtn.onclick = () => switchTab('common');
-      container.appendChild(commonBtn);
-
-      // 2. Onglets des étages
-      erp.floors.forEach(floor => {
-        const isFloorActive = erp.activeTab === floor.id;
-        const floorBtn = document.createElement('button');
-        floorBtn.className = `touch-btn px-3.5 py-2 rounded-xl text-xs font-bold shrink-0 transition flex items-center gap-1.5 ${
-          isFloorActive 
-            ? 'bg-teal-500 text-slate-950 shadow-md ring-2 ring-teal-400/50' 
-            : 'bg-slate-900 text-slate-400 border border-slate-800 hover:text-white'
-        }`;
-        floorBtn.innerHTML = `<span>📍 ${floor.name}</span> <span class="text-[10px] px-1.5 py-0.5 rounded-full ${isFloorActive ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-800 text-slate-300'}">${getScopeProgress(erp, floor.id)}</span>`;
-        floorBtn.onclick = () => switchTab(floor.id);
-        container.appendChild(floorBtn);
-      });
-
-      // Gestion visibilité bouton supprimer
-      const btnDelete = document.getElementById('btnDeleteLevel');
-      if (erp.activeTab !== 'common' && erp.floors.length > 1) {
-        btnDelete.classList.remove('hidden');
-      } else {
-        btnDelete.classList.add('hidden');
-      }
-    }
-
-    function switchTab(tabId) {
-      const erp = getActiveERP();
-      erp.activeTab = tabId;
-      renderFloorTabs();
-      renderChecklist();
-      saveState();
-    }
-
-    function promptAddFloor() {
-      const erp = getActiveERP();
-      const defaultName = `Niveau R+${erp.floors.length}`;
-      const name = prompt("Désignation du niveau à ajouter :", defaultName);
-      if (!name) return;
-
-      const newFloorId = `fl_${Date.now()}`;
-      erp.floors.push({
-        id: newFloorId,
-        name: name.trim(),
-        isGroundFloor: false,
-        prestationAtRdc: true,
-        items: {}
-      });
-
-      erp.activeTab = newFloorId;
-      renderFloorTabs();
-      renderChecklist();
-      updateCalculations();
-      saveState();
-    }
-
-    function deleteCurrentFloor() {
-      const erp = getActiveERP();
-      if (erp.activeTab === 'common') return;
-      const index = erp.floors.findIndex(f => f.id === erp.activeTab);
-      if (index === -1) return;
-
-      if (confirm(`Confirmez-vous la suppression du niveau "${erp.floors[index].name}" ?`)) {
-        erp.floors.splice(index, 1);
-        erp.activeTab = erp.floors[0] ? erp.floors[0].id : 'common';
-        renderFloorTabs();
-        renderChecklist();
-        updateCalculations();
-        saveState();
-      }
-    }
-
-    function togglePrestationAtRdc(checked) {
-      const erp = getActiveERP();
-      const currentFloor = erp.floors.find(f => f.id === erp.activeTab);
-      if (currentFloor) {
-        currentFloor.prestationAtRdc = checked;
-        // Si 5e catégorie et prestation au RDC -> ascenseur passe automatiquement en Sans Objet (SO)
-        if (checked && erp.profile === 'existant5') {
-          if (!currentFloor.items['fl_desserte']) currentFloor.items['fl_desserte'] = {};
-          currentFloor.items['fl_desserte'].status = 'SO';
-          currentFloor.items['fl_desserte'].note = "Dispense d'ascenseur : prestations fournies au rez-de-chaussée.";
-        }
-        renderChecklist();
-        updateCalculations();
-        saveState();
-      }
-    }
-
-    function setFilter(f) {
-      activeFilter = f;
-      ['all', 'NC', 'pending'].forEach(btnKey => {
-        const btn = document.getElementById(`fil-btn-${btnKey}`);
-        if (btnKey === f) {
-          btn.className = "px-3 py-1.5 rounded-lg font-semibold transition bg-teal-600 text-white";
-        } else {
-          btn.className = "px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition";
-        }
-      });
-      renderChecklist();
-    }
-
-    function renderChecklist() {
-      const erp = getActiveERP();
-      const container = document.getElementById('checklistItemsContainer');
-      container.innerHTML = '';
-
-      const isCommon = erp.activeTab === 'common';
-      const criteria = isCommon ? auditNorms.common : auditNorms.floor;
-      const currentScopeObj = isCommon ? erp.commonScope : erp.floors.find(f => f.id === erp.activeTab);
-
-      if (!currentScopeObj) return;
-
-      // Header Banner de la section
-      const banner = document.createElement('div');
-      banner.className = "p-3.5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2";
-      banner.innerHTML = `
-        <div>
-          <span class="text-[10px] font-bold text-teal-400 uppercase tracking-wider">Pôle en cours d'inspection</span>
-          <h3 class="text-base font-bold text-white">${isCommon ? "Tronc Commun (Abords, Accès principal & RPA)" : currentScopeObj.name}</h3>
-        </div>
-        <div class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-800 text-teal-300 border border-slate-700 w-fit">
-          Score du pôle : <span class="font-bold text-white">${getScopeScore(currentScopeObj, isCommon)}%</span>
-        </div>
+    function rendreOngletsEtages() {
+      const cont = document.getElementById('etagesConteneur');
+      cont.innerHTML = `
+        <button type="button" class="etage-btn ${auditActuel.etageActif === 'tronc' ? 'active' : ''}" onclick="selectionnerEtage('tronc')">Extérieurs & Accueil</button>
       `;
-      container.appendChild(banner);
-
-      // Question clé d'équivalence 5e catégorie
-      if (!isCommon && erp.profile === 'existant5') {
-        const questionBox = document.createElement('div');
-        questionBox.className = "p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs flex items-start gap-2.5";
-        questionBox.innerHTML = `
-          <svg class="w-5 h-5 text-amber-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <div class="flex-grow">
-            <span class="font-bold text-amber-100">Souplesse Réglementaire 5ᵉ Catégorie : Prestations équivalentes</span>
-            <p class="text-[11px] text-amber-300/80 mt-0.5">Les prestations ou services dispensés à ce niveau sont-ils également délivrés de plain-pied au rez-de-chaussée ?</p>
-            <label class="inline-flex items-center gap-2 mt-2 cursor-pointer">
-              <input type="checkbox" ${currentScopeObj.prestationAtRdc ? 'checked' : ''} onchange="togglePrestationAtRdc(this.checked)" class="w-4 h-4 rounded text-teal-600 focus:ring-teal-500 bg-slate-900 border-slate-700">
-              <span class="font-semibold text-white">Oui, prestation identique au RDC (Dispense légale d'ascenseur)</span>
-            </label>
-          </div>
-        `;
-        container.appendChild(questionBox);
-      }
-
-      // Regroupement par catégories
-      const groups = {};
-      criteria.forEach(c => {
-        if (!groups[c.cat]) groups[c.cat] = [];
-        groups[c.cat].push(c);
+      auditActuel.etages.filter(e => e !== 'tronc').forEach(et => {
+        const btn = document.createElement('button');
+        btn.type = "button";
+        btn.className = `etage-btn ${auditActuel.etageActif === et ? 'active' : ''}`;
+        btn.innerText = et;
+        btn.onclick = () => selectionnerEtage(et);
+        cont.appendChild(btn);
       });
+    }
 
-      Object.keys(groups).forEach(catName => {
-        const items = groups[catName];
-        const filtered = items.filter(item => {
-          const itemData = currentScopeObj.items[item.id] || { status: 'pending' };
-          if (activeFilter === 'NC') return itemData.status === 'NC';
-          if (activeFilter === 'pending') return itemData.status === 'pending';
-          return true;
-        });
+    function rendreCriteres() {
+      const cont = document.getElementById('listeCriteres');
+      cont.innerHTML = "";
 
-        if (filtered.length === 0 && activeFilter !== 'all') return;
+      const estTronc = auditActuel.etageActif === 'tronc';
+      const liste = estTronc ? REFERENTIEL.tronc : REFERENTIEL.etage;
+
+      if (!auditActuel.evaluations[auditActuel.etageActif]) {
+        auditActuel.evaluations[auditActuel.etageActif] = {};
+      }
+      const evalEtage = auditActuel.evaluations[auditActuel.etageActif];
+
+      liste.forEach(crit => {
+        const etat = evalEtage[crit.id] || { status: null, note: "", photos: [] };
+        const regleSpecifique = crit[auditActuel.profil] || crit.desc;
 
         const card = document.createElement('div');
-        card.className = "bg-slate-900/90 rounded-2xl border border-slate-800 shadow-lg overflow-hidden";
+        card.className = "criterion-item";
         card.innerHTML = `
-          <div class="bg-slate-950/60 px-4 py-2.5 border-b border-slate-800 flex items-center justify-between">
-            <h4 class="text-xs font-bold text-teal-300 uppercase tracking-wider">${catName}</h4>
-            <span class="text-[10px] text-slate-400 font-mono">${filtered.length} point(s)</span>
+          <div class="crit-title">${crit.titre}</div>
+          <div class="crit-desc">${crit.desc}</div>
+          <div style="background:#0f172a; padding:6px 10px; border-radius:6px; font-size:0.75rem; color:#38bdf8; margin-bottom:8px; border-left:3px solid var(--primary);">
+            <strong>Règle profil :</strong> ${regleSpecifique}
           </div>
-          <div class="divide-y divide-slate-800/80 p-3 sm:p-4 space-y-3" id="cat_group_${catName.replace(/[^a-zA-Z0-9]/g, '_')}"></div>
+
+          <div class="status-btns">
+            <div class="status-btn c ${etat.status === 'C' ? 'active' : ''}" onclick="definirStatut('${crit.id}', 'C')">Conforme</div>
+            <div class="status-btn nc ${etat.status === 'NC' ? 'active' : ''}" onclick="definirStatut('${crit.id}', 'NC')">Non Conforme</div>
+            <div class="status-btn so ${etat.status === 'SO' ? 'active' : ''}" onclick="definirStatut('${crit.id}', 'SO')">Sans Objet</div>
+          </div>
+
+          <div class="print-status">Constat : <strong>${etat.status || 'Non vérifié'}</strong></div>
+
+          <textarea placeholder="Constats techniques, cotes relevées, préconisations..." style="margin-bottom:6px; height:50px;" oninput="majNote('${crit.id}', this.value)">${etat.note || ''}</textarea>
+
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <label style="margin:0; cursor:pointer; font-size:0.75rem; color:var(--primary-light);">
+              📷 Prendre une photo
+              <input type="file" accept="image/*" capture="environment" style="display:none" onchange="ajouterPhoto('${crit.id}', event)">
+            </label>
+            <div class="photo-preview-wrap" id="photos_${crit.id}">
+              ${(etat.photos || []).map(src => `<img src="${src}" class="photo-thumb">`).join('')}
+            </div>
+          </div>
         `;
-        container.appendChild(card);
-
-        const groupContent = card.querySelector(`#cat_group_${catName.replace(/[^a-zA-Z0-9]/g, '_')}`);
-
-        filtered.forEach(item => {
-          const itemData = currentScopeObj.items[item.id] || { status: 'pending', note: '', photo: null };
-          const ruleText = item.rules[erp.profile] || "Règle non spécifiée";
-
-          const itemEl = document.createElement('div');
-          itemEl.className = "pt-3 first:pt-0 space-y-2.5";
-          itemEl.innerHTML = `
-            <div class="space-y-1">
-              <div class="flex items-start justify-between gap-2">
-                <h5 class="text-xs sm:text-sm font-bold text-white leading-tight">${item.label}</h5>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider shrink-0 ${getStatusBadgeClass(itemData.status)}">
-                  ${getStatusText(itemData.status)}
-                </span>
-              </div>
-              <p class="text-[11px] text-slate-400 leading-snug">${item.desc}</p>
-              
-              <!-- Règle de tolérance dynamique -->
-              <div class="p-2 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-300 flex items-start gap-1.5 mt-1.5">
-                <span class="text-teal-400 font-bold shrink-0">Norme [${getProfileShort(erp.profile)}] :</span>
-                <span class="text-slate-300 leading-tight">${ruleText}</span>
-              </div>
-            </div>
-
-            <!-- Boutons de saisie tactile C, NC, SO & Caméra -->
-            <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
-              <div class="inline-flex rounded-xl border border-slate-700 bg-slate-950 p-1 shadow-inner">
-                <button onclick="setItemStatus('${item.id}', 'C')" class="touch-btn px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 ${itemData.status === 'C' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:text-emerald-400'}">
-                  <span>✓</span> C
-                </button>
-                <button onclick="setItemStatus('${item.id}', 'NC')" class="touch-btn px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 ${itemData.status === 'NC' ? 'bg-red-600 text-white shadow-md' : 'text-slate-400 hover:text-red-400'}">
-                  <span>✗</span> NC
-                </button>
-                <button onclick="setItemStatus('${item.id}', 'SO')" class="touch-btn px-2.5 py-1.5 rounded-lg text-xs font-bold transition ${itemData.status === 'SO' ? 'bg-slate-700 text-white shadow-md' : 'text-slate-400 hover:text-white'}">
-                  S.O.
-                </button>
-              </div>
-
-              <!-- Prise de photo terrain -->
-              <div>
-                <label class="touch-btn px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition active:scale-95 shadow-sm">
-                  <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                  <span>${itemData.photo ? 'Modifier Photo' : 'Prendre Photo'}</span>
-                  <input type="file" accept="image/*" capture="environment" class="hidden" onchange="capturePhoto(event, '${item.id}')">
-                </label>
-              </div>
-            </div>
-
-            <!-- Aperçu Photo -->
-            ${itemData.photo ? `
-              <div class="relative inline-block mt-2">
-                <img src="${itemData.photo}" alt="Preuve" class="h-20 w-auto rounded-xl border border-slate-700 object-cover shadow-sm">
-                <button onclick="removePhoto('${item.id}')" class="absolute -top-1.5 -right-1.5 bg-red-600 hover:bg-red-500 text-white rounded-full p-1 text-[10px] shadow-md transition" title="Supprimer la photo">✕</button>
-              </div>
-            ` : ''}
-
-            <!-- Notes & Cotes relevées -->
-            <div class="pt-1">
-              <input type="text" value="${escapeHtml(itemData.note || '')}" oninput="setItemNote('${item.id}', this.value)" placeholder="Cotes mesurées (cm), observations de visite, motif dérogation..." class="touch-btn w-full text-xs px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 focus:outline-none focus:border-teal-500">
-            </div>
-          `;
-          groupContent.appendChild(itemEl);
-        });
+        cont.appendChild(card);
       });
+
+      calculerScore();
     }
 
-    function setItemStatus(itemId, status) {
-      const erp = getActiveERP();
-      const scope = erp.activeTab === 'common' ? erp.commonScope : erp.floors.find(f => f.id === erp.activeTab);
-      if (!scope) return;
-      if (!scope.items[itemId]) scope.items[itemId] = { note: '', photo: null };
-
-      scope.items[itemId].status = (scope.items[itemId].status === status) ? 'pending' : status;
-
-      renderChecklist();
-      renderFloorTabs();
-      updateCalculations();
-      updateDropdownLabelOnly();
-      saveState();
+    function definirStatut(critId, statut) {
+      if (!auditActuel.evaluations[auditActuel.etageActif]) {
+        auditActuel.evaluations[auditActuel.etageActif] = {};
+      }
+      if (!auditActuel.evaluations[auditActuel.etageActif][critId]) {
+        auditActuel.evaluations[auditActuel.etageActif][critId] = { status: null, note: "", photos: [] };
+      }
+      auditActuel.evaluations[auditActuel.etageActif][critId].status = statut;
+      rendreCriteres();
+      sauvegarderLocal();
     }
 
-    function setItemNote(itemId, note) {
-      const erp = getActiveERP();
-      const scope = erp.activeTab === 'common' ? erp.commonScope : erp.floors.find(f => f.id === erp.activeTab);
-      if (!scope) return;
-      if (!scope.items[itemId]) scope.items[itemId] = { status: 'pending', photo: null };
-      scope.items[itemId].note = note;
-      saveState();
+    function majNote(critId, val) {
+      if (!auditActuel.evaluations[auditActuel.etageActif][critId]) {
+        auditActuel.evaluations[auditActuel.etageActif][critId] = { status: null, note: "", photos: [] };
+      }
+      auditActuel.evaluations[auditActuel.etageActif][critId].note = val;
+      sauvegarderLocal();
     }
 
-    function capturePhoto(event, itemId) {
-      const file = event.target.files[0];
+    function ajouterPhoto(critId, ev) {
+      const file = ev.target.files[0];
       if (!file) return;
 
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = (e) => {
+        // Redimensionnement automatique pour économiser le stockage
         const img = new Image();
-        img.onload = function() {
-          // Compression Canvas pour réduire la mémoire et optimiser le JSON
+        img.onload = () => {
           const canvas = document.createElement('canvas');
-          const MAX_W = 800;
-          const scale = MAX_W / img.width;
-          canvas.width = (img.width > MAX_W) ? MAX_W : img.width;
-          canvas.height = (img.width > MAX_W) ? (img.height * scale) : img.height;
-
+          const maxDim = 800;
+          let w = img.width, h = img.height;
+          if (w > h && w > maxDim) { h *= maxDim / w; w = maxDim; }
+          else if (h > maxDim) { w *= maxDim / h; h = maxDim; }
+          canvas.width = w; canvas.height = h;
           const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.65);
+          ctx.drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
 
-          const erp = getActiveERP();
-          const scope = erp.activeTab === 'common' ? erp.commonScope : erp.floors.find(f => f.id === erp.activeTab);
-          if (!scope.items[itemId]) scope.items[itemId] = { status: 'pending', note: '' };
-          scope.items[itemId].photo = compressedDataUrl;
-
-          renderChecklist();
-          saveState();
+          if (!auditActuel.evaluations[auditActuel.etageActif][critId]) {
+            auditActuel.evaluations[auditActuel.etageActif][critId] = { status: null, note: "", photos: [] };
+          }
+          if (!auditActuel.evaluations[auditActuel.etageActif][critId].photos) {
+            auditActuel.evaluations[auditActuel.etageActif][critId].photos = [];
+          }
+          auditActuel.evaluations[auditActuel.etageActif][critId].photos.push(dataUrl);
+          rendreCriteres();
+          sauvegarderLocal();
         };
         img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
 
-    function removePhoto(itemId) {
-      const erp = getActiveERP();
-      const scope = erp.activeTab === 'common' ? erp.commonScope : erp.floors.find(f => f.id === erp.activeTab);
-      if (scope && scope.items[itemId]) {
-        scope.items[itemId].photo = null;
-        renderChecklist();
-        saveState();
-      }
-    }
+    function calculerScore() {
+      let conformes = 0;
+      let nonConformes = 0;
 
-    function markCurrentScopeAllConform() {
-      const erp = getActiveERP();
-      const isCommon = erp.activeTab === 'common';
-      const criteria = isCommon ? auditNorms.common : auditNorms.floor;
-      const scope = isCommon ? erp.commonScope : erp.floors.find(f => f.id === erp.activeTab);
-
-      criteria.forEach(c => {
-        if (!scope.items[c.id]) scope.items[c.id] = { note: '', photo: null };
-        scope.items[c.id].status = 'C';
-      });
-
-      renderChecklist();
-      renderFloorTabs();
-      updateCalculations();
-      updateDropdownLabelOnly();
-      saveState();
-    }
-
-    function getScopeProgress(erp, scopeId) {
-      const isCommon = scopeId === 'common';
-      const criteria = isCommon ? auditNorms.common : auditNorms.floor;
-      const scope = isCommon ? erp.commonScope : erp.floors.find(f => f.id === scopeId);
-      if (!scope) return "0/0";
-
-      let done = 0;
-      criteria.forEach(c => {
-        const item = scope.items[c.id];
-        if (item && (item.status === 'C' || item.status === 'NC' || item.status === 'SO')) {
-          done++;
-        }
-      });
-      return `${done}/${criteria.length}`;
-    }
-
-    function getScopeScore(scopeObj, isCommon) {
-      const criteria = isCommon ? auditNorms.common : auditNorms.floor;
-      let c = 0, nc = 0;
-      criteria.forEach(crit => {
-        const it = scopeObj.items[crit.id];
-        if (it) {
-          if (it.status === 'C') c++;
-          if (it.status === 'NC') nc++;
-        }
-      });
-      const tot = c + nc;
-      return tot > 0 ? Math.round((c / tot) * 100) : 0;
-    }
-
-    function getERPGlobalScore(erp) {
-      let totalC = 0;
-      let totalNC = 0;
-
-      // Tronc commun
-      auditNorms.common.forEach(c => {
-        const it = erp.commonScope.items[c.id];
-        if (it) {
-          if (it.status === 'C') totalC++;
-          if (it.status === 'NC') totalNC++;
-        }
-      });
-
-      // Étages
-      erp.floors.forEach(fl => {
-        auditNorms.floor.forEach(c => {
-          const it = fl.items[c.id];
-          if (it) {
-            if (it.status === 'C') totalC++;
-            if (it.status === 'NC') totalNC++;
-          }
+      Object.keys(auditActuel.evaluations).forEach(et => {
+        const obj = auditActuel.evaluations[et];
+        Object.keys(obj).forEach(cId => {
+          const s = obj[cId].status;
+          if (s === 'C') conformes++;
+          else if (s === 'NC') nonConformes++;
         });
       });
 
-      const evaluated = totalC + totalNC;
-      return evaluated > 0 ? Math.round((totalC / evaluated) * 100) : 0;
+      const total = conformes + nonConformes;
+      const score = total > 0 ? Math.round((conformes / total) * 100) : 0;
+
+      document.getElementById('gaugeBar').style.width = `${score}%`;
+      document.getElementById('gaugeScore').innerText = `${score} %`;
     }
 
-    function updateCalculations() {
-      const erp = getActiveERP();
-      let totalC = 0, totalNC = 0, totalSO = 0;
-
-      auditNorms.common.forEach(c => {
-        const it = erp.commonScope.items[c.id];
-        if (it) {
-          if (it.status === 'C') totalC++;
-          else if (it.status === 'NC') totalNC++;
-          else if (it.status === 'SO') totalSO++;
-        }
-      });
-
-      erp.floors.forEach(fl => {
-        auditNorms.floor.forEach(c => {
-          const it = fl.items[c.id];
-          if (it) {
-            if (it.status === 'C') totalC++;
-            else if (it.status === 'NC') totalNC++;
-            else if (it.status === 'SO') totalSO++;
-          }
-        });
-      });
-
-      const evaluated = totalC + totalNC;
-      const score = evaluated > 0 ? Math.round((totalC / evaluated) * 100) : 0;
-
-      document.getElementById('kpiCountC').innerText = totalC;
-      document.getElementById('kpiCountNC').innerText = totalNC;
-      document.getElementById('kpiCountSO').innerText = totalSO;
-      document.getElementById('kpiScoreGlobal').innerText = `${score}%`;
-
-      const bar = document.getElementById('kpiBarGlobal');
-      bar.style.width = `${score}%`;
-      if (score >= 80) bar.className = "bg-emerald-500 h-1.5 rounded-full transition-all duration-300";
-      else if (score >= 50) bar.className = "bg-amber-500 h-1.5 rounded-full transition-all duration-300";
-      else bar.className = "bg-red-500 h-1.5 rounded-full transition-all duration-300";
+    function rendreInterface() {
+      document.getElementById('displayErpNom').innerText = auditActuel.nom;
+      document.getElementById(`prof_${auditActuel.profil}`).click();
+      rendreOngletsEtages();
+      rendreCriteres();
     }
 
-    function toggleParcModal() {
-      const modal = document.getElementById('parcModal');
-      const isHidden = modal.classList.contains('hidden');
-      if (isHidden) {
-        renderParcList(parkState.erps);
-        modal.classList.remove('hidden');
-      } else {
-        modal.classList.add('hidden');
-      }
-    }
-
-    function updateParcBadge() {
-      document.getElementById('badgeParcCount').innerText = parkState.erps.length;
-    }
-
-    function renderParcList(list) {
-      const container = document.getElementById('parcListItemsContainer');
-      container.innerHTML = '';
-      document.getElementById('parcTotalCount').innerText = `${list.length} établissement(s)`;
-
-      list.forEach(erp => {
-        const score = getERPGlobalScore(erp);
-        const isActive = erp.id === parkState.activeERPId;
-
-        const row = document.createElement('div');
-        row.className = `p-3 rounded-2xl flex items-center justify-between gap-2 transition ${
-          isActive ? 'bg-teal-950/40 border border-teal-500/50' : 'bg-slate-900/60 border border-slate-800 hover:bg-slate-900'
-        }`;
-
-        row.innerHTML = `
-          <div class="flex-grow">
-            <div class="flex items-center gap-2">
-              <h5 class="text-xs font-bold text-white">${erp.name}</h5>
-              <span class="text-[9px] px-1.5 py-0.5 rounded font-mono ${erp.category === '5' ? 'bg-amber-500/20 text-amber-300' : 'bg-blue-500/20 text-blue-300'}">
-                Cat. ${erp.category || '5'}
-              </span>
-            </div>
-            <p class="text-[11px] text-slate-400 mt-0.5">${erp.address || 'Sans adresse'} • ${erp.floors.length} niveau(x)</p>
-          </div>
-          <div class="text-right shrink-0 flex items-center gap-2">
-            <span class="text-xs font-black ${score >= 80 ? 'text-emerald-400' : (score >= 50 ? 'text-amber-400' : 'text-slate-400')}">
-              ${score}%
-            </span>
-            <button onclick="selectERPFromParc('${erp.id}')" class="touch-btn px-2.5 py-1 text-xs font-bold rounded-xl ${
-              isActive ? 'bg-teal-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:text-white'
-            }">
-              ${isActive ? 'Actif' : 'Ouvrir'}
-            </button>
-          </div>
-        `;
-        container.appendChild(row);
-      });
-    }
-
-    function filterParcList(query) {
-      const q = query.toLowerCase();
-      const filtered = parkState.erps.filter(e => 
-        e.name.toLowerCase().includes(q) || 
-        (e.address && e.address.toLowerCase().includes(q)) ||
-        (e.category && e.category.includes(q))
-      );
-      renderParcList(filtered);
-    }
-
-    function selectERPFromParc(id) {
-      parkState.activeERPId = id;
-      refreshDropdownAndMeta();
-      renderFloorTabs();
-      renderChecklist();
-      updateCalculations();
-      saveState();
-      toggleParcModal();
-    }
-
-    function handleCSVImport(event) {
+    // --- 3. GESTION DU PARC IMMOBILIER (CSV) ---
+    function importerParcCSV(event) {
       const file = event.target.files[0];
       if (!file) return;
 
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = (e) => {
+        const text = e.target.result;
+        const lignes = text.split(/\r\n|\n/).filter(l => l.trim() !== "");
+        if (lignes.length < 2) {
+          alert("Fichier CSV vide ou non conforme.");
+          return;
+        }
+
+        auditActuel.parc = [];
+        const entetes = lignes[0].toLowerCase().split(/[;,]/);
+
+        for (let i = 1; i < lignes.length; i++) {
+          const cols = lignes[i].split(/[;,]/);
+          if (cols.length >= 2) {
+            auditActuel.parc.push({
+              id: "erp_" + i,
+              nom: cols[0].trim(),
+              adresse: cols[1] ? cols[1].trim() : "",
+              cat: cols[2] ? cols[2].trim() : "5",
+              niveaux: cols[4] ? cols[4].split(',').map(s => s.trim()) : ["RDC"]
+            });
+          }
+        }
+
+        remplirSelecteurParc();
+        sauvegarderLocal();
+        alert(`${auditActuel.parc.length} ERP importés dans le parc !`);
+      };
+      reader.readAsText(file);
+    }
+
+    function remplirSelecteurParc() {
+      const sel = document.getElementById('erpSelect');
+      sel.innerHTML = '<option value="">-- Choisir un bâtiment dans le parc --</option>';
+      auditActuel.parc.forEach(erp => {
+        const opt = document.createElement('option');
+        opt.value = erp.id;
+        opt.innerText = `${erp.nom} (${erp.adresse || 'Cat. ' + erp.cat})`;
+        sel.appendChild(opt);
+      });
+    }
+
+    function changerErpSelectionne(id) {
+      const erp = auditActuel.parc.find(e => e.id === id);
+      if (!erp) return;
+
+      auditActuel.nom = erp.nom;
+      document.getElementById('nomERP').value = erp.nom;
+      document.getElementById('displayErpNom').innerText = erp.nom;
+
+      // Déduction du profil
+      if (erp.cat === "5") changerProfil('existant_5');
+      else changerProfil('existant_1_4');
+
+      // Création des étages
+      auditActuel.etages = ["tronc", ...erp.niveaux];
+      auditActuel.etageActif = "tronc";
+      rendreOngletsEtages();
+      rendreCriteres();
+      sauvegarderLocal();
+    }
+
+    // --- 4. EXPORT / IMPORT JSON ET CSV SYNTHÈSE ---
+    function exporterAuditJSON() {
+      const blob = new Blob([JSON.stringify(auditActuel, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Audit_${auditActuel.nom.replace(/\s+/g, '_')}_${auditActuel.date}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importerAuditJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
         try {
-          const text = e.target.result;
-          const lines = text.split(/\r\n|\n/).filter(line => line.trim().length > 0);
-          if (lines.length < 2) {
-            alert("Fichier CSV trop court ou vide.");
-            return;
-          }
-
-          // Détecter séparateur (; ou ,)
-          const separator = lines[0].includes(';') ? ';' : ',';
-          let importedCount = 0;
-
-          // Ignorer l'en-tête (ligne 0)
-          for (let i = 1; i < lines.length; i++) {
-            const cols = lines[i].split(separator).map(s => s.trim().replace(/^"|"$/g, ''));
-            if (cols.length >= 1 && cols[0]) {
-              const name = cols[0];
-              const address = cols[1] || "";
-              const cat = cols[2] || "5";
-              const annee = cols[3] || "1990";
-              const rawLevels = cols[4] || "RDC";
-
-              // Déduire profil réglementaire
-              let prof = "existant5";
-              if (parseInt(cat) >= 1 && parseInt(cat) <= 4) prof = "existant14";
-              if (parseInt(annee) >= 2017) prof = "neuf";
-
-              // Niveaux
-              const floorNames = rawLevels.split(/[,/]/).map(fn => fn.trim()).filter(Boolean);
-              const generatedFloors = floorNames.length > 0 ? floorNames.map((fn, idx) => ({
-                id: `fl_csv_${Date.now()}_${idx}`,
-                name: fn,
-                isGroundFloor: idx === 0,
-                prestationAtRdc: true,
-                items: {}
-              })) : [{ id: `fl_csv_${Date.now()}_0`, name: "Rez-de-chaussée", isGroundFloor: true, prestationAtRdc: true, items: {} }];
-
-              parkState.erps.push({
-                id: `erp_csv_${Date.now()}_${i}`,
-                name: name,
-                address: address,
-                category: cat,
-                constructionYear: annee,
-                profile: prof,
-                auditor: document.getElementById('metaAuditor').value || "Auditeur",
-                date: new Date().toISOString().split('T')[0],
-                activeTab: "common",
-                commonScope: { items: {} },
-                floors: generatedFloors
-              });
-              importedCount++;
-            }
-          }
-
-          refreshDropdownAndMeta();
-          renderFloorTabs();
-          renderChecklist();
-          updateCalculations();
-          updateParcBadge();
-          renderParcList(parkState.erps);
-          saveState();
-          alert(`Succès : ${importedCount} établissement(s) importé(s) dans le parc !`);
+          auditActuel = JSON.parse(e.target.result);
+          document.getElementById('nomERP').value = auditActuel.nom;
+          document.getElementById('dateAudit').value = auditActuel.date;
+          remplirSelecteurParc();
+          rendreInterface();
+          alert("Audit rechargé avec succès !");
         } catch (err) {
-          alert("Erreur de parsing CSV : " + err.message);
+          alert("Erreur de décodage du fichier JSON.");
         }
       };
-      reader.readAsText(file, "UTF-8");
-      event.target.value = '';
+      reader.readAsText(file);
     }
 
-    function downloadCSVTemplate() {
-      const csvHeader = "nom;adresse;categorie;annee_construction;niveaux\n";
-      const sample1 = "École Jean Moulin;14 Rue des Écoles;5;1982;RDC,R+1\n";
-      const sample2 = "Mairie Annexe Centre;Place de l'Hôtel de Ville;4;1920;RDC,R+1,R+2\n";
-      const sample3 = "Complexe Sportif Municipal;Avenue du Stade;3;2018;RDC\n";
-      const blob = new Blob([csvHeader + sample1 + sample2 + sample3], { type: 'text/csv;charset=utf-8;' });
+    function exporterSyntheseCSV() {
+      let csv = "Zone/Niveau;Critere;Statut;Constat\n";
+      Object.keys(auditActuel.evaluations).forEach(et => {
+        const obj = auditActuel.evaluations[et];
+        Object.keys(obj).forEach(cId => {
+          const item = obj[cId];
+          csv += `"${et}";"${cId}";"${item.status || ''}";"${(item.note || '').replace(/"/g, '""')}"\n`;
+        });
+      });
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = "modele_parc_erp.csv";
+      a.download = `Synthese_${auditActuel.nom.replace(/\s+/g, '_')}.csv`;
       a.click();
       URL.revokeObjectURL(url);
     }
 
-    function exportParcCSV() {
-      let csv = "ID;Nom;Adresse;Categorie;Annee;Profil;Score;Conformes;Non_Conformes;Sans_Objet\n";
-      parkState.erps.forEach(erp => {
-        let c = 0, nc = 0, so = 0;
-        auditNorms.common.forEach(cr => {
-          const it = erp.commonScope.items[cr.id];
-          if (it) {
-            if (it.status === 'C') c++;
-            else if (it.status === 'NC') nc++;
-            else if (it.status === 'SO') so++;
-          }
-        });
-        erp.floors.forEach(fl => {
-          auditNorms.floor.forEach(cr => {
-            const it = fl.items[cr.id];
-            if (it) {
-              if (it.status === 'C') c++;
-              else if (it.status === 'NC') nc++;
-              else if (it.status === 'SO') so++;
-            }
-          });
-        });
-        const evalTotal = c + nc;
-        const score = evalTotal > 0 ? Math.round((c / evalTotal) * 100) : 0;
-        csv += `"${erp.id}";"${erp.name.replace(/"/g, '""')}";"${erp.address.replace(/"/g, '""')}";"${erp.category}";"${erp.constructionYear}";"${erp.profile}";"${score}%";${c};${nc};${so}\n`;
+    // Service Worker autonome pour exécution hors-ligne
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        const swBlob = new Blob([`
+          const CACHE = 'audit-erp-no-green-v1';
+          self.addEventListener('install', e => self.skipWaiting());
+          self.addEventListener('activate', e => self.clients.claim());
+          self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
+        `], { type: 'application/javascript' });
+        navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
       });
-
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `bilan_consolide_parc_erp_${new Date().toISOString().split('T')[0]}.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
     }
-
-    function exportCurrentJSON() {
-      const erp = getActiveERP();
-      const blob = new Blob([JSON.stringify(erp, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Audit_${erp.name.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function triggerPrintPDF() {
-      const erp = getActiveERP();
-      document.getElementById('printERPName').innerText = erp.name || '-';
-      document.getElementById('printERPAddress').innerText = erp.address || '-';
-      document.getElementById('printERPAuditor').innerText = erp.auditor || '-';
-      document.getElementById('printERPProfile').innerText = getProfileFull(erp.profile);
-      document.getElementById('printDatePlaceholder').innerText = new Date().toLocaleDateString('fr-FR');
-
-      // Générer le tableau de synthèse pour l'impression
-      const printContainer = document.getElementById('printFullReportContainer');
-      printContainer.innerHTML = '';
-
-      // 1. Synthèse globale
-      let reportHTML = `
-        <div class="print-box">
-          <h3 class="text-sm font-bold text-slate-900 border-b pb-1 mb-2">SYNTHÈSE DES CONTRÔLES PAR PÔLE</h3>
-          <table class="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr class="border-b text-slate-600">
-                <th class="py-1">Niveau / Pôle</th>
-                <th class="text-center">Conformes</th>
-                <th class="text-center">Non conformes</th>
-                <th class="text-center">Sans Objet</th>
-                <th class="text-right">Score</th>
-              </tr>
-            </thead>
-            <tbody>
-      `;
-
-      // Tronc commun
-      const comScore = getScopeScore(erp.commonScope, true);
-      let comC = 0, comNC = 0, comSO = 0;
-      auditNorms.common.forEach(cr => {
-        const it = erp.commonScope.items[cr.id];
-        if (it?.status === 'C') comC++;
-        else if (it?.status === 'NC') comNC++;
-        else if (it?.status === 'SO') comSO++;
-      });
-      reportHTML += `
-        <tr class="border-b">
-          <td class="py-1 font-semibold">Tronc Commun (Abords, Accueil, RPA)</td>
-          <td class="text-center font-bold text-emerald-800">${comC}</td>
-          <td class="text-center font-bold text-red-800">${comNC}</td>
-          <td class="text-center text-slate-600">${comSO}</td>
-          <td class="text-right font-bold">${comScore}%</td>
-        </tr>
-      `;
-
-      // Étages
-      erp.floors.forEach(fl => {
-        const flScore = getScopeScore(fl, false);
-        let fC = 0, fNC = 0, fSO = 0;
-        auditNorms.floor.forEach(cr => {
-          const it = fl.items[cr.id];
-          if (it?.status === 'C') fC++;
-          else if (it?.status === 'NC') fNC++;
-          else if (it?.status === 'SO') fSO++;
-        });
-        reportHTML += `
-          <tr class="border-b">
-            <td class="py-1 font-semibold">${fl.name}</td>
-            <td class="text-center font-bold text-emerald-800">${fC}</td>
-            <td class="text-center font-bold text-red-800">${fNC}</td>
-            <td class="text-center text-slate-600">${fSO}</td>
-            <td class="text-right font-bold">${flScore}%</td>
-          </tr>
-        `;
-      });
-
-      const totalScore = getERPGlobalScore(erp);
-      reportHTML += `
-            </tbody>
-          </table>
-          <div class="mt-2 text-right text-xs font-black">
-            Taux de conformité global de l'établissement : ${totalScore}%
-          </div>
-        </div>
-      `;
-
-      // 2. Détail des constats et photos
-      reportHTML += `<h3 class="text-sm font-bold text-slate-900 mt-4 mb-2">RELEVÉ DÉTAILLÉ DES ANOMALIES & PHOTOS DE TERRAIN</h3>`;
-
-      // Fonction d'ajout des anomalies
-      function appendScopeAnomalies(title, scope, criteria) {
-        let block = `<div class="avoid-break mb-3"><h4 class="text-xs font-bold text-slate-800 border-b pb-0.5 mb-1.5">${title}</h4>`;
-        let hasAnomaly = false;
-
-        criteria.forEach(cr => {
-          const it = scope.items[cr.id];
-          if (it && it.status === 'NC') {
-            hasAnomaly = true;
-            block += `
-              <div class="print-box mb-2">
-                <div class="flex justify-between items-start">
-                  <span class="font-bold text-xs text-red-900">${cr.label}</span>
-                  <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-100 text-red-800 border border-red-300">NON CONFORME</span>
-                </div>
-                <p class="text-[11px] text-slate-700 mt-0.5 font-mono">Exigence réglementaire : ${cr.rules[erp.profile] || ''}</p>
-                ${it.note ? `<p class="text-xs text-slate-900 mt-1"><strong>Constat / Cotes :</strong> ${escapeHtml(it.note)}</p>` : ''}
-                ${it.photo ? `<div class="mt-2"><img src="${it.photo}" class="print-img rounded"></div>` : ''}
-              </div>
-            `;
-          }
-        });
-
-        if (!hasAnomaly) {
-          block += `<p class="text-xs text-emerald-800 italic">Aucune non-conformité relevée sur ce pôle.</p>`;
-        }
-        block += `</div>`;
-        return block;
-      }
-
-      reportHTML += appendScopeAnomalies("Tronc Commun", erp.commonScope, auditNorms.common);
-      erp.floors.forEach(fl => {
-        reportHTML += appendScopeAnomalies(`Niveau : ${fl.name}`, fl, auditNorms.floor);
-      });
-
-      // Cadre de signature
-      reportHTML += `
-        <div class="avoid-break mt-6 pt-4 border-t border-slate-300 flex justify-between items-end text-xs">
-          <div>
-            <p class="font-bold">Visa et signature du diagnostiqueur :</p>
-            <div class="h-16 w-48 border border-dashed border-slate-400 mt-1 rounded"></div>
-          </div>
-          <div class="text-right text-slate-500">
-            <p>Auditeur ERP PWA • Document opposable CCDSA</p>
-          </div>
-        </div>
-      `;
-
-      printContainer.innerHTML = reportHTML;
-      window.print();
-    }
-
-    function getProfileShort(profile) {
-      if (profile === 'neuf') return 'Neuf';
-      if (profile === 'existant14') return 'Existant 1-4';
-      return '5e Catégorie';
-    }
-
-    function getProfileFull(profile) {
-      if (profile === 'neuf') return 'ERP Neuf (Arrêté 20/04/2017)';
-      if (profile === 'existant14') return 'Bâti Existant Cat. 1 à 4 (Arrêté 08/12/2014)';
-      return 'Bâti Existant 5ᵉ Catégorie (Arrêté 08/12/2014 & allègements)';
-    }
-
-    function getStatusText(status) {
-      if (status === 'C') return 'Conforme';
-      if (status === 'NC') return 'Non Conforme';
-      if (status === 'SO') return 'Sans Objet';
-      return 'À vérifier';
-    }
-
-    function getStatusBadgeClass(status) {
-      if (status === 'C') return 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
-      if (status === 'NC') return 'bg-red-500/20 text-red-300 border border-red-500/30';
-      if (status === 'SO') return 'bg-slate-700 text-slate-300';
-      return 'bg-amber-500/20 text-amber-300 border border-amber-500/30';
-    }
-
-    function escapeHtml(str) {
-      return (str || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    }
-
-    // Initialisation au chargement de la fenêtre
-    window.addEventListener('DOMContentLoaded', initApp);
   </script>
 </body>
 </html>
