@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Audit Accessibilité ERP</title>
+  <title>Audit Accessibilité ERP - Ville d'Aubagne</title>
 
-  <!-- Configuration PWA & Compatibilité iOS / Android -->
   <meta name="theme-color" content="#1e293b">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -23,10 +22,10 @@
       --primary: #2563eb;
       --primary-light: #60a5fa;
       --primary-dark: #1d4ed8;
-      --conform-color: #0284c7; /* Bleu océan pour Conforme - AUCUN VERT */
-      --nc-color: #dc2626;      /* Rouge pour Non Conforme */
-      --so-color: #64748b;      /* Ardoise pour Sans Objet */
-      --warn-color: #d97706;    /* Ambre pour Alerte */
+      --conform-color: #0284c7; /* Bleu océan - Zéro vert */
+      --nc-color: #dc2626;      /* Rouge carmin */
+      --so-color: #64748b;      /* Ardoise */
+      --warn-color: #d97706;    /* Ambre */
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -35,21 +34,20 @@
     header {
       background: #0f172a;
       border-bottom: 1px solid var(--card-border);
-      padding: 16px;
+      padding: 14px 16px;
       position: sticky;
       top: 0;
       z-index: 100;
     }
     .header-top { display: flex; justify-content: space-between; align-items: center; }
-    .header-title { font-size: 1.15rem; font-weight: 700; color: #fff; }
+    .header-title { font-size: 1.1rem; font-weight: 700; color: #fff; }
     
-    .gauge-wrapper { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+    .gauge-wrapper { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
     .gauge-bar-bg { flex: 1; height: 10px; background: #334155; border-radius: 5px; overflow: hidden; }
     .gauge-bar-fill { height: 100%; width: 0%; background: var(--primary); transition: width 0.3s ease; }
     .gauge-text { font-size: 0.85rem; font-weight: 700; color: var(--primary-light); min-width: 48px; text-align: right; }
 
     .container { padding: 14px; max-width: 900px; margin: 0 auto; }
-
     .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
     .card-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; color: var(--primary-light); display: flex; justify-content: space-between; align-items: center; }
 
@@ -59,14 +57,25 @@
     }
     input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); }
 
-    /* Sélecteur de profil */
+    .adap-banner {
+      background: #0f1e36; border: 1px solid #1e3a5f; border-radius: 10px; padding: 12px; margin-bottom: 12px;
+    }
+    .adap-banner-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .adap-badge { font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; text-transform: uppercase; }
+    .badge-realise { background: #0369a1; color: #fff; }
+    .badge-encours { background: #b45309; color: #fff; }
+    .adap-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; }
+    .adap-stat-val { font-weight: 700; color: #fff; font-size: 0.85rem; }
+    .adap-comment {
+      font-size: 0.78rem; color: #93c5fd; background: #091322; padding: 8px 10px; border-radius: 6px; line-height: 1.35; border-left: 3px solid var(--primary-light);
+    }
+
     .profile-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
     .profile-tab {
       background: #0f172a; border: 1px solid #334155; color: var(--text-muted); padding: 8px 4px; font-size: 0.75rem; text-align: center; border-radius: 8px; cursor: pointer; font-weight: 600;
     }
     .profile-tab.active { background: var(--primary); color: #fff; border-color: var(--primary-light); }
 
-    /* Sélecteur d'étage */
     .etage-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 12px; }
     .etage-btn {
       background: #0f172a; border: 1px solid #334155; color: #fff; padding: 6px 14px; font-size: 0.85rem; border-radius: 20px; white-space: nowrap; cursor: pointer; font-weight: 600;
@@ -74,14 +83,13 @@
     .etage-btn.active { background: var(--primary-dark); border-color: var(--primary-light); color: #fff; }
     .btn-add-etage { background: #334155; border: none; color: #fff; border-radius: 20px; padding: 6px 14px; font-size: 0.85rem; cursor: pointer; white-space: nowrap; }
 
-    /* Critères d'audit */
     .criterion-item { background: #162032; border: 1px solid #2d3c52; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
     .crit-title { font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
     .crit-desc { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.3; }
     
     .status-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px; }
     .status-btn {
-      background: #0f172a; border: 1px solid #334155; color: var(--text-muted); padding: 8px; font-size: 0.8rem; font-weight: 700; border-radius: 6px; cursor: pointer; text-align: center;
+      background: #0f172a; border: 1px solid #334155; color: var(--text-muted); padding: 10px 4px; font-size: 0.8rem; font-weight: 700; border-radius: 6px; cursor: pointer; text-align: center; min-height: 44px; display: flex; align-items: center; justify-content: center;
     }
     .status-btn.c.active { background: var(--conform-color); color: #fff; border-color: #38bdf8; }
     .status-btn.nc.active { background: var(--nc-color); color: #fff; border-color: #f87171; }
@@ -90,21 +98,20 @@
     .photo-preview-wrap { display: flex; gap: 8px; overflow-x: auto; margin-top: 6px; }
     .photo-thumb { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; border: 1px solid #475569; }
 
-    /* Barre d'action fixe en bas */
     .bottom-bar {
       position: fixed; bottom: 0; left: 0; right: 0; background: #0f172a; border-top: 1px solid var(--card-border); padding: 10px 14px; display: flex; gap: 8px; z-index: 100;
     }
     .btn-action {
-      flex: 1; background: #334155; color: #fff; border: 1px solid #475569; border-radius: 8px; padding: 10px; font-size: 0.8rem; font-weight: 600; text-align: center; cursor: pointer;
+      flex: 1; background: #334155; color: #fff; border: 1px solid #475569; border-radius: 8px; padding: 10px 4px; font-size: 0.78rem; font-weight: 600; text-align: center; cursor: pointer; min-height: 44px;
     }
     .btn-primary { background: var(--primary); border-color: var(--primary-light); }
 
-    /* Impression PDF */
     @media print {
       body { background: #fff !important; color: #000 !important; padding: 0 !important; }
       header, .bottom-bar, .profile-tabs, .etage-scroll, .btn-add-etage, input[type="file"], .status-btns { display: none !important; }
-      .card, .criterion-item { background: #fff !important; border: 1px solid #ccc !important; color: #000 !important; break-inside: avoid; }
-      .crit-title { color: #000 !important; }
+      .card, .criterion-item, .adap-banner { background: #fff !important; border: 1px solid #ccc !important; color: #000 !important; break-inside: avoid; }
+      .crit-title, .adap-stat-val { color: #000 !important; }
+      .adap-comment { background: #f1f5f9 !important; color: #1e293b !important; border-left-color: #2563eb !important; }
       .print-status { display: block !important; font-weight: bold; margin-top: 4px; }
     }
     .print-status { display: none; font-size: 0.85rem; }
@@ -126,44 +133,53 @@
   </header>
 
   <div class="container">
-    <!-- Sélection de l'ERP & Import Parc CSV -->
     <div class="card">
       <div class="card-title">
-        <span>Bâtiment audité</span>
-        <button type="button" class="btn-action" style="flex:none; padding:4px 8px; font-size:0.75rem;" onclick="document.getElementById('csvInput').click()">Importer Parc (CSV)</button>
-        <input type="file" id="csvInput" accept=".csv" style="display:none" onchange="importerParcCSV(event)">
+        <span>Bâtiment communal (Ville d'Aubagne)</span>
+        <button type="button" class="btn-action" style="flex:none; padding:4px 8px; font-size:0.75rem; min-height:30px;" onclick="document.getElementById('csvInput').click()">Recharger CSV</button>
+        <input type="file" id="csvInput" accept=".csv" style="display:none" onchange="chargerFichierCsvLocal(event)">
       </div>
-      <label>Sélectionner un bâtiment du parc :</label>
+      <label>Sélectionner parmi les 87 bâtiments communaux :</label>
       <select id="erpSelect" onchange="changerErpSelectionne(this.value)">
-        <option value="">-- Saisie manuelle ou choisir un ERP --</option>
+        <option value="">Chargement de la liste...</option>
       </select>
+      
+      <div id="adapInfoBox" class="adap-banner" style="display:none;">
+        <div class="adap-banner-top">
+          <span style="font-size:0.8rem; font-weight:700; color:var(--primary-light);">Suivi Ad'Ap Ville d'Aubagne</span>
+          <span id="adapStatutBadge" class="adap-badge badge-realise">Réalisé</span>
+        </div>
+        <div class="adap-stats">
+          <div>Taux 2015 : <span id="adapTaux2015" class="adap-stat-val">37 %</span></div>
+          <div>Cible Ad'Ap : <span id="adapTauxCible" class="adap-stat-val">100 %</span></div>
+          <div>Budget tvx : <span id="adapMontant" class="adap-stat-val">33 776 €</span></div>
+        </div>
+        <div id="adapCommentaire" class="adap-comment">Travaux réalisés</div>
+      </div>
+
       <div style="display:grid; grid-template-columns: 2fr 1fr; gap:8px;">
         <div>
-          <label>Nom de l'établissement :</label>
-          <input type="text" id="nomERP" placeholder="ex: Groupe Scolaire Curie" oninput="mettreAJourNom(this.value)">
+          <label>Nom du bâtiment :</label>
+          <input type="text" id="nomERP" placeholder="ex: Théâtre Le Comoedia" oninput="mettreAJourNom(this.value)">
         </div>
         <div>
-          <label>Date :</label>
+          <label>Date de visite :</label>
           <input type="date" id="dateAudit">
         </div>
       </div>
     </div>
 
-    <!-- Choix du Profil Réglementaire -->
     <div class="card">
       <label>Profil réglementaire appliqué :</label>
       <div class="profile-tabs">
-        <div class="profile-tab active" id="prof_neuf" onclick="changerProfil('neuf')">Neuf (Arrêté 2017)</div>
+        <div class="profile-tab" id="prof_neuf" onclick="changerProfil('neuf')">Neuf (Arrêté 2017)</div>
         <div class="profile-tab" id="prof_existant_1_4" onclick="changerProfil('existant_1_4')">Existant (Cat 1-4)</div>
-        <div class="profile-tab" id="prof_existant_5" onclick="changerProfil('existant_5')">Existant (5e Cat)</div>
+        <div class="profile-tab active" id="prof_existant_5" onclick="changerProfil('existant_5')">Existant (5e Cat)</div>
       </div>
     </div>
 
-    <!-- Navigation Niveaux / Étages -->
     <div class="card">
-      <div class="card-title">
-        <span>Zone / Niveau évalué</span>
-      </div>
+      <div class="card-title"><span>Zone / Niveau évalué</span></div>
       <div class="etage-scroll" id="etagesConteneur">
         <button type="button" class="etage-btn active" onclick="selectionnerEtage('tronc')">Extérieurs & Accueil</button>
         <button type="button" class="etage-btn" onclick="selectionnerEtage('RDC')">RDC</button>
@@ -171,200 +187,228 @@
       <button type="button" class="btn-add-etage" onclick="ajouterEtage()">+ Ajouter un étage / sous-sol</button>
     </div>
 
-    <!-- Liste des critères d'évaluation dynamique -->
     <div id="listeCriteres"></div>
   </div>
 
-  <!-- Barre d'action fixe inférieure -->
   <div class="bottom-bar">
     <button type="button" class="btn-action" onclick="document.getElementById('jsonInput').click()">📂 Ouvrir</button>
-    <button type="button" class="btn-action" onclick="exporterAuditJSON()">💾 Enregistrer</button>
-    <button type="button" class="btn-action" onclick="exporterSyntheseCSV()">📊 Synthèse CSV</button>
-    <button type="button" class="btn-action btn-primary" onclick="window.print()">🖨 Rapport PDF</button>
+    <button type="button" class="btn-action" onclick="exporterAuditJSON()">💾 Sauvegarder</button>
+    <button type="button" class="btn-action" onclick="exporterSyntheseCSV()">📊 CSV</button>
+    <button type="button" class="btn-action btn-primary" onclick="window.print()">🖨 PDF</button>
     <input type="file" id="jsonInput" accept=".json" style="display:none" onchange="importerAuditJSON(event)">
   </div>
 
   <script>
-    // --- 1. BASE DE DONNÉES DES CRITÈRES EXHAUSTIFS ---
     const REFERENTIEL = {
       tronc: [
-        {
-          id: "stationnement",
-          titre: "Stationnement réservé PMR",
-          desc: "≥ 2 % des places (min 1). Largeur ≥ 3,30 m, pente ≤ 2 %. Raccordement direct sans ressaut.",
-          neuf: "Largeur stricte 3,30 m, pente max 2 %.",
-          existant_1_4: "Emplacement au plus proche de l'entrée, bateau d'accès sans ressaut > 2 cm.",
-          existant_5: "Si parking réservé au public : 1 place adaptée obligatoire sauf contrainte technique."
-        },
-        {
-          id: "cheminement_ext",
-          titre: "Cheminement d'accès extérieur",
-          desc: "Largeur libre ≥ 1,20 m. Absence d'obstacle au sol. Sol non meuble et antidérapant.",
-          neuf: "Pente ≤ 5 % (tolérance 8 % sur 2 m, 10 % sur 0,5 m). Paliers de repos de 1,40 × 1,20 m.",
-          existant_1_4: "Tolérance de pente jusqu'à 12 % sur 0,50 m si impossibilité topographique.",
-          existant_5: "Tolérance élargie et dérogation possible si dénivelé de voirie insurmontable."
-        },
-        {
-          id: "entree_seuil",
-          titre: "Porte d'entrée & Seuil",
-          desc: "Largeur utile minimale, manœuvre de porte Ø 1,50 m, seuil plat ou chanfreiné.",
-          neuf: "Largeur utile ≥ 0,83 m. Seuil ≤ 2 cm chanfreiné. Effort d'ouverture ≤ 50 N.",
-          existant_1_4: "Largeur utile ≥ 0,77 m admise. Dispositif d'appel extérieur si seuil non modifiable.",
-          existant_5: "Largeur utile ≥ 0,77 m admise. Visiophone/sonnette accessible entre 0,90 et 1,30 m."
-        },
-        {
-          id: "accueil_banque",
-          titre: "Banque d'accueil & Sonorisation",
-          desc: "Poste abaissé avec vide pour les genoux. Boucle à Induction Magnétique (BIM).",
-          neuf: "Partie surbaissée hauteur ≤ 0,80 m, vide sous table 0,70×0,60 m. BIM fixe obligatoire.",
-          existant_1_4: "Hauteur ≤ 0,80 m ou tablette amovible. BIM fixe à l'accueil principal.",
-          existant_5: "Tablette ou guichet abaissé. BIM mobile tolérée si accueil ponctuel."
-        },
-        {
-          id: "eclairage_ext_accueil",
-          titre: "Éclairage & Luxmétrie (Abords & Accueil)",
-          desc: "Éclairement minimal mesuré au sol et absence d'éblouissement.",
-          neuf: "≥ 20 lux sur cheminement ext., ≥ 100 lux sous abri, ≥ 200 lux au poste d'accueil.",
-          existant_1_4: "≥ 20 lux ext., ≥ 200 lux au poste d'accueil pour la lecture labiale.",
-          existant_5: "Éclairage direct suffisant sur le visage de l'agent sans contre-jour."
-        },
-        {
-          id: "registre_rpa",
-          titre: "Registre Public d'Accessibilité (RPA)",
-          desc: "Mise à disposition du public des attestations, formation du personnel et fiches.",
-          neuf: "Document complet disponible à l'accueil et consultable en ligne ou sur place.",
-          existant_1_4: "Attestation de conformité ou calendrier d'agenda d'accessibilité (Ad'AP).",
-          existant_5: "RPA obligatoire sous format allégé (attestation, fiche synthétique, formation accueil)."
-        }
+        { id: "stationnement", titre: "Stationnement réservé PMR", desc: "≥ 2 % des places (min 1). Largeur ≥ 3,30 m, pente ≤ 2 %. Raccordement direct sans ressaut.", neuf: "Largeur 3,30 m, pente ≤ 2 %.", existant_1_4: "Emplacement proche entrée, bateau sans ressaut > 2 cm.", existant_5: "Si parking public : 1 place adaptée sauf contrainte." },
+        { id: "cheminement_ext", titre: "Cheminement d'accès extérieur", desc: "Largeur libre ≥ 1,20 m. Absence d'obstacle au sol. Sol non meuble et antidérapant.", neuf: "Pente ≤ 5 % (8 % / 2 m, 10 % / 0,5 m). Paliers de repos.", existant_1_4: "Pente jusqu'à 12 % / 0,5 m si impossibilité technique.", existant_5: "Dérogation possible si dénivelé de voirie insurmontable." },
+        { id: "entree_seuil", titre: "Porte d'entrée & Seuil", desc: "Largeur libre, espace de manœuvre Ø 1,50 m, seuil plat ou chanfreiné ≤ 2 cm.", neuf: "Largeur utile ≥ 0,83 m. Seuil ≤ 2 cm. Effort ≤ 50 N.", existant_1_4: "Largeur utile ≥ 0,77 m admise. Appel ext. si seuil bloquant.", existant_5: "Largeur utile ≥ 0,77 m admise. Visiophone à 0,90-1,30 m." },
+        { id: "accueil_banque", titre: "Banque d'accueil & Boucle Magnétique", desc: "Poste abaissé avec vide sous table. Boucle à Induction Magnétique (BIM).", neuf: "Hauteur ≤ 0,80 m, vide 0,70×0,60 m. BIM fixe obligatoire.", existant_1_4: "Hauteur ≤ 0,80 m ou tablette. BIM fixe à l'accueil.", existant_5: "Tablette abaissée. BIM mobile tolérée." },
+        { id: "eclairage_ext_accueil", titre: "Éclairage & Luxmétrie (Abords & Accueil)", desc: "Éclairement mesuré au sol et confort visuel.", neuf: "≥ 20 lux ext., ≥ 100 lux couloirs, ≥ 200 lux accueil.", existant_1_4: "≥ 20 lux ext., ≥ 200 lux à l'accueil pour lecture labiale.", existant_5: "Éclairage direct suffisant sur le visage sans contre-jour." },
+        { id: "registre_rpa", titre: "Registre Public d'Accessibilité (RPA)", desc: "Mise à disposition des attestations, formation du personnel et fiches.", neuf: "RPA complet consultable sur place et en ligne.", existant_1_4: "Attestation de conformité ou agenda Ad'AP.", existant_5: "RPA obligatoire sous format allégé." }
       ],
       etage: [
-        {
-          id: "circulations_horiz",
-          titre: "Circulations horizontales intérieures",
-          desc: "Largeur utile des couloirs, passage sans obstacle et zones d'évitement.",
-          neuf: "Largeur nominale ≥ 1,40 m continu. Espaces de demi-tour (Ø 1,50 m) tous les 6 m.",
-          existant_1_4: "Largeur ≥ 1,20 m principal (0,90 m ponctuel admis avec zones de croisement).",
-          existant_5: "Largeur ≥ 1,20 m (0,90 m toléré en circulation secondaire)."
-        },
-        {
-          id: "portes_interieures",
-          titre: "Portes intérieures & Sas",
-          desc: "Largeur de passage utile, poignées facilement manœuvrables (0,90 m à 1,30 m).",
-          neuf: "Largeur libre ≥ 0,83 m. Espace de manœuvre rectangulaire hors débattement.",
-          existant_1_4: "Largeur utile ≥ 0,77 m admise. Poignées préhensibles sans serrage du poignet.",
-          existant_5: "Largeur utile ≥ 0,77 m admise."
-        },
-        {
-          id: "escaliers_interieurs",
-          titre: "Escaliers intérieurs (si présents au niveau)",
-          desc: "Sécurisation tactile, visuelle et préhension des marches.",
-          neuf: "BEV à 50 cm du nez supérieur. 1re/dernière contremarches contrastées. 2 mains courantes.",
-          existant_1_4: "Idem neuf. 1 seule main courante admise si largeur utile < 1,00 m.",
-          existant_5: "BEV et nez de marches antidérapants obligatoires. 1 main courante tolérée."
-        },
-        {
-          id: "ascenseur_desserte",
-          titre: "Ascenseur / Desserte verticale",
-          desc: "Cabine adaptée et annonces multisensorielles.",
-          neuf: "Obligatoire si étage > 50 personnes. Cabine 1,10×1,40 m, annonces vocales et visuelles.",
-          existant_1_4: "Ascenseur ou appareil élévateur obligatoire sauf dérogation technique ou disproportion.",
-          existant_5: "NON OBLIGATOIRE si l'ensemble des prestations délivrées est accessible au rez-de-chaussée."
-        },
-        {
-          id: "sanitaires_pmr",
-          titre: "Cabinet d'aisances adapté (PMR)",
-          desc: "Espace latéral de transfert, cuvette à hauteur et barre d'appui.",
-          neuf: "Espace d'usage 0,80×1,30 m à côté de la cuvette (0,45-0,50 m). Ø 1,50 m hors débattement.",
-          existant_1_4: "Débattement de porte empiétant sur le cercle admis si ouverture vers l'extérieur.",
-          existant_5: "SANS OBJET si les sanitaires sont exclusivement réservés au personnel."
-        },
-        {
-          id: "acoustique_reverb",
-          titre: "Traitement acoustique & Réverbération",
-          desc: "Limitation de l'écho dans les espaces d'attente et salles de réunion.",
-          neuf: "Temps de réverbération Tr ≤ 0,8 s à 1,2 s selon volume (matériaux absorbants).",
-          existant_1_4: "Traitement obligatoire lors de travaux de rénovation de faux-plafonds ou revêtements.",
-          existant_5: "Vérifier l'intelligibilité de la parole dans les espaces d'entretien individuel."
-        },
-        {
-          id: "obstacles_220",
-          titre: "Obstacles en saillie sous 2,20 m",
-          desc: "Détection des obstacles bas à la canne blanche pour les malvoyants.",
-          neuf: "Tout élément saillant sous 2,20 m doit comporter un rappel au sol à moins de 0,40 m.",
-          existant_1_4: "Équipements suspendus (écrans, sous-faces d'escaliers) sécurisés ou prolongés au sol.",
-          existant_5: "Vérifier les caissons et tableaux sous les montées d'escalier."
-        },
-        {
-          id: "signaletique_vitrages",
-          titre: "Signalétique & Vitrages",
-          desc: "Hauteurs de lisibilité, contraste visuel et repérage des baies vitrées.",
-          neuf: "Vitrages munis de bandes contrastées à 1,10 m et 1,60 m. Signalétique tactile/visuelle à 1,30 m.",
-          existant_1_4: "Vitrages transparents obligatoirement signalés. Contraste ≥ 70 % sur panneaux d'orientation.",
-          existant_5: "Vitrages repérés à hauteur des yeux et des enfants."
-        },
-        {
-          id: "securite_eas_alarmes",
-          titre: "Évacuation adaptée, EAS & Alarmes",
-          desc: "Espace d'Attente Sécurisé et bimodalité sonore/lumineuse de l'alarme.",
-          neuf: "EAS par étage accessible aux PMR avec interphone. Flashs lumineux dans les sanitaires.",
-          existant_1_4: "EAS aménagé dans les cages d'escaliers encloisonnées. Flash d'alarme dans les WC isolés.",
-          existant_5: "Vérification des diffuseurs lumineux d'alarme dans les locaux isolés."
-        }
+        { id: "circulations_horiz", titre: "Circulations horizontales intérieures", desc: "Largeur utile, passages sans obstacle et zones de croisement.", neuf: "Largeur ≥ 1,40 m continu. Demi-tour Ø 1,50 m tous les 6 m.", existant_1_4: "Largeur ≥ 1,20 m (0,90 m ponctuel admis avec évitements).", existant_5: "Largeur ≥ 1,20 m (0,90 m toléré en secondaire)." },
+        { id: "portes_interieures", titre: "Portes intérieures & Sas", desc: "Largeur de passage utile, poignées facilement manœuvrables (0,90 à 1,30 m).", neuf: "Largeur utile ≥ 0,83 m. Manœuvre hors débattement.", existant_1_4: "Largeur utile ≥ 0,77 m admise. Poignées préhensibles.", existant_5: "Largeur utile ≥ 0,77 m admise." },
+        { id: "escaliers_interieurs", titre: "Escaliers intérieurs (si présents)", desc: "Sécurisation tactile, visuelle et préhension.", neuf: "BEV à 50 cm. 1re/dernière contremarches contrastées. 2 mains courantes.", existant_1_4: "Idem neuf (1 seule main courante tolérée si largeur < 1 m).", existant_5: "BEV et nez de marches antidérapants. 1 main courante tolérée." },
+        { id: "ascenseur_desserte", titre: "Ascenseur / Desserte verticale", desc: "Cabine adaptée et annonces multisensorielles.", neuf: "Obligatoire si étage > 50 pers. Cabine 1,10×1,40 m.", existant_1_4: "Ascenseur obligatoire sauf disproportion ou impossibilité avérée.", existant_5: "NON OBLIGATOIRE si l'ensemble des prestations est accessible au RDC." },
+        { id: "sanitaires_pmr", titre: "Cabinet d'aisances adapté (PMR)", desc: "Espace latéral de transfert, cuvette à 0,45-0,50 m et barre d'appui.", neuf: "Espace d'usage 0,80×1,30 m. Ø 1,50 m hors débattement.", existant_1_4: "Débattement sur zone de manœuvre admis si ouverture ext.", existant_5: "SANS OBJET si sanitaires réservés exclusivement au personnel." },
+        { id: "acoustique_reverb", titre: "Traitement acoustique & Réverbération", desc: "Limitation de l'écho dans les espaces d'attente et réunions.", neuf: "Temps Tr ≤ 0,8 s à 1,2 s selon volume.", existant_1_4: "Traitement lors de réfections de plafonds ou revêtements.", existant_5: "Intelligibilité de la parole dans les espaces d'accueil." },
+        { id: "obstacles_220", titre: "Obstacles en saillie sous 2,20 m", desc: "Détection des obstacles bas à la canne blanche.", neuf: "Élément sous 2,20 m prolongé au sol sous 0,40 m.", existant_1_4: "Écrans et sous-faces d'escaliers signalés au sol.", existant_5: "Vérifier caissons sous escaliers." },
+        { id: "signaletique_vitrages", titre: "Signalétique & Vitrages", desc: "Contraste visuel et repérage des baies vitrées.", neuf: "Vitrages avec bandes à 1,10 m et 1,60 m. Signalétique à 1,30 m.", existant_1_4: "Vitrages transparents repérés. Contraste ≥ 70 %.", existant_5: "Vitrages repérés à hauteur de vue." },
+        { id: "securite_eas_alarmes", titre: "Évacuation adaptée, EAS & Alarmes", desc: "Espace d'Attente Sécurisé et flashs lumineux d'alarme.", neuf: "EAS par étage accessible avec interphone. Flashs WC.", existant_1_4: "EAS dans cages d'escaliers encloisonnées. Flashs WC.", existant_5: "Diffuseurs visuels dans les locaux isolés." }
       ]
     };
 
-    // --- 2. GESTION DE L'ÉTAT DE L'APPLICATION ---
     let auditActuel = {
       erpId: "",
-      nom: "Audit Sans Titre",
+      nom: "",
       date: new Date().toISOString().slice(0, 10),
       profil: "existant_5",
       etageActif: "tronc",
       etages: ["tronc", "RDC"],
-      evaluations: {}, // format: { [etage]: { [critId]: { status: 'C'|'NC'|'SO', note: '', photos: [] } } }
+      evaluations: {},
       parc: []
     };
 
-    // Initialisation
-    window.addEventListener('load', () => {
+    window.addEventListener('load', async () => {
       document.getElementById('dateAudit').value = auditActuel.date;
       chargerDonneesLocales();
-      rendreInterface();
+      if (!auditActuel.parc || auditActuel.parc.length === 0) {
+        await chargerParcDepuisFichier();
+      } else {
+        remplirSelecteurParc();
+      }
+      if (!auditActuel.erpId && auditActuel.parc.length > 0) {
+        changerErpSelectionne(auditActuel.parc[0].id);
+      } else {
+        rendreInterface();
+      }
     });
 
-    function chargerDonneesLocales() {
-      const sauvegarde = localStorage.getItem('audit_erp_data');
-      if (sauvegarde) {
-        try {
-          const parsed = JSON.parse(sauvegarde);
-          auditActuel = { ...auditActuel, ...parsed };
-          document.getElementById('nomERP').value = auditActuel.nom;
-          document.getElementById('dateAudit').value = auditActuel.date;
-        } catch (e) {
-          console.error("Erreur de chargement local", e);
+    async function chargerParcDepuisFichier() {
+      try {
+        const res = await fetch('./parc.csv');
+        if (res.ok) {
+          const txt = await res.text();
+          traiterCsvTexte(txt);
         }
+      } catch (err) {
+        console.log("Lecture réseau parc.csv impossible, utilisation base locale si présente.");
+      }
+    }
+
+    function traiterCsvTexte(csvText) {
+      const lignes = csvText.trim().split(/\r\n|\n/);
+      if (lignes.length < 2) return;
+
+      auditActuel.parc = [];
+      for (let i = 1; i < lignes.length; i++) {
+        const cols = lignes[i].split(';');
+        if (cols.length < 9) continue;
+        const [nom, pat, cls, a15, aap, st, mt, nivStr, com] = cols;
+
+        let cat = "5";
+        if (cls.includes("1")) cat = "1";
+        else if (cls.includes("2")) cat = "2";
+        else if (cls.includes("3")) cat = "3";
+        else if (cls.includes("4")) cat = "4";
+
+        const isRealise = (st === "Réalisé");
+        const cLow = com.toLowerCase();
+        const evals = { "tronc": {}, "RDC": {} };
+        const niveaux = nivStr.split(',').map(s => s.trim());
+        niveaux.forEach(n => { if (n !== 'RDC') evals[n] = {}; });
+
+        if (isRealise) {
+          evals.tronc.stationnement = { status: "C", note: "Travaux Ad'Ap réalisés" };
+          evals.tronc.entree_seuil = { status: "C", note: "Travaux Ad'Ap réalisés" };
+          evals.tronc.registre_rpa = { status: "C", note: "Ad'Ap Aubagne (Réalisé)" };
+          evals.RDC.escaliers_interieurs = { status: "C", note: "Travaux Ad'Ap réalisés" };
+          evals.RDC.ascenseur_desserte = { status: cat === "5" ? "SO" : "C", note: "Conforme" };
+          evals.RDC.sanitaires_pmr = { status: "C", note: "Travaux Ad'Ap réalisés" };
+          evals.RDC.portes_interieures = { status: "C", note: "Travaux Ad'Ap réalisés" };
+          evals.RDC.circulations_horiz = { status: "C", note: "Travaux Ad'Ap réalisés" };
+          evals.RDC.signaletique_vitrages = { status: "C", note: "Travaux Ad'Ap réalisés" };
+        } else {
+          evals.tronc.registre_rpa = { status: "NC", note: "Ad'Ap Ville d'Aubagne (en cours)" };
+          if (cLow.includes("parking") || cLow.includes("place pmr")) evals.tronc.stationnement = { status: "NC", note: "Aménagement place PMR" };
+          if (cLow.includes("seuil") || cLow.includes("rampe") || cLow.includes("visiophone") || cLow.includes("sas")) evals.tronc.entree_seuil = { status: "NC", note: com };
+          if (cLow.includes("escalier") || cLow.includes("marche")) evals.RDC.escaliers_interieurs = { status: "NC", note: "Équipement escaliers requis" };
+          if (cLow.includes("ascenseur") || cLow.includes("dérogation") || cLow.includes("disproportion")) evals.RDC.ascenseur_desserte = { status: (cLow.includes("dérogation") || cLow.includes("disproportion")) ? "SO" : "NC", note: com };
+          if (cLow.includes("wc") || cLow.includes("sanit")) evals.RDC.sanitaires_pmr = { status: "NC", note: "Création / mise aux normes sanitaires PMR" };
+          if (cLow.includes("porte") || cLow.includes("passage") || cLow.includes("menuiserie")) {
+            evals.RDC.portes_interieures = { status: "NC", note: "Portes tiercées / passages" };
+            evals.RDC.circulations_horiz = { status: "NC", note: "Largeurs circulations" };
+          }
+          if (cLow.includes("vitrophanie") || cLow.includes("signalétique") || cLow.includes("signaletique")) evals.RDC.signaletique_vitrages = { status: "NC", note: "Vitrophanie / signalétique requise" };
+        }
+
+        auditActuel.parc.push({
+          id: "erp_" + i,
+          nom: nom,
+          adresse: pat ? `Aubagne (${pat})` : "Aubagne",
+          categorie: cat,
+          classe_erp: cls,
+          acces_2015: a15,
+          acces_apres: aap,
+          statut_adap: st,
+          commentaire_adap: com,
+          montant_adap: mt ? Number(mt).toLocaleString('fr-FR') + " €" : "0 €",
+          niveaux: niveaux,
+          evaluations: evals
+        });
+      }
+
+      remplirSelecteurParc();
+      sauvegarderLocal();
+    }
+
+    function chargerFichierCsvLocal(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        traiterCsvTexte(e.target.result);
+        if (auditActuel.parc.length > 0) changerErpSelectionne(auditActuel.parc[0].id);
+      };
+      reader.readAsText(file);
+    }
+
+    function chargerDonneesLocales() {
+      const sauvg = localStorage.getItem('audit_erp_aubagne_app');
+      if (sauvg) {
+        try {
+          auditActuel = { ...auditActuel, ...JSON.parse(sauvg) };
+        } catch (e) {}
       }
     }
 
     function sauvegarderLocal() {
-      localStorage.setItem('audit_erp_data', JSON.stringify(auditActuel));
+      localStorage.setItem('audit_erp_aubagne_app', JSON.stringify(auditActuel));
       calculerScore();
     }
 
+    function remplirSelecteurParc() {
+      const sel = document.getElementById('erpSelect');
+      sel.innerHTML = '<option value="">-- Choisir un bâtiment d\'Aubagne --</option>';
+      auditActuel.parc.forEach(erp => {
+        const opt = document.createElement('option');
+        opt.value = erp.id;
+        opt.innerText = `${erp.nom} (${erp.classe_erp || 'Cat ' + erp.categorie}) - [${erp.statut_adap}]`;
+        if (erp.id === auditActuel.erpId) opt.selected = true;
+        sel.appendChild(opt);
+      });
+    }
+
+    function changerErpSelectionne(id) {
+      const erp = auditActuel.parc.find(e => e.id === id);
+      if (!erp) return;
+
+      auditActuel.erpId = erp.id;
+      auditActuel.nom = erp.nom;
+      document.getElementById('nomERP').value = erp.nom;
+      document.getElementById('displayErpNom').innerText = erp.nom;
+
+      const adapBox = document.getElementById('adapInfoBox');
+      adapBox.style.display = "block";
+      const badge = document.getElementById('adapStatutBadge');
+      badge.innerText = erp.statut_adap;
+      badge.className = erp.statut_adap === 'Réalisé' ? 'adap-badge badge-realise' : 'adap-badge badge-encours';
+
+      document.getElementById('adapTaux2015').innerText = erp.acces_2015 || 'N/A';
+      document.getElementById('adapTauxCible').innerText = erp.acces_apres || '100 %';
+      document.getElementById('adapMontant').innerText = erp.montant_adap || '0 €';
+      document.getElementById('adapCommentaire').innerText = erp.commentaire_adap || 'Travaux réalisés';
+
+      if (erp.categorie === "5") changerProfil('existant_5');
+      else changerProfil('existant_1_4');
+
+      auditActuel.etages = ["tronc", ...(erp.niveaux || ["RDC"])];
+      auditActuel.etageActif = "tronc";
+      auditActuel.evaluations = JSON.parse(JSON.stringify(erp.evaluations || {}));
+
+      rendreOngletsEtages();
+      rendreCriteres();
+      sauvegarderLocal();
+    }
+
     function mettreAJourNom(val) {
-      auditActuel.nom = val || "Audit Sans Titre";
+      auditActuel.nom = val || "Audit";
       document.getElementById('displayErpNom').innerText = auditActuel.nom;
       sauvegarderLocal();
     }
 
-    function changerProfil(nouveauProfil) {
-      auditActuel.profil = nouveauProfil;
+    function changerProfil(p) {
+      auditActuel.profil = p;
       document.querySelectorAll('.profile-tab').forEach(el => el.classList.remove('active'));
-      document.getElementById(`prof_${nouveauProfil}`).classList.add('active');
+      const tab = document.getElementById(`prof_${p}`);
+      if (tab) tab.classList.add('active');
       
       const badge = document.getElementById('currentCategoryBadge');
-      if (nouveauProfil === 'neuf') badge.innerText = "Neuf (Arrêté 2017)";
-      else if (nouveauProfil === 'existant_1_4') badge.innerText = "Existant (Cat 1 à 4)";
+      if (p === 'neuf') badge.innerText = "Neuf (Arrêté 2017)";
+      else if (p === 'existant_1_4') badge.innerText = "Existant (Cat 1 à 4)";
       else badge.innerText = "Existant (5e Catégorie)";
 
       rendreCriteres();
@@ -380,7 +424,7 @@
     }
 
     function ajouterEtage() {
-      const nom = prompt("Désignation du niveau à ajouter (ex: R+1, Sous-sol, Mezzanine) :");
+      const nom = prompt("Désignation du niveau (ex: R+1, Sous-sol, Mezzanine) :");
       if (!nom || auditActuel.etages.includes(nom)) return;
       auditActuel.etages.push(nom);
       rendreOngletsEtages();
@@ -390,9 +434,7 @@
 
     function rendreOngletsEtages() {
       const cont = document.getElementById('etagesConteneur');
-      cont.innerHTML = `
-        <button type="button" class="etage-btn ${auditActuel.etageActif === 'tronc' ? 'active' : ''}" onclick="selectionnerEtage('tronc')">Extérieurs & Accueil</button>
-      `;
+      cont.innerHTML = `<button type="button" class="etage-btn ${auditActuel.etageActif === 'tronc' ? 'active' : ''}" onclick="selectionnerEtage('tronc')">Extérieurs & Accueil</button>`;
       auditActuel.etages.filter(e => e !== 'tronc').forEach(et => {
         const btn = document.createElement('button');
         btn.type = "button";
@@ -406,18 +448,14 @@
     function rendreCriteres() {
       const cont = document.getElementById('listeCriteres');
       cont.innerHTML = "";
+      const liste = auditActuel.etageActif === 'tronc' ? REFERENTIEL.tronc : REFERENTIEL.etage;
 
-      const estTronc = auditActuel.etageActif === 'tronc';
-      const liste = estTronc ? REFERENTIEL.tronc : REFERENTIEL.etage;
-
-      if (!auditActuel.evaluations[auditActuel.etageActif]) {
-        auditActuel.evaluations[auditActuel.etageActif] = {};
-      }
+      if (!auditActuel.evaluations[auditActuel.etageActif]) auditActuel.evaluations[auditActuel.etageActif] = {};
       const evalEtage = auditActuel.evaluations[auditActuel.etageActif];
 
       liste.forEach(crit => {
         const etat = evalEtage[crit.id] || { status: null, note: "", photos: [] };
-        const regleSpecifique = crit[auditActuel.profil] || crit.desc;
+        const regle = crit[auditActuel.profil] || crit.desc;
 
         const card = document.createElement('div');
         card.className = "criterion-item";
@@ -425,19 +463,15 @@
           <div class="crit-title">${crit.titre}</div>
           <div class="crit-desc">${crit.desc}</div>
           <div style="background:#0f172a; padding:6px 10px; border-radius:6px; font-size:0.75rem; color:#38bdf8; margin-bottom:8px; border-left:3px solid var(--primary);">
-            <strong>Règle profil :</strong> ${regleSpecifique}
+            <strong>Règle profil :</strong> ${regle}
           </div>
-
           <div class="status-btns">
             <div class="status-btn c ${etat.status === 'C' ? 'active' : ''}" onclick="definirStatut('${crit.id}', 'C')">Conforme</div>
             <div class="status-btn nc ${etat.status === 'NC' ? 'active' : ''}" onclick="definirStatut('${crit.id}', 'NC')">Non Conforme</div>
             <div class="status-btn so ${etat.status === 'SO' ? 'active' : ''}" onclick="definirStatut('${crit.id}', 'SO')">Sans Objet</div>
           </div>
-
           <div class="print-status">Constat : <strong>${etat.status || 'Non vérifié'}</strong></div>
-
-          <textarea placeholder="Constats techniques, cotes relevées, préconisations..." style="margin-bottom:6px; height:50px;" oninput="majNote('${crit.id}', this.value)">${etat.note || ''}</textarea>
-
+          <textarea placeholder="Constats techniques, cotes relevées, réserves..." style="margin-bottom:6px; height:50px;" oninput="majNote('${crit.id}', this.value)">${etat.note || ''}</textarea>
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <label style="margin:0; cursor:pointer; font-size:0.75rem; color:var(--primary-light);">
               📷 Prendre une photo
@@ -450,37 +484,29 @@
         `;
         cont.appendChild(card);
       });
-
       calculerScore();
     }
 
-    function definirStatut(critId, statut) {
-      if (!auditActuel.evaluations[auditActuel.etageActif]) {
-        auditActuel.evaluations[auditActuel.etageActif] = {};
-      }
-      if (!auditActuel.evaluations[auditActuel.etageActif][critId]) {
-        auditActuel.evaluations[auditActuel.etageActif][critId] = { status: null, note: "", photos: [] };
-      }
-      auditActuel.evaluations[auditActuel.etageActif][critId].status = statut;
+    function definirStatut(id, s) {
+      if (!auditActuel.evaluations[auditActuel.etageActif]) auditActuel.evaluations[auditActuel.etageActif] = {};
+      if (!auditActuel.evaluations[auditActuel.etageActif][id]) auditActuel.evaluations[auditActuel.etageActif][id] = { status: null, note: "", photos: [] };
+      auditActuel.evaluations[auditActuel.etageActif][id].status = s;
       rendreCriteres();
       sauvegarderLocal();
     }
 
-    function majNote(critId, val) {
-      if (!auditActuel.evaluations[auditActuel.etageActif][critId]) {
-        auditActuel.evaluations[auditActuel.etageActif][critId] = { status: null, note: "", photos: [] };
-      }
-      auditActuel.evaluations[auditActuel.etageActif][critId].note = val;
+    function majNote(id, v) {
+      if (!auditActuel.evaluations[auditActuel.etageActif]) auditActuel.evaluations[auditActuel.etageActif] = {};
+      if (!auditActuel.evaluations[auditActuel.etageActif][id]) auditActuel.evaluations[auditActuel.etageActif][id] = { status: null, note: "", photos: [] };
+      auditActuel.evaluations[auditActuel.etageActif][id].note = v;
       sauvegarderLocal();
     }
 
-    function ajouterPhoto(critId, ev) {
+    function ajouterPhoto(id, ev) {
       const file = ev.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
-      reader.onload = (e) => {
-        // Redimensionnement automatique pour économiser le stockage
+      reader.onload = e => {
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement('canvas');
@@ -493,13 +519,10 @@
           ctx.drawImage(img, 0, 0, w, h);
           const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
 
-          if (!auditActuel.evaluations[auditActuel.etageActif][critId]) {
-            auditActuel.evaluations[auditActuel.etageActif][critId] = { status: null, note: "", photos: [] };
-          }
-          if (!auditActuel.evaluations[auditActuel.etageActif][critId].photos) {
-            auditActuel.evaluations[auditActuel.etageActif][critId].photos = [];
-          }
-          auditActuel.evaluations[auditActuel.etageActif][critId].photos.push(dataUrl);
+          if (!auditActuel.evaluations[auditActuel.etageActif]) auditActuel.evaluations[auditActuel.etageActif] = {};
+          if (!auditActuel.evaluations[auditActuel.etageActif][id]) auditActuel.evaluations[auditActuel.etageActif][id] = { status: null, note: "", photos: [] };
+          if (!auditActuel.evaluations[auditActuel.etageActif][id].photos) auditActuel.evaluations[auditActuel.etageActif][id].photos = [];
+          auditActuel.evaluations[auditActuel.etageActif][id].photos.push(dataUrl);
           rendreCriteres();
           sauvegarderLocal();
         };
@@ -509,9 +532,7 @@
     }
 
     function calculerScore() {
-      let conformes = 0;
-      let nonConformes = 0;
-
+      let conformes = 0, nonConformes = 0;
       Object.keys(auditActuel.evaluations).forEach(et => {
         const obj = auditActuel.evaluations[et];
         Object.keys(obj).forEach(cId => {
@@ -520,90 +541,20 @@
           else if (s === 'NC') nonConformes++;
         });
       });
-
       const total = conformes + nonConformes;
       const score = total > 0 ? Math.round((conformes / total) * 100) : 0;
-
       document.getElementById('gaugeBar').style.width = `${score}%`;
       document.getElementById('gaugeScore').innerText = `${score} %`;
     }
 
     function rendreInterface() {
-      document.getElementById('displayErpNom').innerText = auditActuel.nom;
+      document.getElementById('displayErpNom').innerText = auditActuel.nom || 'Sélectionner un ERP';
+      document.getElementById('nomERP').value = auditActuel.nom || '';
       document.getElementById(`prof_${auditActuel.profil}`).click();
       rendreOngletsEtages();
       rendreCriteres();
     }
 
-    // --- 3. GESTION DU PARC IMMOBILIER (CSV) ---
-    function importerParcCSV(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const text = e.target.result;
-        const lignes = text.split(/\r\n|\n/).filter(l => l.trim() !== "");
-        if (lignes.length < 2) {
-          alert("Fichier CSV vide ou non conforme.");
-          return;
-        }
-
-        auditActuel.parc = [];
-        const entetes = lignes[0].toLowerCase().split(/[;,]/);
-
-        for (let i = 1; i < lignes.length; i++) {
-          const cols = lignes[i].split(/[;,]/);
-          if (cols.length >= 2) {
-            auditActuel.parc.push({
-              id: "erp_" + i,
-              nom: cols[0].trim(),
-              adresse: cols[1] ? cols[1].trim() : "",
-              cat: cols[2] ? cols[2].trim() : "5",
-              niveaux: cols[4] ? cols[4].split(',').map(s => s.trim()) : ["RDC"]
-            });
-          }
-        }
-
-        remplirSelecteurParc();
-        sauvegarderLocal();
-        alert(`${auditActuel.parc.length} ERP importés dans le parc !`);
-      };
-      reader.readAsText(file);
-    }
-
-    function remplirSelecteurParc() {
-      const sel = document.getElementById('erpSelect');
-      sel.innerHTML = '<option value="">-- Choisir un bâtiment dans le parc --</option>';
-      auditActuel.parc.forEach(erp => {
-        const opt = document.createElement('option');
-        opt.value = erp.id;
-        opt.innerText = `${erp.nom} (${erp.adresse || 'Cat. ' + erp.cat})`;
-        sel.appendChild(opt);
-      });
-    }
-
-    function changerErpSelectionne(id) {
-      const erp = auditActuel.parc.find(e => e.id === id);
-      if (!erp) return;
-
-      auditActuel.nom = erp.nom;
-      document.getElementById('nomERP').value = erp.nom;
-      document.getElementById('displayErpNom').innerText = erp.nom;
-
-      // Déduction du profil
-      if (erp.cat === "5") changerProfil('existant_5');
-      else changerProfil('existant_1_4');
-
-      // Création des étages
-      auditActuel.etages = ["tronc", ...erp.niveaux];
-      auditActuel.etageActif = "tronc";
-      rendreOngletsEtages();
-      rendreCriteres();
-      sauvegarderLocal();
-    }
-
-    // --- 4. EXPORT / IMPORT JSON ET CSV SYNTHÈSE ---
     function exporterAuditJSON() {
       const blob = new Blob([JSON.stringify(auditActuel, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
@@ -617,18 +568,15 @@
     function importerAuditJSON(event) {
       const file = event.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = e => {
         try {
           auditActuel = JSON.parse(e.target.result);
-          document.getElementById('nomERP').value = auditActuel.nom;
-          document.getElementById('dateAudit').value = auditActuel.date;
           remplirSelecteurParc();
           rendreInterface();
           alert("Audit rechargé avec succès !");
         } catch (err) {
-          alert("Erreur de décodage du fichier JSON.");
+          alert("Erreur de lecture du JSON.");
         }
       };
       reader.readAsText(file);
@@ -643,7 +591,6 @@
           csv += `"${et}";"${cId}";"${item.status || ''}";"${(item.note || '').replace(/"/g, '""')}"\n`;
         });
       });
-
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -653,11 +600,9 @@
       URL.revokeObjectURL(url);
     }
 
-    // Service Worker autonome pour exécution hors-ligne
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         const swBlob = new Blob([`
-          const CACHE = 'audit-erp-no-green-v1';
           self.addEventListener('install', e => self.skipWaiting());
           self.addEventListener('activate', e => self.clients.claim());
           self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
