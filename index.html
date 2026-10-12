@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Audit Accessibilité ERP - Ville d'Aubagne</title>
 
+  <!-- Configuration PWA Mobile (Pixel & iPhone) -->
   <meta name="theme-color" content="#1e293b">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Audit ERP">
+  <meta name="apple-mobile-web-app-title" content="Audit Aubagne">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%232563eb'><rect width='100' height='100' rx='20' fill='%230f172a'/><text x='50' y='65' font-size='50' text-anchor='middle' fill='%2360a5fa'>♿</text></svg>">
-  <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiQXVkaXQgQWNjZXNzaWJpbGl0w6kgRVJQIiwic2hvcnRfbmFtZSI6IkF1ZGl0IEVSUCIsInN0YXJ0X3VybCI6Ii4vaW5kZXguaHRtbCIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwZjE3MmEiLCJ0aGVtZV9jb2xvciI6IiMxZTI5M2IiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTAwIDEwMCc+PHJlY3Qgd2lkdGg9JzEwMCcgaGVpZ2h0PScxMDAnIHJ4PScyMCcgZmlsbD0nIzBmMTcyYScvPjx0ZXh0IHg9JzUwJyB5PSc2NScgZm9udC1zaXplPSc1MCcgdGV4dC1hbmNob3I9J21pZGRsZScgZmlsbD0nIzYwYTVmYSc+4pm/PC90ZXh0Pjwvc3ZnPiIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9zdmcreG1sIn1dfQ==">
+  <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiQXVkaXQgQWNjZXNzaWJpbGl0w6kgRVJQIC0gQXViYWduZSIsInNob3J0X25hbWUiOiJBdWRpdCBBdWJhZ25lIiwic3RhcnRfdXJsIjoiLi9pbmRleC5odG1sIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzBiMTEyMCIsInRoZW1lX2NvbG9yIjoiIzFlMjkzYiIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWwsPHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAgMTAwJz48cmVjdCB3aWR0aD0nMTAwJyBoZWlnaHQ9JzEwMCcgcng9JzIwJyBmaWxsPScjMGYxNzJhJy8+PHRleHQgeD0nNTAnIHk9JzY1JyBmYXN0LXNpemU9JzUwJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmaWxsPScjNjBhNWZhJz7im788L3RleHQ+PC9zdmc+\",\"c2l6ZXMiOiIxOTJ4MTkyIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19">
 
   <style>
     :root {
@@ -25,7 +26,7 @@
       --conform-color: #0284c7; /* Bleu océan - Zéro vert */
       --nc-color: #dc2626;      /* Rouge carmin */
       --so-color: #64748b;      /* Ardoise */
-      --warn-color: #d97706;    /* Ambre */
+      --warn-color: #d97706;    /* Ambre pour À Faire / En cours */
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -34,14 +35,15 @@
     header {
       background: #0f172a;
       border-bottom: 1px solid var(--card-border);
-      padding: 14px 16px;
+      padding: 12px 16px;
       position: sticky;
       top: 0;
       z-index: 100;
     }
-    .header-top { display: flex; justify-content: space-between; align-items: center; }
-    .header-title { font-size: 1.1rem; font-weight: 700; color: #fff; }
-    
+    .header-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .header-left { display: flex; align-items: center; gap: 10px; }
+
+    /* Barre de progression bâtiment actif */
     .gauge-wrapper { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
     .gauge-bar-bg { flex: 1; height: 10px; background: #334155; border-radius: 5px; overflow: hidden; }
     .gauge-bar-fill { height: 100%; width: 0%; background: var(--primary); transition: width 0.3s ease; }
@@ -57,25 +59,101 @@
     }
     input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); }
 
+    /* Synthèse du Parc Municipal (KPIs) */
+    .parc-dashboard {
+      background: #0f1e36;
+      border: 1px solid #1e3a5f;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .parc-dashboard-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .parc-kpis {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .kpi-card {
+      background: #091322;
+      border: 1px solid #233857;
+      border-radius: 8px;
+      padding: 8px 10px;
+      text-align: center;
+    }
+    .kpi-val { font-size: 1.15rem; font-weight: 800; color: #fff; }
+    .kpi-label { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+    .kpi-afaire { color: #fbbf24; }
+    .kpi-realise { color: #38bdf8; }
+
+    .parc-bar-wrap { height: 10px; border-radius: 5px; overflow: hidden; display: flex; background: #1e293b; margin-bottom: 6px; }
+    .parc-bar-realise { background: #0284c7; height: 100%; transition: width 0.3s; }
+    .parc-bar-afaire { background: #d97706; height: 100%; transition: width 0.3s; }
+    .parc-bar-legend { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); }
+
+    /* Filtres rapides */
+    .filter-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; }
+    .filter-btn {
+      background: #091322; border: 1px solid #334155; color: var(--text-muted); padding: 8px 6px; font-size: 0.78rem; text-align: center; border-radius: 8px; cursor: pointer; font-weight: 700;
+    }
+    .filter-btn.active {
+      background: #1e3a5f; color: #fff; border-color: var(--primary-light);
+    }
+    .filter-btn.btn-afaire.active {
+      background: #78350f; color: #fef3c7; border-color: #f59e0b;
+    }
+    .filter-btn.btn-realise.active {
+      background: #075985; color: #e0f2fe; border-color: #38bdf8;
+    }
+
+    /* Encart Ad'Ap spécifique au bâtiment */
     .adap-banner {
-      background: #0f1e36; border: 1px solid #1e3a5f; border-radius: 10px; padding: 12px; margin-bottom: 12px;
+      background: #0f1e36;
+      border: 1px solid #1e3a5f;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 12px;
     }
     .adap-banner-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .adap-badge { font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; text-transform: uppercase; }
+    .adap-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
     .badge-realise { background: #0369a1; color: #fff; }
     .badge-encours { background: #b45309; color: #fff; }
     .adap-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; }
     .adap-stat-val { font-weight: 700; color: #fff; font-size: 0.85rem; }
     .adap-comment {
-      font-size: 0.78rem; color: #93c5fd; background: #091322; padding: 8px 10px; border-radius: 6px; line-height: 1.35; border-left: 3px solid var(--primary-light);
+      font-size: 0.78rem;
+      color: #93c5fd;
+      background: #091322;
+      padding: 8px 10px;
+      border-radius: 6px;
+      line-height: 1.35;
+      border-left: 3px solid var(--primary-light);
     }
 
+    /* Profil réglementaire */
     .profile-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
     .profile-tab {
       background: #0f172a; border: 1px solid #334155; color: var(--text-muted); padding: 8px 4px; font-size: 0.75rem; text-align: center; border-radius: 8px; cursor: pointer; font-weight: 600;
     }
     .profile-tab.active { background: var(--primary); color: #fff; border-color: var(--primary-light); }
 
+    /* Étages */
     .etage-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 12px; }
     .etage-btn {
       background: #0f172a; border: 1px solid #334155; color: #fff; padding: 6px 14px; font-size: 0.85rem; border-radius: 20px; white-space: nowrap; cursor: pointer; font-weight: 600;
@@ -83,6 +161,7 @@
     .etage-btn.active { background: var(--primary-dark); border-color: var(--primary-light); color: #fff; }
     .btn-add-etage { background: #334155; border: none; color: #fff; border-radius: 20px; padding: 6px 14px; font-size: 0.85rem; cursor: pointer; white-space: nowrap; }
 
+    /* Critères d'audit */
     .criterion-item { background: #162032; border: 1px solid #2d3c52; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
     .crit-title { font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
     .crit-desc { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.3; }
@@ -98,6 +177,7 @@
     .photo-preview-wrap { display: flex; gap: 8px; overflow-x: auto; margin-top: 6px; }
     .photo-thumb { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; border: 1px solid #475569; }
 
+    /* Barre d'action fixe en bas */
     .bottom-bar {
       position: fixed; bottom: 0; left: 0; right: 0; background: #0f172a; border-top: 1px solid var(--card-border); padding: 10px 14px; display: flex; gap: 8px; z-index: 100;
     }
@@ -106,9 +186,10 @@
     }
     .btn-primary { background: var(--primary); border-color: var(--primary-light); }
 
+    /* Impression PDF */
     @media print {
       body { background: #fff !important; color: #000 !important; padding: 0 !important; }
-      header, .bottom-bar, .profile-tabs, .etage-scroll, .btn-add-etage, input[type="file"], .status-btns { display: none !important; }
+      header, .bottom-bar, .profile-tabs, .etage-scroll, .btn-add-etage, input[type="file"], .status-btns, .filter-tabs, .parc-dashboard { display: none !important; }
       .card, .criterion-item, .adap-banner { background: #fff !important; border: 1px solid #ccc !important; color: #000 !important; break-inside: avoid; }
       .crit-title, .adap-stat-val { color: #000 !important; }
       .adap-comment { background: #f1f5f9 !important; color: #1e293b !important; border-left-color: #2563eb !important; }
@@ -121,9 +202,25 @@
 
   <header>
     <div class="header-top">
-      <div class="header-title" id="displayErpNom">Audit Accessibilité ERP</div>
-      <div style="font-size: 0.8rem; color: var(--text-muted);" id="currentCategoryBadge">5e Catégorie</div>
+      <div class="header-left">
+        <!-- Logo officiel vectoriel Ville d'Aubagne -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 46" style="height:36px; width:auto;">
+          <g fill="none">
+            <rect x="2" y="2" width="42" height="42" rx="9" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5"/>
+            <path d="M12 34 L23 11 L34 34" stroke="#60a5fa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 26 L30 26" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="23" cy="20" r="2.5" fill="#93c5fd"/>
+            <text x="52" y="20" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="800" fill="#f8fafc" letter-spacing="1.2">AUBAGNE</text>
+            <text x="52" y="34" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="600" fill="#94a3b8" letter-spacing="2">VILLE D'AUBAGNE</text>
+          </g>
+        </svg>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size: 0.8rem; font-weight:700; color: #fff;" id="currentCategoryBadge">5e Catégorie</div>
+        <div style="font-size: 0.7rem; color: var(--primary-light);">Arrêté ERP</div>
+      </div>
     </div>
+    
     <div class="gauge-wrapper">
       <div class="gauge-bar-bg">
         <div id="gaugeBar" class="gauge-bar-fill"></div>
@@ -133,20 +230,62 @@
   </header>
 
   <div class="container">
+
+    <!-- Synthèse du Patrimoine Communal -->
+    <div class="parc-dashboard">
+      <div class="parc-dashboard-title">
+        <span>Synthèse du Patrimoine Communal</span>
+        <span style="font-size:0.75rem; color:#93c5fd;" id="totalErpCount">87 ERP</span>
+      </div>
+      
+      <div class="parc-kpis">
+        <div class="kpi-card">
+          <div class="kpi-val" id="kpiTotal">87</div>
+          <div class="kpi-label">Total Bâtiments</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val kpi-afaire" id="kpiAfaires">22 (25 %)</div>
+          <div class="kpi-label">À faire / En cours</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val kpi-realise" id="kpiRealises">65 (75 %)</div>
+          <div class="kpi-label">Travaux Réalisés</div>
+        </div>
+      </div>
+
+      <div class="parc-bar-wrap">
+        <div id="barRealise" class="parc-bar-realise" style="width: 74.7%;"></div>
+        <div id="barAfaires" class="parc-bar-afaire" style="width: 25.3%;"></div>
+      </div>
+      <div class="parc-bar-legend">
+        <span style="color:#38bdf8;">■ Réalisés : <strong id="pctRealise">74,7 %</strong></span>
+        <span style="color:#fbbf24;">■ Restant à faire : <strong id="pctAfaires">25,3 %</strong></span>
+      </div>
+    </div>
+
+    <!-- Choix du bâtiment & Filtres rapides -->
     <div class="card">
       <div class="card-title">
-        <span>Bâtiment communal (Ville d'Aubagne)</span>
-        <button type="button" class="btn-action" style="flex:none; padding:4px 8px; font-size:0.75rem; min-height:30px;" onclick="document.getElementById('csvInput').click()">Recharger CSV</button>
-        <input type="file" id="csvInput" accept=".csv" style="display:none" onchange="chargerFichierCsvLocal(event)">
+        <span>Sélection du bâtiment</span>
+        <button type="button" class="btn-action" style="flex:none; padding:4px 8px; font-size:0.75rem; min-height:28px;" onclick="document.getElementById('csvInput').click()">Importer un CSV</button>
+        <input type="file" id="csvInput" accept=".csv" style="display:none" onchange="importerParcCSV(event)">
       </div>
-      <label>Sélectionner parmi les 87 bâtiments communaux :</label>
+
+      <label>Filtrer la liste des bâtiments :</label>
+      <div class="filter-tabs">
+        <div class="filter-btn active" id="flt_tous" onclick="changerFiltre('tous')">Tous (<span id="cnt_tous">87</span>)</div>
+        <div class="filter-btn btn-afaire" id="flt_encours" onclick="changerFiltre('encours')">À faire (<span id="cnt_encours">22</span>)</div>
+        <div class="filter-btn btn-realise" id="flt_realise" onclick="changerFiltre('realise')">Réalisés (<span id="cnt_realise">65</span>)</div>
+      </div>
+
+      <label>Choisir un bâtiment :</label>
       <select id="erpSelect" onchange="changerErpSelectionne(this.value)">
-        <option value="">Chargement de la liste...</option>
       </select>
       
+      <!-- Fiche de suivi Ad'Ap Ville d'Aubagne -->
       <div id="adapInfoBox" class="adap-banner" style="display:none;">
         <div class="adap-banner-top">
-          <span style="font-size:0.8rem; font-weight:700; color:var(--primary-light);">Suivi Ad'Ap Ville d'Aubagne</span>
+          <span style="font-size:0.8rem; font-weight:700; color:var(--primary-light);">Fiche Ad'Ap Aubagne</span>
           <span id="adapStatutBadge" class="adap-badge badge-realise">Réalisé</span>
         </div>
         <div class="adap-stats">
@@ -169,6 +308,7 @@
       </div>
     </div>
 
+    <!-- Profil Réglementaire -->
     <div class="card">
       <label>Profil réglementaire appliqué :</label>
       <div class="profile-tabs">
@@ -178,8 +318,11 @@
       </div>
     </div>
 
+    <!-- Niveaux / Étages -->
     <div class="card">
-      <div class="card-title"><span>Zone / Niveau évalué</span></div>
+      <div class="card-title">
+        <span>Zone / Niveau évalué</span>
+      </div>
       <div class="etage-scroll" id="etagesConteneur">
         <button type="button" class="etage-btn active" onclick="selectionnerEtage('tronc')">Extérieurs & Accueil</button>
         <button type="button" class="etage-btn" onclick="selectionnerEtage('RDC')">RDC</button>
@@ -187,9 +330,11 @@
       <button type="button" class="btn-add-etage" onclick="ajouterEtage()">+ Ajouter un étage / sous-sol</button>
     </div>
 
+    <!-- Liste des critères -->
     <div id="listeCriteres"></div>
   </div>
 
+  <!-- Barre inférieure fixe -->
   <div class="bottom-bar">
     <button type="button" class="btn-action" onclick="document.getElementById('jsonInput').click()">📂 Ouvrir</button>
     <button type="button" class="btn-action" onclick="exporterAuditJSON()">💾 Sauvegarder</button>
@@ -199,88 +344,117 @@
   </div>
 
   <script>
-    const REFERENTIEL = {
-      tronc: [
-        { id: "stationnement", titre: "Stationnement réservé PMR", desc: "≥ 2 % des places (min 1). Largeur ≥ 3,30 m, pente ≤ 2 %. Raccordement direct sans ressaut.", neuf: "Largeur 3,30 m, pente ≤ 2 %.", existant_1_4: "Emplacement proche entrée, bateau sans ressaut > 2 cm.", existant_5: "Si parking public : 1 place adaptée sauf contrainte." },
-        { id: "cheminement_ext", titre: "Cheminement d'accès extérieur", desc: "Largeur libre ≥ 1,20 m. Absence d'obstacle au sol. Sol non meuble et antidérapant.", neuf: "Pente ≤ 5 % (8 % / 2 m, 10 % / 0,5 m). Paliers de repos.", existant_1_4: "Pente jusqu'à 12 % / 0,5 m si impossibilité technique.", existant_5: "Dérogation possible si dénivelé de voirie insurmontable." },
-        { id: "entree_seuil", titre: "Porte d'entrée & Seuil", desc: "Largeur libre, espace de manœuvre Ø 1,50 m, seuil plat ou chanfreiné ≤ 2 cm.", neuf: "Largeur utile ≥ 0,83 m. Seuil ≤ 2 cm. Effort ≤ 50 N.", existant_1_4: "Largeur utile ≥ 0,77 m admise. Appel ext. si seuil bloquant.", existant_5: "Largeur utile ≥ 0,77 m admise. Visiophone à 0,90-1,30 m." },
-        { id: "accueil_banque", titre: "Banque d'accueil & Boucle Magnétique", desc: "Poste abaissé avec vide sous table. Boucle à Induction Magnétique (BIM).", neuf: "Hauteur ≤ 0,80 m, vide 0,70×0,60 m. BIM fixe obligatoire.", existant_1_4: "Hauteur ≤ 0,80 m ou tablette. BIM fixe à l'accueil.", existant_5: "Tablette abaissée. BIM mobile tolérée." },
-        { id: "eclairage_ext_accueil", titre: "Éclairage & Luxmétrie (Abords & Accueil)", desc: "Éclairement mesuré au sol et confort visuel.", neuf: "≥ 20 lux ext., ≥ 100 lux couloirs, ≥ 200 lux accueil.", existant_1_4: "≥ 20 lux ext., ≥ 200 lux à l'accueil pour lecture labiale.", existant_5: "Éclairage direct suffisant sur le visage sans contre-jour." },
-        { id: "registre_rpa", titre: "Registre Public d'Accessibilité (RPA)", desc: "Mise à disposition des attestations, formation du personnel et fiches.", neuf: "RPA complet consultable sur place et en ligne.", existant_1_4: "Attestation de conformité ou agenda Ad'AP.", existant_5: "RPA obligatoire sous format allégé." }
-      ],
-      etage: [
-        { id: "circulations_horiz", titre: "Circulations horizontales intérieures", desc: "Largeur utile, passages sans obstacle et zones de croisement.", neuf: "Largeur ≥ 1,40 m continu. Demi-tour Ø 1,50 m tous les 6 m.", existant_1_4: "Largeur ≥ 1,20 m (0,90 m ponctuel admis avec évitements).", existant_5: "Largeur ≥ 1,20 m (0,90 m toléré en secondaire)." },
-        { id: "portes_interieures", titre: "Portes intérieures & Sas", desc: "Largeur de passage utile, poignées facilement manœuvrables (0,90 à 1,30 m).", neuf: "Largeur utile ≥ 0,83 m. Manœuvre hors débattement.", existant_1_4: "Largeur utile ≥ 0,77 m admise. Poignées préhensibles.", existant_5: "Largeur utile ≥ 0,77 m admise." },
-        { id: "escaliers_interieurs", titre: "Escaliers intérieurs (si présents)", desc: "Sécurisation tactile, visuelle et préhension.", neuf: "BEV à 50 cm. 1re/dernière contremarches contrastées. 2 mains courantes.", existant_1_4: "Idem neuf (1 seule main courante tolérée si largeur < 1 m).", existant_5: "BEV et nez de marches antidérapants. 1 main courante tolérée." },
-        { id: "ascenseur_desserte", titre: "Ascenseur / Desserte verticale", desc: "Cabine adaptée et annonces multisensorielles.", neuf: "Obligatoire si étage > 50 pers. Cabine 1,10×1,40 m.", existant_1_4: "Ascenseur obligatoire sauf disproportion ou impossibilité avérée.", existant_5: "NON OBLIGATOIRE si l'ensemble des prestations est accessible au RDC." },
-        { id: "sanitaires_pmr", titre: "Cabinet d'aisances adapté (PMR)", desc: "Espace latéral de transfert, cuvette à 0,45-0,50 m et barre d'appui.", neuf: "Espace d'usage 0,80×1,30 m. Ø 1,50 m hors débattement.", existant_1_4: "Débattement sur zone de manœuvre admis si ouverture ext.", existant_5: "SANS OBJET si sanitaires réservés exclusivement au personnel." },
-        { id: "acoustique_reverb", titre: "Traitement acoustique & Réverbération", desc: "Limitation de l'écho dans les espaces d'attente et réunions.", neuf: "Temps Tr ≤ 0,8 s à 1,2 s selon volume.", existant_1_4: "Traitement lors de réfections de plafonds ou revêtements.", existant_5: "Intelligibilité de la parole dans les espaces d'accueil." },
-        { id: "obstacles_220", titre: "Obstacles en saillie sous 2,20 m", desc: "Détection des obstacles bas à la canne blanche.", neuf: "Élément sous 2,20 m prolongé au sol sous 0,40 m.", existant_1_4: "Écrans et sous-faces d'escaliers signalés au sol.", existant_5: "Vérifier caissons sous escaliers." },
-        { id: "signaletique_vitrages", titre: "Signalétique & Vitrages", desc: "Contraste visuel et repérage des baies vitrées.", neuf: "Vitrages avec bandes à 1,10 m et 1,60 m. Signalétique à 1,30 m.", existant_1_4: "Vitrages transparents repérés. Contraste ≥ 70 %.", existant_5: "Vitrages repérés à hauteur de vue." },
-        { id: "securite_eas_alarmes", titre: "Évacuation adaptée, EAS & Alarmes", desc: "Espace d'Attente Sécurisé et flashs lumineux d'alarme.", neuf: "EAS par étage accessible avec interphone. Flashs WC.", existant_1_4: "EAS dans cages d'escaliers encloisonnées. Flashs WC.", existant_5: "Diffuseurs visuels dans les locaux isolés." }
-      ]
-    };
+    // --- 1. BASE DE DONNÉES DES 87 ERP DE LA VILLE D'AUBAGNE ---
+    const CSV_DATA = `nom;patrimoine;classe;acces_2015;acces_apres;statut;montant;niveaux;commentaire
+Galerie des Pénitents Noirs;Patrimoine culturel et vie des quartiers;T4;37 %;100 %;Réalisé;33776;RDC;Travaux réalisés
+Espace du Bras d'Or;Patrimoine culturel et vie des quartiers;L2;18 %;91 %;Réalisé;557;RDC;Première tranche de travaux réalisée. Bâtiment va être démoli (fin 2024), ne rien y faire de plus.
+Théâtre Le Comoedia;Patrimoine culturel et vie des quartiers;L3;19 %;100 %;Réalisé;57650;RDC;Travaux réalisés
+Ecole maternelle Louise Michel (Secteur 1);Patrimoine scolaire et petite enfance;R5;56 %;98 %;Réalisé;6247;RDC;Travaux réalisés
+Ecole primaire Victor Hugo (Secteur 1);Patrimoine scolaire et petite enfance;R4;38 %;84 %;Réalisé;27243;RDC;Travaux réalisés
+Centre Communal d'Action Sociale (CCAS);Patrimoine administr et divers;5°;43 %;98 %;Réalisé;0;RDC;Travaux réalisés
+Police municipale;Patrimoine administr et divers;5°;53 %;100 %;Réalisé;0;RDC;Travaux réalisés
+Espace des Libertés;Patrimoine culturel et vie des quartiers;L4;34 %;77 %;Réalisé;5094;RDC;Travaux réalisés
+Parc Jean Moulin;Patrimoine culturel et vie des quartiers;IOP;N/A;100 %;Réalisé;1044;RDC;Travaux faits en régie + entretien régulier
+Parc des 3 Diamants et esp. de proximité de la Tourtelle (Arpèges, Anjou, …);Patrimoine culturel et vie des quartiers;IOP;N/A;100 %;Réalisé;0;RDC;Travaux faits en régie + entretien régulier
+P'Arc en Ciel, au Pin Vert;Patrimoine culturel et vie des quartiers;IOP;N/A;100 %;Réalisé;0;RDC;Travaux faits en régie + entretien régulier
+Maison de Quartier La Tourtelle;Patrimoine culturel et vie des quartiers;5°;23 %;97 %;Réalisé;6909;RDC;Travaux réalisés
+Maison de Quartier Lavoir du Pin Vert;Patrimoine culturel et vie des quartiers;5°;21 %;94 %;Réalisé;11724;RDC;Travaux réalisés
+Boulodromes Mimi Mariotti, Castors et  Beaudinard;Patrimoine sportif;IOP;N/A;100 %;Réalisé;0;RDC;Travaux faits + entretien régulier
+Gymnase Mouren;Patrimoine sportif;X3;25 %;87 %;Réalisé;11570;RDC;Travaux réalisés
+Crèche des Bergeronnettes (Secteur 1);Patrimoine scolaire et petite enfance;R5;30 %;95 %;Réalisé;6959;RDC;Travaux réalisés
+Ecole maternelle Bernard Palissy (Secteur 2);Patrimoine scolaire et petite enfance;R4;32 %;100 %;Réalisé;33130;RDC;Travaux réalisés
+Multi Accueil La Tourtelle (Secteur 4);Patrimoine scolaire et petite enfance;R5;38 %;99 %;Réalisé;16880;RDC;Travaux réalisés
+Ecole maternelle Valriant (Secteur 4);Patrimoine scolaire et petite enfance;R4;20 %;93 %;Réalisé;41216;RDC;Travaux réalisés
+Crèches de la Garenne (Secteur 5);Patrimoine scolaire et petite enfance;R5;65 %;97 %;Réalisé;13906;RDC;Travaux réalisés
+Ecole maternelle La Garenne (Secteur 5);Patrimoine scolaire et petite enfance;R5;44 %;94 %;Réalisé;13227;RDC;Travaux réalisés
+Point Information Jeunes;Patrimoine administr et divers;5°;45 %;97 %;Réalisé;5215;RDC;Travaux réalisés / Sorti du patrimoine (cession à un autre gestionnaire)
+Maison de la Vie Associative;Patrimoine administr et divers;5°;43 %;90 %;Réalisé;2140;RDC;Travaux réalisés
+Tribunal d'instance;Patrimoine administr et divers;W3;46 %;99 %;Démarré / en cours;0;RDC;Etude en cours. Voir avec Ministère de la Justice. Reste à faire : vitrophanie, paillasson armé, élargissemt passages + blocs portes, mise à niveau sanitaires PMR
+Club des Anciens Lakanal;Patrimoine culturel et vie des quartiers;L3;37 %;93 %;Réalisé;5106;RDC;Travaux réalisés / Sorti du patrimoine (cession à un autre gestionnaire)
+Salle de musculation Tourtelle;Patrimoine sportif;5°;7 %;74 %;Réalisé;527;RDC;Travaux réalisés
+Piscine Oasis du Charrel;Patrimoine sportif;X3;36 %;75 %;Réalisé;13185;RDC;Travaux réalisés
+Ecole primaire Beaudinard (Secteur 1);Patrimoine scolaire et petite enfance;R5;33 %;93 %;Réalisé;42172;RDC;Travaux réalisés
+Groupe scolaire Paul Eluard (Secteur 4);Patrimoine scolaire et petite enfance;R4;36 %;97 %;Réalisé;84641;RDC;Travaux réalisés
+Ecole élémentaire La Perussonne (Secteur 5);Patrimoine scolaire et petite enfance;R4;0 %;97 %;Réalisé;29104;RDC;Travaux réalisés
+Eglises Saint Sauveur et Observance;Patrimoine administr et divers;V4;24 %;67 %;Réalisé;6290;RDC;Travaux réalisés
+Mairie annexe;Patrimoine administr et divers;5°;29 %;92 %;Réalisé;53759;RDC;Travaux réalisés
+Jardins de Palissy;Patrimoine culturel et vie des quartiers;IOP;N/A;100 %;Réalisé;0;RDC;Travaux faits en régie + entretien régulier
+La Distillerie;Patrimoine culturel et vie des quartiers;L4;17 %;94 %;Réalisé;13457;RDC;Travaux réalisés
+Maison de Quartier Bernard Palissy;Patrimoine culturel et vie des quartiers;5°;31 %;96 %;Réalisé;6042;RDC;Travaux réalisés
+Maison de Quartier Château Blanc;Patrimoine culturel et vie des quartiers;5°;21 %;52 %;Réalisé;1905;RDC;Travaux réalisés
+Gymnase du Charrel;Patrimoine sportif;X3;14 %;98 %;Démarré / en cours;3843;RDC,R+1;Travaux phase 1 réalisés. Reste à faire vestiaires et sanitaires. Demande de dérogation pour accès des UFR à l'étage
+Gymnase Serge Mesonès;Patrimoine sportif;X3;30 %;98 %;Démarré / en cours;18657;RDC;Travaux phase 1 réalisés. Reste à faire vestiaires et sanitaires.
+Complexe sportif de la Botte;Patrimoine sportif;IOP;N/A;100 %;Démarré / en cours;27082;RDC;Reprises de sols en 2017 + entretien régulier ,  parking PMR en 2021. Aménagement des Berges de l'Huveaune à venir avec création de passerelles adaptées aux PMR.
+Ecole maternelle Pin Vert (Secteur 1);Patrimoine scolaire et petite enfance;R3;45 %;99 %;Réalisé;28557;RDC;Travaux réalisés
+Ecole primaire Pin Vert (Secteur 1);Patrimoine scolaire et petite enfance;R3;0 %;83 %;Réalisé;62549;RDC,R+1;Travaux 1° phase et WC PMR réalisés. Demande de dérogation pour l'étage, disproportion manifeste : travaux d'aménagement et ascenseur très chers, perte de place dans le hall, déjà 4 classes + BCD + réfectoire en RdC
+Pôle enfance;Patrimoine administr et divers;5°;30 %;95 %;Réalisé;9280;RDC;Travaux réalisés
+Espaces de proximité du Charrel (Jourdan, Cabre d'Or, …);Patrimoine culturel et vie des quartiers;IOP;N/A;100 %;Réalisé;0;RDC;Travaux faits en régie + entretien régulier
+Square Scarcelli, sur le plateau des Espillières;Patrimoine culturel et vie des quartiers;IOP;N/A;100 %;Réalisé;12924;RDC;Travaux réalisés + entretien régulier
+Ecole maternelle Les Lavandes (Secteur 5);Patrimoine scolaire et petite enfance;R5;23 %;99 %;Réalisé;45519;RDC;Travaux réalisés
+Ecole maternelle Les Romarins (Secteur 5);Patrimoine scolaire et petite enfance;R5;25 %;97 %;Réalisé;22375;RDC;Travaux réalisés. Demande de dérogation WC PMR : école des Lavandes mitoyenne est équipée
+Ecole primaire du Charrel (Secteur 5);Patrimoine scolaire et petite enfance;R3;5 %;98 %;Démarré / en cours;48461;RDC;Visiophone installé en 2017. WC PMR en 2019. Cour en 2021. Travaux importants restant à faire : aménagement parking avec place PMR, ascenseur, équipement de tous les escaliers int. et ext., portes tiercées, création de 3 WC PMR, rampes, vitrophanie, garde-corps. Etude en cours
+Résidence de Personnes Agées;Patrimoine administr et divers;5°;32 %;100 %;Réalisé;0;RDC;Travaux réalisés / Sorti du patrimoine (cession à un autre gestionnaire)
+Gymnase du Bras d'Or;Patrimoine sportif;X4;53 %;100 %;Démarré / en cours;0;RDC;Reste à faire : Signalétique, rampe d'accès, WC PMR à l'entrée, 2 vestiaires + sanit. accessibles, portes tiercées. Etude en cours
+Salle de musculation de l'Huveaune;Patrimoine sportif;5°;22 %;96 %;Réalisé;0;RDC;Travaux réalisés / Sorti du patrimoine (cession à un autre gestionnaire)
+Salle de boxe du Charrel;Patrimoine sportif;5°;13 %;83 %;Réalisé;0;RDC;Travaux faits en 2017, par le propriétaire des locaux, le bailleur Erilia.
+Ecole maternelle Victor Hugo (Secteur 1);Patrimoine scolaire et petite enfance;R4;27 %;77 %;Démarré / en cours;2468;RDC;Travaux importants restant à faire : modification du SAS, élargissement de passages, menuiseries ext. et int. avec portes tiercées, seuils, création WC PMR, équipement escaliers, vitrophanie. Etude en cours
+Ecole élémentaire Camp Major I (Secteur 4);Patrimoine scolaire et petite enfance;R4;27 %;84 %;Démarré / en cours;4939;RDC;Travaux importants restant à faire : création d'un WC PMR sous le préau, équipement de tous les escaliers int. et ext., reprises seuils, remplacement poignées de portes. Etude en cours
+Ecole maternelle Marie Mauron (Secteur 5);Patrimoine scolaire et petite enfance;R5;21 %;82 %;Réalisé;30993;RDC;Travaux réalisés
+Centre aéré des Espillières;Patrimoine scolaire et petite enfance;5°;6 %;84 %;Démarré / en cours;0;RDC;Travaux importants restant à faire : aménagements extérieurs, rampe d'accès, élargissement passages, menuiseries int. et ext. avec portes tiercées, équipement de tous les escaliers,  mise à niveau sanit. PMR, signalétique, vitrophanie. Etude en cours
+Centre de vacances de la Ville d'Aubagne;Patrimoine scolaire et petite enfance;R4;10 %;93 %;Démarré / en cours;0;RDC,R+1,R+2;Travaux importants restant à faire : aménagements extérieurs, rampes d'accès, ascenseur accès R+1, élargissement passages, menuiseries int. et ext. avec portes tiercées, équipement de tous les escaliers,  création de sanit. PMR, création de 2 chambres adaptées PMR, y compris salles d'eau, signalétique, vitrophanie. Etude en cours. Demande de dérogation pour accès  R+2.
+Médiathèque Marcel Pagnol;Patrimoine culturel et vie des quartiers;S4;24 %;99 %;Réalisé;0;RDC;Travaux réalisés
+Groupe scolaire Antide Boyer (Secteur 1);Patrimoine scolaire et petite enfance;R3;32 %;99 %;Démarré / en cours;51508;RDC,R+1;Visiophone installé en 2017. Sanitaires PMR 2020. Travaux importants restant à faire : ascenseur accès R+1, rampes d'accès, équipement de tous les escaliers, menuiseries int. et ext. avec portes tiercées, seuils, vitrophanie. Etude en cours
+Ecole maternelle Mermoz (Secteur 2);Patrimoine scolaire et petite enfance;R4;37 %;92 %;Démarré / en cours;9161;RDC,R+1;Visiophone installé en 2017.  Parvis en 2022. Travaux importants restant à faire : ascenseur accès R+1 (1 pr tout le groupe scolaire), équipement de tous les escaliers, menuiseries int. et ext. avec portes tiercées, création d'un WC PMR. Etude en cours
+Ecole élémentaire Mermoz (Secteur 2);Patrimoine scolaire et petite enfance;R4;26 %;97 %;Démarré / en cours;76399;RDC,R+1;Visiophones installés en 2017, rampes d'accès entrées et cour en 2019, WC PMR 2020 et 2021. Travaux restant à faire : équipement de tous les escaliers, rampe d'accès, menuiseries int. et ext. avec portes tiercées. Etude en cours. Demande de dérogation pour l'étage, disproportion manifeste : ascenseur cher, déjà 5 classes + BCD + réfectoire accessibles en RdC (9 classes au R+1)
+Hôtel de ville;Patrimoine administr et divers;5°;11 %;95 %;Réalisé;2100;RDC;Travaux réalisés
+Trésorerie principale;Patrimoine administr et divers;5°;59 %;95 %;Réalisé;0;RDC;Travaux réalisés / Sorti du patrimoine (non affecté)
+Centre Technique Municipal La Tourtelle;Patrimoine administr et divers;5°;45 %;94 %;Réalisé;0;RDC;Travaux réalisés
+Service des sports;Patrimoine administr et divers;5°;23 %;93 %;Réalisé;0;RDC;Travaux réalisés
+Cuisine Centrale;Patrimoine administr et divers;5°;64 %;100 %;Réalisé;0;RDC;Travaux réalisés
+Espace Art et Jeunesse (ex-MJC);Patrimoine culturel et vie des quartiers;L4;59 %;88 %;Réalisé;72241;RDC;Travaux réalisés
+Maison de Quartier Les Passons;Patrimoine culturel et vie des quartiers;5°;35 %;96 %;Réalisé;0;RDC;Travaux réalisés / Sorti du patrimoine (bâtiment démoli)
+Maison de Quartier Centre ville;Patrimoine culturel et vie des quartiers;5°;37 %;97 %;Réalisé;0;RDC;Travaux réalisés / Sorti du patrimoine
+Tennis Saint Pierre;Patrimoine sportif;5°;16 %;50 %;Démarré / en cours;0;RDC;Travaux importants à faire : aménagements extérieurs, équipement de tous les escaliers, garde-corps, création d'un bâtiment avec vestiaires-sanitaires PMR sur le parking, vitrophanie. Etude en cours. Demande de dérogation pour accès buvette impossible pour UFR.
+Tribunes de Lattre;Patrimoine sportif;PA1;36 %;79 %;Réalisé;19012;RDC;Travaux réalisés
+Tribunes de rugby;Patrimoine sportif;5°;28 %;80 %;Démarré / en cours;0;RDC;Travaux à faire : aménagements extérieurs, rampe d'accès, mise à niveau du WC PMR, équipement escaliers, signalétique. Etude en cours
+Ecole maternelle la Vassale (Secteur 1);Patrimoine scolaire et petite enfance;R5;32 %;96 %;Réalisé;5097;RDC;Travaux réalisés / Sorti du patrimoine (non affecté)
+Crèche de la Delphine (Secteur 2);Patrimoine scolaire et petite enfance;R4;20 %;39 %;Démarré / en cours;13708;RDC;Travaux restant à faire : équipement escaliers extérieurs (dont rue de la Delphine) et intérieurs, mise à niveau ascenseur. Etude en cours. Demande de dérogation pour UFR : disproportion manifeste.
+Groupe scolaire La Tourtelle (Secteur 4);Patrimoine scolaire et petite enfance;R4;38 %;98 %;Démarré / en cours;16822;RDC,R+1;Travaux restant à faire : ascenseur accès R+1 école primaire, menuiseries int. et ext. avec portes tiercées, équipement de tous les escaliers. Etude en cours
+Ecole élémentaire Camp Major II (Secteur 4);Patrimoine scolaire et petite enfance;R4;19 %;100 %;Réalisé;50435;RDC;Travaux réalisés
+Cimetière de Fénestrelles;Patrimoine administr et divers;IOP;N/A;100 %;Réalisé;9366;RDC;Travaux réalisés
+Cimetière des Passons;Patrimoine administr et divers;IOP;N/A;100 %;Réalisé;21490;RDC;Travaux réalisés
+Consigne Voltaire;Patrimoine administr et divers;5°;7 %;100 %;Réalisé;0;RDC;Travaux réalisés / Sorti du patrimoine (cession à un autre gestionnaire)
+Ilot des Berges, Square Matisse, Square Barbusse, espaces de proximité du C Ville;Patrimoine culturel et vie des quartiers;IOP;N/A;100 %;Réalisé;10430;RDC;Travaux faits + entretien régulier
+Terrain Berlioux et espaces de proximité des Passons;Patrimoine culturel et vie des quartiers;IOP;N/A;100 %;Réalisé;0;RDC;Travaux faits + entretien régulier
+Ecole élémentaire Chaulan (Secteur 2);Patrimoine scolaire et petite enfance;R4;12 %;78 %;Démarré / en cours;31476;RDC,R+1,R+2;Sanitaires PMR et rampes en 2020. Travaux importants restant à faire, après réaffectation des locaux : ascenseur accès R+1 et R+2 bâtiment récent, équipement des escaliers ext. et int., élargissement passages et remplacement portes. Etude en cours. Demande de dérogation pour UFR étages bâtiment ancien : disproportion manifeste.
+Ecole maternelle Gaimard (Secteur 2);Patrimoine scolaire et petite enfance;R4;0 %;0 %;Démarré / en cours;4208;RDC;Travaux restant à faire : équipement de nombreux escaliers intérieurs et extérieurs, poignées de portes, reprises de seuils. Etude en cours. Bâtiment complètement inaccessible pour les UFR, même après travaux. Demande de dérogation pour UFR : disproportion manifeste.
+Multi Accueil Les Passons (Secteur 3);Patrimoine scolaire et petite enfance;R5;35 %;96 %;Démarré / en cours;0;RDC;Travaux à faire : rampe d'accès, élargissement passage, portes tiercées, vitrophanie. Etude en cours
+Ecole maternelle des Passons (Secteur 3);Patrimoine scolaire et petite enfance;R4;0 %;0 %;Réalisé;3481;RDC;Travaux réalisés / Sorti du patrimoine (bâtiment démoli)
+Ecole élémentaire des Passons (Secteur 3);Patrimoine scolaire et petite enfance;R4;15 %;81 %;Réalisé;3161;RDC;Travaux réalisés / Sorti du patrimoine (bâtiment démoli)
+Conservatoire;Patrimoine culturel et vie des quartiers;5°;0 %;0 %;Démarré / en cours;0;RDC;Travaux restant à faire : équipement d'escaliers intérieurs et extérieurs, poignées de portes, reprises de seuils. Etude en cours. Bâtiment complètement inaccessible pour les Usagers en Fauteuil Roulant, même après travaux. Demande de dérogation pour UFR : disproportion manifeste.
+Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en cours;0;RDC;Travaux à faire : mise à niveau WC PMR, équipement escalier, remplacement poignées, vitrophanie. Etude en cours`;
 
-    let auditActuel = {
-      erpId: "",
-      nom: "",
-      date: new Date().toISOString().slice(0, 10),
-      profil: "existant_5",
-      etageActif: "tronc",
-      etages: ["tronc", "RDC"],
-      evaluations: {},
-      parc: []
-    };
-
-    window.addEventListener('load', async () => {
-      document.getElementById('dateAudit').value = auditActuel.date;
-      chargerDonneesLocales();
-      if (!auditActuel.parc || auditActuel.parc.length === 0) {
-        await chargerParcDepuisFichier();
-      } else {
-        remplirSelecteurParc();
-      }
-      if (!auditActuel.erpId && auditActuel.parc.length > 0) {
-        changerErpSelectionne(auditActuel.parc[0].id);
-      } else {
-        rendreInterface();
-      }
-    });
-
-    async function chargerParcDepuisFichier() {
-      try {
-        const res = await fetch('./parc.csv');
-        if (res.ok) {
-          const txt = await res.text();
-          traiterCsvTexte(txt);
-        }
-      } catch (err) {
-        console.log("Lecture réseau parc.csv impossible, utilisation base locale si présente.");
-      }
-    }
-
-    function traiterCsvTexte(csvText) {
-      const lignes = csvText.trim().split(/\r\n|\n/);
-      if (lignes.length < 2) return;
-
-      auditActuel.parc = [];
+    function parserParc(csvText) {
+      const lignes = csvText.trim().split(/\r?\n/);
+      const parc = [];
       for (let i = 1; i < lignes.length; i++) {
         const cols = lignes[i].split(';');
         if (cols.length < 9) continue;
         const [nom, pat, cls, a15, aap, st, mt, nivStr, com] = cols;
-
+        
         let cat = "5";
         if (cls.includes("1")) cat = "1";
         else if (cls.includes("2")) cat = "2";
         else if (cls.includes("3")) cat = "3";
         else if (cls.includes("4")) cat = "4";
-
-        const isRealise = (st === "Réalisé");
+        
+        const isRealise = (st.trim() === "Réalisé");
         const cLow = com.toLowerCase();
+        
         const evals = { "tronc": {}, "RDC": {} };
         const niveaux = nivStr.split(',').map(s => s.trim());
         niveaux.forEach(n => { if (n !== 'RDC') evals[n] = {}; });
-
+        
         if (isRealise) {
           evals.tronc.stationnement = { status: "C", note: "Travaux Ad'Ap réalisés" };
           evals.tronc.entree_seuil = { status: "C", note: "Travaux Ad'Ap réalisés" };
@@ -299,13 +473,13 @@
           if (cLow.includes("ascenseur") || cLow.includes("dérogation") || cLow.includes("disproportion")) evals.RDC.ascenseur_desserte = { status: (cLow.includes("dérogation") || cLow.includes("disproportion")) ? "SO" : "NC", note: com };
           if (cLow.includes("wc") || cLow.includes("sanit")) evals.RDC.sanitaires_pmr = { status: "NC", note: "Création / mise aux normes sanitaires PMR" };
           if (cLow.includes("porte") || cLow.includes("passage") || cLow.includes("menuiserie")) {
-            evals.RDC.portes_interieures = { status: "NC", note: "Portes tiercées / passages" };
+            evals.RDC.portes_interieures = { status: "NC", note: "Portes tiercées / élargissement passages" };
             evals.RDC.circulations_horiz = { status: "NC", note: "Largeurs circulations" };
           }
           if (cLow.includes("vitrophanie") || cLow.includes("signalétique") || cLow.includes("signaletique")) evals.RDC.signaletique_vitrages = { status: "NC", note: "Vitrophanie / signalétique requise" };
         }
-
-        auditActuel.parc.push({
+        
+        parc.push({
           id: "erp_" + i,
           nom: nom,
           adresse: pat ? `Aubagne (${pat})` : "Aubagne",
@@ -313,303 +487,112 @@
           classe_erp: cls,
           acces_2015: a15,
           acces_apres: aap,
-          statut_adap: st,
+          statut_adap: st.trim(),
           commentaire_adap: com,
           montant_adap: mt ? Number(mt).toLocaleString('fr-FR') + " €" : "0 €",
           niveaux: niveaux,
           evaluations: evals
         });
       }
-
-      remplirSelecteurParc();
-      sauvegarderLocal();
+      return parc;
     }
 
-    function chargerFichierCsvLocal(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        traiterCsvTexte(e.target.result);
-        if (auditActuel.parc.length > 0) changerErpSelectionne(auditActuel.parc[0].id);
-      };
-      reader.readAsText(file);
-    }
-
-    function chargerDonneesLocales() {
-      const sauvg = localStorage.getItem('audit_erp_aubagne_app');
-      if (sauvg) {
-        try {
-          auditActuel = { ...auditActuel, ...JSON.parse(sauvg) };
-        } catch (e) {}
-      }
-    }
-
-    function sauvegarderLocal() {
-      localStorage.setItem('audit_erp_aubagne_app', JSON.stringify(auditActuel));
-      calculerScore();
-    }
-
-    function remplirSelecteurParc() {
-      const sel = document.getElementById('erpSelect');
-      sel.innerHTML = '<option value="">-- Choisir un bâtiment d\'Aubagne --</option>';
-      auditActuel.parc.forEach(erp => {
-        const opt = document.createElement('option');
-        opt.value = erp.id;
-        opt.innerText = `${erp.nom} (${erp.classe_erp || 'Cat ' + erp.categorie}) - [${erp.statut_adap}]`;
-        if (erp.id === auditActuel.erpId) opt.selected = true;
-        sel.appendChild(opt);
-      });
-    }
-
-    function changerErpSelectionne(id) {
-      const erp = auditActuel.parc.find(e => e.id === id);
-      if (!erp) return;
-
-      auditActuel.erpId = erp.id;
-      auditActuel.nom = erp.nom;
-      document.getElementById('nomERP').value = erp.nom;
-      document.getElementById('displayErpNom').innerText = erp.nom;
-
-      const adapBox = document.getElementById('adapInfoBox');
-      adapBox.style.display = "block";
-      const badge = document.getElementById('adapStatutBadge');
-      badge.innerText = erp.statut_adap;
-      badge.className = erp.statut_adap === 'Réalisé' ? 'adap-badge badge-realise' : 'adap-badge badge-encours';
-
-      document.getElementById('adapTaux2015').innerText = erp.acces_2015 || 'N/A';
-      document.getElementById('adapTauxCible').innerText = erp.acces_apres || '100 %';
-      document.getElementById('adapMontant').innerText = erp.montant_adap || '0 €';
-      document.getElementById('adapCommentaire').innerText = erp.commentaire_adap || 'Travaux réalisés';
-
-      if (erp.categorie === "5") changerProfil('existant_5');
-      else changerProfil('existant_1_4');
-
-      auditActuel.etages = ["tronc", ...(erp.niveaux || ["RDC"])];
-      auditActuel.etageActif = "tronc";
-      auditActuel.evaluations = JSON.parse(JSON.stringify(erp.evaluations || {}));
-
-      rendreOngletsEtages();
-      rendreCriteres();
-      sauvegarderLocal();
-    }
-
-    function mettreAJourNom(val) {
-      auditActuel.nom = val || "Audit";
-      document.getElementById('displayErpNom').innerText = auditActuel.nom;
-      sauvegarderLocal();
-    }
-
-    function changerProfil(p) {
-      auditActuel.profil = p;
-      document.querySelectorAll('.profile-tab').forEach(el => el.classList.remove('active'));
-      const tab = document.getElementById(`prof_${p}`);
-      if (tab) tab.classList.add('active');
-      
-      const badge = document.getElementById('currentCategoryBadge');
-      if (p === 'neuf') badge.innerText = "Neuf (Arrêté 2017)";
-      else if (p === 'existant_1_4') badge.innerText = "Existant (Cat 1 à 4)";
-      else badge.innerText = "Existant (5e Catégorie)";
-
-      rendreCriteres();
-      sauvegarderLocal();
-    }
-
-    function selectionnerEtage(etage) {
-      auditActuel.etageActif = etage;
-      document.querySelectorAll('.etage-btn').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = Array.from(document.querySelectorAll('.etage-btn')).find(b => b.innerText.includes(etage === 'tronc' ? 'Extérieurs' : etage));
-      if (activeBtn) activeBtn.classList.add('active');
-      rendreCriteres();
-    }
-
-    function ajouterEtage() {
-      const nom = prompt("Désignation du niveau (ex: R+1, Sous-sol, Mezzanine) :");
-      if (!nom || auditActuel.etages.includes(nom)) return;
-      auditActuel.etages.push(nom);
-      rendreOngletsEtages();
-      selectionnerEtage(nom);
-      sauvegarderLocal();
-    }
-
-    function rendreOngletsEtages() {
-      const cont = document.getElementById('etagesConteneur');
-      cont.innerHTML = `<button type="button" class="etage-btn ${auditActuel.etageActif === 'tronc' ? 'active' : ''}" onclick="selectionnerEtage('tronc')">Extérieurs & Accueil</button>`;
-      auditActuel.etages.filter(e => e !== 'tronc').forEach(et => {
-        const btn = document.createElement('button');
-        btn.type = "button";
-        btn.className = `etage-btn ${auditActuel.etageActif === et ? 'active' : ''}`;
-        btn.innerText = et;
-        btn.onclick = () => selectionnerEtage(et);
-        cont.appendChild(btn);
-      });
-    }
-
-    function rendreCriteres() {
-      const cont = document.getElementById('listeCriteres');
-      cont.innerHTML = "";
-      const liste = auditActuel.etageActif === 'tronc' ? REFERENTIEL.tronc : REFERENTIEL.etage;
-
-      if (!auditActuel.evaluations[auditActuel.etageActif]) auditActuel.evaluations[auditActuel.etageActif] = {};
-      const evalEtage = auditActuel.evaluations[auditActuel.etageActif];
-
-      liste.forEach(crit => {
-        const etat = evalEtage[crit.id] || { status: null, note: "", photos: [] };
-        const regle = crit[auditActuel.profil] || crit.desc;
-
-        const card = document.createElement('div');
-        card.className = "criterion-item";
-        card.innerHTML = `
-          <div class="crit-title">${crit.titre}</div>
-          <div class="crit-desc">${crit.desc}</div>
-          <div style="background:#0f172a; padding:6px 10px; border-radius:6px; font-size:0.75rem; color:#38bdf8; margin-bottom:8px; border-left:3px solid var(--primary);">
-            <strong>Règle profil :</strong> ${regle}
-          </div>
-          <div class="status-btns">
-            <div class="status-btn c ${etat.status === 'C' ? 'active' : ''}" onclick="definirStatut('${crit.id}', 'C')">Conforme</div>
-            <div class="status-btn nc ${etat.status === 'NC' ? 'active' : ''}" onclick="definirStatut('${crit.id}', 'NC')">Non Conforme</div>
-            <div class="status-btn so ${etat.status === 'SO' ? 'active' : ''}" onclick="definirStatut('${crit.id}', 'SO')">Sans Objet</div>
-          </div>
-          <div class="print-status">Constat : <strong>${etat.status || 'Non vérifié'}</strong></div>
-          <textarea placeholder="Constats techniques, cotes relevées, réserves..." style="margin-bottom:6px; height:50px;" oninput="majNote('${crit.id}', this.value)">${etat.note || ''}</textarea>
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <label style="margin:0; cursor:pointer; font-size:0.75rem; color:var(--primary-light);">
-              📷 Prendre une photo
-              <input type="file" accept="image/*" capture="environment" style="display:none" onchange="ajouterPhoto('${crit.id}', event)">
-            </label>
-            <div class="photo-preview-wrap" id="photos_${crit.id}">
-              ${(etat.photos || []).map(src => `<img src="${src}" class="photo-thumb">`).join('')}
-            </div>
-          </div>
-        `;
-        cont.appendChild(card);
-      });
-      calculerScore();
-    }
-
-    function definirStatut(id, s) {
-      if (!auditActuel.evaluations[auditActuel.etageActif]) auditActuel.evaluations[auditActuel.etageActif] = {};
-      if (!auditActuel.evaluations[auditActuel.etageActif][id]) auditActuel.evaluations[auditActuel.etageActif][id] = { status: null, note: "", photos: [] };
-      auditActuel.evaluations[auditActuel.etageActif][id].status = s;
-      rendreCriteres();
-      sauvegarderLocal();
-    }
-
-    function majNote(id, v) {
-      if (!auditActuel.evaluations[auditActuel.etageActif]) auditActuel.evaluations[auditActuel.etageActif] = {};
-      if (!auditActuel.evaluations[auditActuel.etageActif][id]) auditActuel.evaluations[auditActuel.etageActif][id] = { status: null, note: "", photos: [] };
-      auditActuel.evaluations[auditActuel.etageActif][id].note = v;
-      sauvegarderLocal();
-    }
-
-    function ajouterPhoto(id, ev) {
-      const file = ev.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const maxDim = 800;
-          let w = img.width, h = img.height;
-          if (w > h && w > maxDim) { h *= maxDim / w; w = maxDim; }
-          else if (h > maxDim) { w *= maxDim / h; h = maxDim; }
-          canvas.width = w; canvas.height = h;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, w, h);
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
-
-          if (!auditActuel.evaluations[auditActuel.etageActif]) auditActuel.evaluations[auditActuel.etageActif] = {};
-          if (!auditActuel.evaluations[auditActuel.etageActif][id]) auditActuel.evaluations[auditActuel.etageActif][id] = { status: null, note: "", photos: [] };
-          if (!auditActuel.evaluations[auditActuel.etageActif][id].photos) auditActuel.evaluations[auditActuel.etageActif][id].photos = [];
-          auditActuel.evaluations[auditActuel.etageActif][id].photos.push(dataUrl);
-          rendreCriteres();
-          sauvegarderLocal();
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function calculerScore() {
-      let conformes = 0, nonConformes = 0;
-      Object.keys(auditActuel.evaluations).forEach(et => {
-        const obj = auditActuel.evaluations[et];
-        Object.keys(obj).forEach(cId => {
-          const s = obj[cId].status;
-          if (s === 'C') conformes++;
-          else if (s === 'NC') nonConformes++;
-        });
-      });
-      const total = conformes + nonConformes;
-      const score = total > 0 ? Math.round((conformes / total) * 100) : 0;
-      document.getElementById('gaugeBar').style.width = `${score}%`;
-      document.getElementById('gaugeScore').innerText = `${score} %`;
-    }
-
-    function rendreInterface() {
-      document.getElementById('displayErpNom').innerText = auditActuel.nom || 'Sélectionner un ERP';
-      document.getElementById('nomERP').value = auditActuel.nom || '';
-      document.getElementById(`prof_${auditActuel.profil}`).click();
-      rendreOngletsEtages();
-      rendreCriteres();
-    }
-
-    function exporterAuditJSON() {
-      const blob = new Blob([JSON.stringify(auditActuel, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Audit_${auditActuel.nom.replace(/\s+/g, '_')}_${auditActuel.date}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function importerAuditJSON(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        try {
-          auditActuel = JSON.parse(e.target.result);
-          remplirSelecteurParc();
-          rendreInterface();
-          alert("Audit rechargé avec succès !");
-        } catch (err) {
-          alert("Erreur de lecture du JSON.");
+    // --- 2. RÉFÉRENTIEL COMPLET DES CRITÈRES NORMATIFS ---
+    const REFERENTIEL = {
+      tronc: [
+        {
+          id: "stationnement",
+          titre: "Stationnement réservé PMR",
+          desc: "≥ 2 % des places (min 1). Largeur ≥ 3,30 m, pente ≤ 2 %. Raccordement direct sans ressaut.",
+          neuf: "Largeur stricte 3,30 m, pente max 2 %.",
+          existant_1_4: "Emplacement au plus proche de l'entrée, bateau d'accès sans ressaut > 2 cm.",
+          existant_5: "Si parking réservé au public : 1 place adaptée obligatoire sauf contrainte technique."
+        },
+        {
+          id: "cheminement_ext",
+          titre: "Cheminement d'accès extérieur",
+          desc: "Largeur libre ≥ 1,20 m. Absence d'obstacle au sol. Sol non meuble et antidérapant.",
+          neuf: "Pente ≤ 5 % (tolérance 8 % sur 2 m, 10 % sur 0,5 m). Paliers de repos de 1,40 × 1,20 m.",
+          existant_1_4: "Tolérance de pente jusqu'à 12 % sur 0,50 m si impossibilité topographique.",
+          existant_5: "Tolérance élargie et dérogation possible si dénivelé de voirie insurmontable."
+        },
+        {
+          id: "entree_seuil",
+          titre: "Porte d'entrée & Seuil",
+          desc: "Largeur utile minimale, manœuvre de porte Ø 1,50 m, seuil plat ou chanfreiné.",
+          neuf: "Largeur utile ≥ 0,83 m. Seuil ≤ 2 cm chanfreiné. Effort d'ouverture ≤ 50 N.",
+          existant_1_4: "Largeur utile ≥ 0,77 m admise. Dispositif d'appel extérieur si seuil non modifiable.",
+          existant_5: "Largeur utile ≥ 0,77 m admise. Visiophone/sonnette accessible entre 0,90 et 1,30 m."
+        },
+        {
+          id: "accueil_banque",
+          titre: "Banque d'accueil & Sonorisation",
+          desc: "Poste abaissé avec vide pour les genoux. Boucle à Induction Magnétique (BIM).",
+          neuf: "Partie surbaissée hauteur ≤ 0,80 m, vide sous table 0,70×0,60 m. BIM fixe obligatoire.",
+          existant_1_4: "Hauteur ≤ 0,80 m ou tablette amovible. BIM fixe à l'accueil principal.",
+          existant_5: "Tablette ou guichet abaissé. BIM mobile tolérée si accueil ponctuel."
+        },
+        {
+          id: "eclairage_ext_accueil",
+          titre: "Éclairage & Luxmétrie (Abords & Accueil)",
+          desc: "Éclairement minimal mesuré au sol et absence d'éblouissement.",
+          neuf: "≥ 20 lux sur cheminement ext., ≥ 100 lux sous abri, ≥ 200 lux au poste d'accueil.",
+          existant_1_4: "≥ 20 lux ext., ≥ 200 lux au poste d'accueil pour la lecture labiale.",
+          existant_5: "Éclairage direct suffisant sur le visage de l'agent sans contre-jour."
+        },
+        {
+          id: "registre_rpa",
+          titre: "Registre Public d'Accessibilité (RPA)",
+          desc: "Mise à disposition du public des attestations, formation du personnel et fiches.",
+          neuf: "Document complet disponible à l'accueil et consultable en ligne ou sur place.",
+          existant_1_4: "Attestation de conformité ou calendrier d'agenda d'accessibilité (Ad'AP).",
+          existant_5: "RPA obligatoire sous format allégé (attestation, fiche synthétique, formation accueil)."
         }
-      };
-      reader.readAsText(file);
-    }
-
-    function exporterSyntheseCSV() {
-      let csv = "Zone/Niveau;Critere;Statut;Constat\n";
-      Object.keys(auditActuel.evaluations).forEach(et => {
-        const obj = auditActuel.evaluations[et];
-        Object.keys(obj).forEach(cId => {
-          const item = obj[cId];
-          csv += `"${et}";"${cId}";"${item.status || ''}";"${(item.note || '').replace(/"/g, '""')}"\n`;
-        });
-      });
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Synthese_${auditActuel.nom.replace(/\s+/g, '_')}.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        const swBlob = new Blob([`
-          self.addEventListener('install', e => self.skipWaiting());
-          self.addEventListener('activate', e => self.clients.claim());
-          self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
-        `], { type: 'application/javascript' });
-        navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
-      });
-    }
-  </script>
-</body>
-</html>
+      ],
+      etage: [
+        {
+          id: "circulations_horiz",
+          titre: "Circulations horizontales intérieures",
+          desc: "Largeur utile des couloirs, passage sans obstacle et zones d'évitement.",
+          neuf: "Largeur nominale ≥ 1,40 m continu. Espaces de demi-tour (Ø 1,50 m) tous les 6 m.",
+          existant_1_4: "Largeur ≥ 1,20 m principal (0,90 m ponctuel admis avec zones de croisement).",
+          existant_5: "Largeur ≥ 1,20 m (0,90 m toléré en circulation secondaire)."
+        },
+        {
+          id: "portes_interieures",
+          titre: "Portes intérieures & Sas",
+          desc: "Largeur de passage utile, poignées facilement manœuvrables (0,90 m à 1,30 m).",
+          neuf: "Largeur libre ≥ 0,83 m. Espace de manœuvre rectangulaire hors débattement.",
+          existant_1_4: "Largeur utile ≥ 0,77 m admise. Poignées préhensibles sans serrage du poignet.",
+          existant_5: "Largeur utile ≥ 0,77 m admise."
+        },
+        {
+          id: "escaliers_interieurs",
+          titre: "Escaliers intérieurs (si présents au niveau)",
+          desc: "Sécurisation tactile, visuelle et préhension des marches.",
+          neuf: "BEV à 50 cm du nez supérieur. 1re/dernière contremarches contrastées. 2 mains courantes.",
+          existant_1_4: "Idem neuf. 1 seule main courante admise si largeur utile < 1,00 m.",
+          existant_5: "BEV et nez de marches antidérapants obligatoires. 1 main courante tolérée."
+        },
+        {
+          id: "ascenseur_desserte",
+          titre: "Ascenseur / Desserte verticale",
+          desc: "Cabine adaptée et annonces multisensorielles.",
+          neuf: "Obligatoire si étage > 50 personnes. Cabine 1,10×1,40 m, annonces vocales et visuelles.",
+          existant_1_4: "Ascenseur ou appareil élévateur obligatoire sauf dérogation technique ou disproportion.",
+          existant_5: "NON OBLIGATOIRE si l'ensemble des prestations délivrées est accessible au rez-de-chaussée."
+        },
+        {
+          id: "sanitaires_pmr",
+          titre: "Cabinet d'aisances adapté (PMR)",
+          desc: "Espace latéral de transfert, cuvette à hauteur et barre d'appui.",
+          neuf: "Espace d'usage 0,80×1,30 m à côté de la cuvette (0,45-0,50 m). Ø 1,50 m hors débattement.",
+          existant_1_4: "Débattement de porte empiétant sur le cercle admis si ouverture vers l'extérieur.",
+          existant_5: "SANS OBJET si les sanitaires sont exclusivement réservés au personnel."
+        },
+        {
+          id: "acoustique_reverb",
+          titre: "Traitement acoustique & Réverbération",
+          desc: "Limitation de l'écho dans les espaces d'attente et salles de réunion.",
+          neuf: "Temps de réverbération Tr ≤ 0,8 s à 1,2 s selon volume (matériaux absorbants).",
+          existant_1_4
