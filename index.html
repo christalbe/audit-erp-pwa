@@ -22,7 +22,7 @@
       --primary: #2563eb;
       --primary-light: #60a5fa;
       --primary-dark: #1d4ed8;
-      --conform-color: #0284c7; /* Bleu océan pour Conforme - Zéro vert */
+      --conform-color: #0284c7; /* Bleu océan pour Conforme */
       --nc-color: #dc2626;      /* Rouge carmin pour Non Conforme */
       --so-color: #64748b;      /* Ardoise pour Sans Objet */
       --warn-color: #d97706;    /* Ambre pour À Faire / Alertes */
@@ -108,7 +108,7 @@
     .filter-btn.btn-afaire.active { background: #78350f; color: #fef3c7; border-color: #f59e0b; }
     .filter-btn.btn-realise.active { background: #075985; color: #e0f2fe; border-color: #38bdf8; }
 
-    /* Encart Bilan Ad'Ap détaillé avec pourcentage mis en avant */
+    /* Encart Bilan Ad'Ap */
     .adap-bilan-box {
       background: #091322;
       border: 1px solid #1e3a5f;
@@ -132,15 +132,9 @@
     .bilan-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
     @media(min-width: 600px) { .bilan-grid { grid-template-columns: 1fr 1fr; } }
 
-    .bilan-bloc-done {
-      background: #0c1b30; border: 1px solid #1d4ed8; border-radius: 8px; padding: 10px;
-    }
-    .bilan-bloc-todo {
-      background: #2a1508; border: 1px solid #b45309; border-radius: 8px; padding: 10px;
-    }
-    .bilan-bloc-title {
-      font-size: 0.8rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
-    }
+    .bilan-bloc-done { background: #0c1b30; border: 1px solid #1d4ed8; border-radius: 8px; padding: 10px; }
+    .bilan-bloc-todo { background: #2a1508; border: 1px solid #b45309; border-radius: 8px; padding: 10px; }
+    .bilan-bloc-title { font-size: 0.8rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
     .title-done { color: #38bdf8; }
     .title-todo { color: #f59e0b; }
 
@@ -286,7 +280,7 @@
       <select id="erpSelect" onchange="changerErpSelectionne(this.value)">
       </select>
       
-      <!-- Bilan détaillé Ad'Ap : Pourcentage, Ce qui est validé vs Ce qu'il reste à faire -->
+      <!-- Bilan détaillé Ad'Ap -->
       <div id="adapInfoBox" class="adap-bilan-box" style="display:none;">
         <div class="bilan-header">
           <div>
@@ -296,7 +290,6 @@
           <span id="adapStatutBadge" class="adap-badge badge-realise">Réalisé</span>
         </div>
 
-        <!-- Pourcentages Ad'Ap inscrits en grand -->
         <div class="pourcentage-adap-banner">
           <div>
             <div class="pct-box-lbl">Taux cible Ad'Ap :</div>
@@ -309,7 +302,6 @@
         </div>
 
         <div class="bilan-grid">
-          <!-- Ce qui a été validé -->
           <div class="bilan-bloc-done">
             <div class="bilan-bloc-title title-done">
               <span>✓ Validé / Réalisé</span>
@@ -318,7 +310,6 @@
             </ul>
           </div>
 
-          <!-- Ce qu'il reste à faire -->
           <div class="bilan-bloc-todo">
             <div class="bilan-bloc-title title-todo">
               <span>⚠ Reste à faire</span>
@@ -468,496 +459,192 @@ Ecole élémentaire des Passons (Secteur 3);Patrimoine scolaire et petite enfanc
 Conservatoire;Patrimoine culturel et vie des quartiers;5°;0 %;0 %;Démarré / en cours;0;RDC;Travaux restant à faire : équipement d'escaliers intérieurs et extérieurs, poignées de portes, reprises de seuils. Etude en cours. Bâtiment complètement inaccessible pour les Usagers en Fauteuil Roulant, même après travaux. Demande de dérogation pour UFR : disproportion manifeste.
 Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en cours;0;RDC;Travaux à faire : mise à niveau WC PMR, équipement escalier, remplacement poignées, vitrophanie. Etude en cours`;
 
-    // 25 CRITÈRES RÉGLEMENTAIRES COMPLETS
-    const REFERENTIEL_COMPLET = [
-      {
-        section: "1. Abords, Stationnement & Accès Extérieur",
-        criteres: [
-          { id: "stationnement", titre: "Stationnement réservé PMR", desc: "≥ 2 % des places (min 1). Largeur ≥ 3,30 m, pente ≤ 2 %. Raccordement direct sans ressaut.", neuf: "Largeur stricte 3,30 m, pente max 2 %.", existant_1_4: "Emplacement au plus proche de l'entrée, bateau d'accès sans ressaut > 2 cm.", existant_5: "Si parking réservé au public : 1 place adaptée obligatoire sauf contrainte technique." },
-          { id: "cheminement_ext", titre: "Cheminement d'accès extérieur", desc: "Largeur libre ≥ 1,20 m. Absence d'obstacle au sol. Sol non meuble et antidérapant.", neuf: "Pente ≤ 5 % (tolérance 8 % sur 2 m, 10 % sur 0,5 m). Paliers de repos de 1,40 × 1,20 m.", existant_1_4: "Tolérance de pente jusqu'à 12 % sur 0,50 m si impossibilité topographique.", existant_5: "Tolérance élargie et dérogation possible si dénivelé de voirie insurmontable." }
-        ]
-      },
-      {
-        section: "2. Entrée principale & Accueil du public",
-        criteres: [
-          { id: "entree_seuil", titre: "Porte d'entrée & Seuil", desc: "Largeur utile minimale, manœuvre de porte Ø 1,50 m, seuil plat ou chanfreiné ≤ 2 cm.", neuf: "Largeur utile ≥ 0,83 m. Seuil ≤ 2 cm chanfreiné. Effort d'ouverture ≤ 50 N.", existant_1_4: "Largeur utile ≥ 0,77 m admise. Dispositif d'appel extérieur si seuil non modifiable.", existant_5: "Largeur utile ≥ 0,77 m admise. Visiophone/sonnette accessible entre 0,90 et 1,30 m." },
-          { id: "accueil_banque", titre: "Banque d'accueil & Boucle Magnétique (BIM)", desc: "Poste abaissé avec vide pour les genoux. Boucle à Induction Magnétique (BIM) pour malentendants.", neuf: "Partie surbaissée hauteur ≤ 0,80 m, vide sous table 0,70×0,60 m. BIM fixe obligatoire.", existant_1_4: "Hauteur ≤ 0,80 m ou tablette amovible. BIM fixe à l'accueil principal.", existant_5: "Tablette ou guichet abaissé. BIM mobile tolérée si accueil ponctuel." }
-        ]
-      },
-      {
-        section: "3. Circulations horizontales & Portes de l'étage",
-        criteres: [
-          { id: "circulations_horiz", titre: "Circulations horizontales intérieures", desc: "Largeur utile des couloirs, passage libre sans obstacle et zones de croisement PMR.", neuf: "Largeur nominale ≥ 1,40 m continu. Espaces de demi-tour (Ø 1,50 m) tous les 6 m.", existant_1_4: "Largeur ≥ 1,20 m principal (0,90 m ponctuel admis avec zones de croisement).", existant_5: "Largeur ≥ 1,20 m (0,90 m toléré en circulation secondaire)." },
-          { id: "portes_interieures", titre: "Portes intérieures, Sas & Poignées", desc: "Largeur de passage utile, poignées facilement manœuvrables en position assise (0,90 m à 1,30 m).", neuf: "Largeur libre ≥ 0,83 m. Espace de manœuvre rectangulaire hors débattement.", existant_1_4: "Largeur utile ≥ 0,77 m admise. Poignées préhensibles sans serrage du poignet.", existant_5: "Largeur utile ≥ 0,77 m admise." }
-        ]
-      },
-      {
-        section: "4. Sanitaires adaptés (PMR) du niveau",
-        criteres: [
-          { id: "sanitaires_pmr", titre: "Cabinet d'aisances adapté (PMR)", desc: "Espace latéral de transfert (0,80 × 1,30 m), cuvette à 0,45-0,50 m et barre d'appui à 0,70-0,80 m.", neuf: "Espace d'usage 0,80×1,30 m à côté de la cuvette. Ø 1,50 m hors débattement de porte.", existant_1_4: "Débattement de porte empiétant sur le cercle admis si ouverture vers l'extérieur.", existant_5: "SANS OBJET si les sanitaires sont exclusivement réservés au personnel." }
-        ]
-      },
-      {
-        section: "5. Desserte verticale & Ascenseurs / Élévateurs (Étages)",
-        criteres: [
-          { id: "ascenseur_dimension", titre: "Ascenseur / EPMR : Dimensions cabine & Palier", desc: "Cabine normalisée (type 2 : dimensions intérieures ≥ 1,10 × 1,40 m, porte utile ≥ 0,80 m). Palier dégagé avec aire de rotation Ø 1,50 m.", neuf: "Cabine type 2 obligatoire dès que l'étage accueille plus de 50 personnes.", existant_1_4: "Ascenseur obligatoire sauf impossibilité technique ou disproportion avérée.", existant_5: "NON OBLIGATOIRE si l'ensemble des prestations est accessible au RDC." },
-          { id: "ascenseur_commandes", titre: "Ascenseur / EPMR : Commandes, Relief & Braille", desc: "Boutons de commande paliers et cabine situés entre 0,90 et 1,30 m, en relief (≥ 0,8 mm) avec braille et contraste visuel.", neuf: "Commandes à 0,90-1,30 m, relief + braille, bouton d'étage principal contrasté.", existant_1_4: "Boutons accessibles en position assise (≤ 1,30 m), repérage tactile obligatoire.", existant_5: "Commandes accessibles et contrastées." },
-          { id: "ascenseur_bimodalite", titre: "Ascenseur / EPMR : Annonces bimodalités (visuelle + sonore)", desc: "Signalisation visuelle et sonore : flèches lumineuses de sens, gong sonore d'arrivée et synthèse vocale annonçant le niveau d'étage.", neuf: "Synthèse vocale d'étage + voyants lumineux obligatoires (norme EN 81-70).", existant_1_4: "Annonce vocale et visuelle du niveau lors de modernisation.", existant_5: "Signalisation visuelle et sonore minimale du niveau atteint." }
-        ]
-      },
-      {
-        section: "6. Escaliers d'étage (Volées & Paliers)",
-        criteres: [
-          { id: "escaliers_dimensions", titre: "Escaliers d'étage : Dimensions & Géométrie", desc: "Largeur utile minimale entre mains courantes. Hauteur de marche ≤ 16 cm et giron ≥ 28 cm régulier.", neuf: "Largeur utile ≥ 1,20 m. Hauteur marche ≤ 16 cm, giron ≥ 28 cm.", existant_1_4: "Largeur utile ≥ 1,00 m admise. Marches régulières sans dépassement abrupt.", existant_5: "Largeur ≥ 1,00 m (0,80 m admis si faible flux). Marches régulières." },
-          { id: "escaliers_bev", titre: "Escaliers d'étage : Bande d'Éveil de Vigilance (BEV)", desc: "Bande podotactile d'éveil de vigilance (BEV) implantée à 50 cm du nez de la première marche descendante sur toute la largeur de la volée.", neuf: "BEV obligatoire conforme NF P98-351 à 50 cm de la première marche descendante.", existant_1_4: "BEV obligatoire en haut de chaque volée d'escalier descendant.", existant_5: "BEV obligatoire en tête de chaque descente d'escalier." },
-          { id: "escaliers_nez_contremarches", titre: "Escaliers d'étage : Nez de marches & Contremarches", desc: "Nez de marches antidérapants et contrastés visuellement. Première et dernière contremarches contrastées sur 10 cm minimum.", neuf: "1re et dernière contremarches contrastées sur 10 cm. Nez antidérapants contrastés.", existant_1_4: "Nez de marches contrastés et non glissants. Première et dernière contremarches contrastées.", existant_5: "Contraste visuel obligatoire sur la première et dernière marche + nez non glissants." },
-          { id: "escaliers_mains_courantes", titre: "Escaliers d'étage : Mains courantes continues", desc: "Mains courantes continues des 2 côtés, préhensibles (hauteur 0,80-1,00 m), prolongeant d'un giron en haut et en bas sans obstacle.", neuf: "Mains courantes des 2 côtés, débord horizontal d'un giron en extrémité.", existant_1_4: "1 seule main courante tolérée si largeur utile < 1,00 m. Débord sans obstacle.", existant_5: "Au moins 1 main courante continue et préhensible sur toute la volée." }
-        ]
-      },
-      {
-        section: "7. Sécurité, Refuge & Évacuation en étage",
-        criteres: [
-          { id: "eas_presence", titre: "Espaces d'Attente Sécurisés (EAS) : Présence & Capacité", desc: "Présence d'au moins un EAS (ou zone protégée équivalente) à chaque niveau non de plain-pied, accueillant au moins 2 PMR en fauteuil.", neuf: "Au moins 1 EAS par étage pour 2 UFR (espace libre 0,80 × 1,30 m chacun). Balisage photoluminescent.", existant_1_4: "EAS obligatoire dans les cages d'escaliers encloisonnées ou local de refuge sécurisé.", existant_5: "EAS ou espace refuge équivalent balisé dès lors que l'étage n'est pas de plain-pied." },
-          { id: "eas_interphonie", titre: "EAS de l'étage : Dispositif d'appel d'urgence bimodal", desc: "Interphone d'urgence accessible (0,90-1,30 m) relié au poste de sécurité ou accueil, avec voyant visuel d'accusé de réception pour les sourds.", neuf: "Interphone d'appel d'urgence avec retour visuel d'acquittement (signal visuel bimodal).", existant_1_4: "Dispositif d'appel d'urgence obligatoire avec repère visuel et sonore.", existant_5: "Moyen d'alerte et de communication accessible depuis l'espace de refuge." },
-          { id: "garde_corps_etage", titre: "Garde-corps, Mezzanines & Paliers d'étage", desc: "Protection contre les chutes : hauteur minimale ≥ 1,00 m (ou 1,10 m), espacement entre barreaux verticaux ≤ 11 cm, plinthe basse ≤ 11 cm.", neuf: "Garde-corps hauteur ≥ 1,00 m, vide entre barreaux ≤ 11 cm, zone de stationnement précaire protégée.", existant_1_4: "Garde-corps conforme NF P01-012 sur tous les vides de mezzanine et paliers d'étage.", existant_5: "Protection rigide antichute sur tout palier ou circulation surélevée." },
-          { id: "obstacles_sous_escalier", titre: "Sous-faces d'escaliers & Volumes sous 2,20 m", desc: "Toute partie inférieure d'escalier ou mezzanine située sous 2,20 m de hauteur libre doit être fermée ou signalée au sol sous 0,40 m (canne blanche).", neuf: "Rappel tactile au sol sous 0,40 m ou cloisonnement sous toute hauteur libre < 2,20 m.", existant_1_4: "Protection basse ou aménagement sous escalier pour éviter le choc aux malvoyants.", existant_5: "Sécurisation sous-face d'escalier (mobilier ou plinthe basse)." }
-        ]
-      },
-      {
-        section: "8. Confort sensoriel, Prestations & Réglementation",
-        criteres: [
-          { id: "eclairage_ext_accueil", titre: "Éclairage & Luxmétrie du niveau", desc: "Éclairement minimal mesuré au sol : ≥ 100 lux dans les circulations et escaliers, ≥ 200 lux aux postes de travail, sans éblouissement.", neuf: "≥ 100 lux dans les couloirs et escaliers d'étage, ≥ 200 lux aux guichets.", existant_1_4: "≥ 100 lux dans les circulations d'étage, absence de zones d'ombre dangereuses.", existant_5: "Éclairage suffisant et régulier sur les parcours et paliers." },
-          { id: "acoustique_reverb", titre: "Traitement acoustique & Réverbération", desc: "Limitation de l'écho dans les espaces d'attente et salles de réunion (Tr ≤ 0,8 s à 1,2 s selon volume) pour l'intelligibilité des malentendants.", neuf: "Temps de réverbération Tr ≤ 0,8 s à 1,2 s selon volume (matériaux absorbants).", existant_1_4: "Traitement obligatoire lors de travaux de rénovation de faux-plafonds ou revêtements.", existant_5: "Vérifier l'intelligibilité de la parole dans les espaces d'entretien individuel." },
-          { id: "signaletique_etage", titre: "Signalétique de repérage du niveau d'étage", desc: "Numéro d'étage contrasté, en relief et tactile à la sortie de l'ascenseur et en tête de volée d'escalier (sur main courante ou à 1,30 m).", neuf: "Numéro d'étage en relief/tactile sur les montants d'ascenseur et extrémités de mains courantes.", existant_1_4: "Plaque de repérage du niveau contrastée et en relief à l'arrivée sur le palier.", existant_5: "Numéro d'étage bien lisible et contrasté à chaque palier." },
-          { id: "signaletique_vitrages", titre: "Signalétique des baies vitrées (Vitrophanie)", desc: "Parois vitrées signalées par deux bandes contrastées situées à 1,10 m et 1,60 m de hauteur.", neuf: "Vitrages munis de bandes contrastées à 1,10 m et 1,60 m. Contraste visuel ≥ 70 %.", existant_1_4: "Vitrages transparents obligatoirement signalés par motifs contrastés.", existant_5: "Vitrages repérés à hauteur des yeux." },
-          { id: "securite_alarmes", titre: "Alarme incendie bimodalité (Diffuseurs flashs)", desc: "Diffuseurs d'alarme sonore couplés à des flashs lumineux visibles dans les sanitaires d'étage et locaux isolés.", neuf: "Flashs lumineux d'alarme dans tous les sanitaires et locaux où une personne peut être isolée.", existant_1_4: "Flash d'alarme dans les WC isolés et cabines d'étage.", existant_5: "Vérification des diffuseurs lumineux d'alarme dans les locaux fermés isolés." },
-          { id: "prestations_etage", titre: "Prestations de l'étage & Équivalence RDC (5e catégorie)", desc: "En 5e catégorie, dispense d'ascenseur si la totalité des prestations délivrées au public à cet étage est également disponible au rez-de-chaussée.", neuf: "Toutes les salles et prestations ouvertes au public doivent être rendues accessibles.", existant_1_4: "Prestations de l'étage accessibles ou organisation de service équivalent justifié.", existant_5: "DISPENSE d'ascenseur si l'ensemble des services au public est délivré au RDC." },
-          { id: "registre_rpa", titre: "Registre Public d'Accessibilité (RPA)", desc: "Mise à disposition du public des attestations, formation du personnel et fiches.", neuf: "Document complet disponible à l'accueil et consultable en ligne ou sur place.", existant_1_4: "Attestation de conformité ou calendrier d'agenda d'accessibilité (Ad'AP).", existant_5: "RPA obligatoire sous format allégé (attestation, fiche synthétique, formation accueil)." }
-        ]
+    // Parser avec calcul automatique des statuts C / NC / SO pour tous les 25 critères
+    function parserParc(csvText) {
+      const allCritIds = [
+        'stationnement', 'cheminement_ext', 'entree_seuil', 'accueil_banque', 'circulations_horiz',
+        'portes_interieures', 'sanitaires_pmr', 'ascenseur_dimension', 'ascenseur_commandes', 'ascenseur_bimodalite',
+        'escaliers_dimensions', 'escaliers_bev', 'escaliers_nez_contremarches', 'escaliers_mains_courantes',
+        'eas_presence', 'eas_interphonie', 'garde_corps_etage', 'obstacles_sous_escalier',
+        'eclairage_ext_accueil', 'acoustique_reverb', 'signaletique_etage', 'signaletique_vitrages',
+        'securite_alarmes', 'prestations_etage', 'registre_rpa'
+      ];
+
+      const lignes = csvText.trim().split('\n');
+      const parc = [];
+
+      for (let i = 1; i < lignes.length; i++) {
+        const cols = lignes[i].split(';');
+        if (cols.length < 9) continue;
+        const [nom, pat, cls, a15, aap, st, mt, nivStr, com] = cols;
+
+        let cat = "5";
+        if (cls.includes("1")) cat = "1";
+        else if (cls.includes("2")) cat = "2";
+        else if (cls.includes("3")) cat = "3";
+        else if (cls.includes("4")) cat = "4";
+
+        const isRealise = (st.trim() === "Réalisé");
+        const cLow = com.toLowerCase();
+        const nomLow = nom.toLowerCase();
+        const isIop = (cls.toLowerCase().includes("iop") || nomLow.includes("parc") || nomLow.includes("cimetière") || nomLow.includes("boulodrome"));
+
+        const evals = {};
+        const niveaux = nivStr.split(',').map(s => s.trim());
+
+        niveaux.forEach(n => {
+          evals[n] = {};
+          allCritIds.forEach(cid => {
+            evals[n][cid] = {
+              status: "C",
+              note: isRealise ? "Conforme - Travaux Ad'Ap réalisés et réceptionnés" : "Conforme / existant validé Ad'Ap"
+            };
+          });
+
+          // Règle 5e catégorie ou espaces extérieurs
+          if (cat === "5" || isIop) {
+            evals[n].ascenseur_dimension = { status: "SO", note: "Sans objet (Établissement de plain-pied ou prestations assurées au RDC)" };
+            evals[n].ascenseur_commandes = { status: "SO", note: "Sans objet" };
+            evals[n].ascenseur_bimodalite = { status: "SO", note: "Sans objet" };
+            evals[n].prestations_etage = { status: "SO", note: "Sans objet (Prestations assurées au RDC)" };
+          }
+
+          if (isIop) {
+            evals[n].sanitaires_pmr = { status: "SO", note: "Sans objet (Espace extérieur sans sanitaires publics)" };
+            evals[n].accueil_banque = { status: "SO", note: "Sans objet (Espace extérieur sans guichet)" };
+            evals[n].acoustique_reverb = { status: "SO", note: "Sans objet" };
+            evals[n].obstacles_sous_escalier = { status: "SO", note: "Sans objet" };
+            evals[n].securite_alarmes = { status: "SO", note: "Sans objet" };
+          }
+
+          // Pré-remplissage des Non-Conformités pour les ERP en cours
+          if (!isRealise) {
+            evals[n].registre_rpa = { status: "NC", note: "Reste à faire : mise à jour du Registre Public d'Accessibilité" };
+
+            if (cLow.includes("parking") || cLow.includes("place pmr")) {
+              evals[n].stationnement = { status: "NC", note: "Reste à faire : aménagement et marquage d'une place réservée PMR (3,30 m)" };
+            }
+
+            if (cLow.includes("visiophone")) {
+              evals[n].accueil_banque = { status: "C", note: "Validé : visiophone et interphonie d'accueil installés" };
+            }
+            if (cLow.includes("seuil")) {
+              evals[n].entree_seuil = { status: "NC", note: "Reste à faire : reprise et chanfreinage du seuil d'entrée (≤ 2 cm)" };
+            }
+            if (cLow.includes("sas")) {
+              evals[n].entree_seuil = { status: "NC", note: "Reste à faire : modification et mise aux normes du SAS d'entrée" };
+            }
+            if (cLow.includes("rampe")) {
+              if (cLow.includes("rampes en 20") || cLow.includes("rampes d'accès entrées et cour en 2019")) {
+                evals[n].cheminement_ext = { status: "C", note: "Validé : rampes d'accès réalisées lors de la phase précédente" };
+              } else {
+                evals[n].cheminement_ext = { status: "NC", note: "Reste à faire : création d'une rampe d'accès PMR conforme (pente ≤ 5 %)" };
+              }
+            }
+
+            if (cLow.includes("escalier") || cLow.includes("marche")) {
+              evals[n].escaliers_dimensions = { status: "NC", note: "Reste à faire : mise en conformité des marches d'escalier" };
+              evals[n].escaliers_bev = { status: "NC", note: "Reste à faire : pose de bande podotactile (BEV) à 50 cm en tête de descente" };
+              evals[n].escaliers_nez_contremarches = { status: "NC", note: "Reste à faire : nez de marches antidérapants et contremarches contrastées" };
+              evals[n].escaliers_mains_courantes = { status: "NC", note: "Reste à faire : mains courantes continues préhensibles des deux côtés" };
+            }
+
+            if (cLow.includes("ascenseur") || cLow.includes("dérogation") || cLow.includes("disproportion")) {
+              const isDerog = (cLow.includes("dérogation") || cLow.includes("disproportion"));
+              const stAsc = isDerog ? "SO" : "NC";
+              const noteAsc = isDerog ? "Sans objet : dossier de dérogation Ad'Ap pour disproportion manifeste (étage)" : "Reste à faire : installation ascenseur / EPMR d'accès aux étages";
+              evals[n].ascenseur_dimension = { status: stAsc, note: noteAsc };
+              evals[n].ascenseur_commandes = { status: stAsc, note: noteAsc };
+              evals[n].ascenseur_bimodalite = { status: stAsc, note: noteAsc };
+              evals[n].prestations_etage = { status: stAsc, note: isDerog ? "Sans objet : dérogation pour disproportion manifeste" : "Reste à faire : prestations de l'étage à rendre accessibles" };
+            }
+
+            if (cLow.includes("garde-corps")) {
+              evals[n].garde_corps_etage = { status: "NC", note: "Reste à faire : pose et rehausse des garde-corps antichute (≥ 1,00 m)" };
+            }
+
+            if (cLow.includes("sanit") || cLow.includes("wc")) {
+              if (cLow.includes("wc pmr en 20") && !cLow.includes("création de 3 wc pmr") && !cLow.includes("reste à faire")) {
+                evals[n].sanitaires_pmr = { status: "C", note: "Validé : WC PMR adapté déjà réalisé" };
+              } else {
+                evals[n].sanitaires_pmr = { status: "NC", note: "Reste à faire : création ou mise à niveau du cabinet d'aisances PMR" };
+              }
+            }
+
+            if (cLow.includes("porte") || cLow.includes("passage") || cLow.includes("menuiserie")) {
+              evals[n].portes_interieures = { status: "NC", note: "Reste à faire : remplacement blocs-portes et portes tiercées (passage utile ≥ 0,83 m)" };
+              evals[n].circulations_horiz = { status: "NC", note: "Reste à faire : élargissement des dégagements et circulations intérieures" };
+            }
+
+            if (cLow.includes("vitrophanie") || cLow.includes("signalétique") || cLow.includes("signaletique")) {
+              evals[n].signaletique_vitrages = { status: "NC", note: "Reste à faire : pose de bandes de vitrophanie contrastées (1,10 et 1,60 m)" };
+              evals[n].signaletique_etage = { status: "NC", note: "Reste à faire : signalétique directionnelle et repérage des niveaux" };
+            }
+          }
+        });
+
+        parc.push({
+          id: "erp_" + i,
+          nom: nom,
+          adresse: pat ? `Aubagne (${pat})` : "Aubagne",
+          categorie: cat,
+          classe_erp: cls,
+          acces_2015: a15,
+          acces_apres: aap,
+          statut_adap: st.trim(),
+          commentaire_adap: com,
+          montant_adap: mt ? Number(mt).toLocaleString('fr-FR') + " €" : "0 €",
+          niveaux: niveaux,
+          evaluations: evals
+        });
       }
-    ];
-
-    // Définition de l'état d'audit
-    let auditActuel = {
-      erpId: "",
-      nom: "",
-      date: new Date().toISOString().slice(0, 10),
-      profil: "existant_5",
-      etageActif: "RDC",
-      etages: ["RDC"],
-      evaluations: {},
-      parc: parserParc(DONNEES_PARC_AUBAGNE),
-      filtreStatut: "tous"
-    };
-
-    window.addEventListener('load', () => {
-      document.getElementById('dateAudit').value = auditActuel.date;
-      chargerDonneesLocales();
-
-      if (!auditActuel.parc || auditActuel.parc.length === 0) {
-        auditActuel.parc = parserParc(DONNEES_PARC_AUBAGNE);
-      }
-
-      mettreAJourKpisParc();
-      remplirSelecteurParc();
-
-      if (!auditActuel.erpId && auditActuel.parc.length > 0) {
-        changerErpSelectionne(auditActuel.parc[0].id);
-      } else {
-        rendreInterface();
-      }
-    });
-
-    function reinitialiserParcAubagne() {
-      auditActuel.parc = parserParc(DONNEES_PARC_AUBAGNE);
-      sauvegarderLocal();
-      mettreAJourKpisParc();
-      remplirSelecteurParc();
-      changerErpSelectionne(auditActuel.parc[0].id);
-      alert("Les 87 ERP d'Aubagne et l'ensemble des critères ont été réinitialisés !");
+      return parc;
     }
 
-    function chargerDonneesLocales() {
-      const sauvegarde = localStorage.getItem('audit_erp_aubagne_app_v7');
-      if (sauvegarde) {
-        try {
-          const parsed = JSON.parse(sauvegarde);
-          auditActuel = { ...auditActuel, ...parsed };
-        } catch (e) {
-          console.error("Erreur chargement local", e);
+    // Extraction des opérations validées et restant à faire
+    function analyserBilanTravaux(statut, commentaire) {
+      const valides = [];
+      const restants = [];
+      let derogation = "";
+
+      if (statut === "Réalisé") {
+        valides.push("Ensemble des préconisations de l'Ad'Ap réalisées et réceptionnées");
+        if (commentaire.toLowerCase().includes("démoli") || commentaire.toLowerCase().includes("sorti")) {
+          valides.push(commentaire);
         }
-      }
-    }
-
-    function sauvegarderLocal() {
-      localStorage.setItem('audit_erp_aubagne_app_v7', JSON.stringify(auditActuel));
-      calculerScore();
-      mettreAJourKpisParc();
-    }
-
-    function mettreAJourKpisParc() {
-      const total = auditActuel.parc.length;
-      let realises = 0;
-      let afaires = 0;
-
-      auditActuel.parc.forEach(e => {
-        if (e.statut_adap === "Réalisé") realises++;
-        else afaires++;
-      });
-
-      const pctReal = total > 0 ? ((realises / total) * 100).toFixed(1).replace('.', ',') : "0";
-      const pctAF = total > 0 ? ((afaires / total) * 100).toFixed(1).replace('.', ',') : "0";
-      const numPctReal = total > 0 ? (realises / total) * 100 : 0;
-      const numPctAF = total > 0 ? (afaires / total) * 100 : 0;
-
-      document.getElementById('totalErpCount').innerText = `${total} ERP`;
-      document.getElementById('kpiTotal').innerText = total;
-      document.getElementById('kpiRealises').innerText = `${realises} (${Math.round(numPctReal)} %)`;
-      document.getElementById('kpiAfaires').innerText = `${afaires} (${Math.round(numPctAF)} %)`;
-
-      document.getElementById('barRealise').style.width = `${numPctReal}%`;
-      document.getElementById('barAfaires').style.width = `${numPctAF}%`;
-
-      document.getElementById('pctRealise').innerText = `${pctReal} %`;
-      document.getElementById('pctAfaires').innerText = `${pctAF} %`;
-
-      document.getElementById('cnt_tous').innerText = total;
-      document.getElementById('cnt_encours').innerText = afaires;
-      document.getElementById('cnt_realise').innerText = realises;
-    }
-
-    function changerFiltre(filtre) {
-      auditActuel.filtreStatut = filtre;
-      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = document.getElementById(`flt_${filtre}`);
-      if (activeBtn) activeBtn.classList.add('active');
-
-      remplirSelecteurParc();
-
-      const listeFiltree = obtenirListeFiltree();
-      if (listeFiltree.length > 0) {
-        const existe = listeFiltree.find(e => e.id === auditActuel.erpId);
-        if (!existe) changerErpSelectionne(listeFiltree[0].id);
-      }
-    }
-
-    function obtenirListeFiltree() {
-      if (auditActuel.filtreStatut === 'encours') return auditActuel.parc.filter(e => e.statut_adap !== "Réalisé");
-      if (auditActuel.filtreStatut === 'realise') return auditActuel.parc.filter(e => e.statut_adap === "Réalisé");
-      return auditActuel.parc;
-    }
-
-    function remplirSelecteurParc() {
-      const sel = document.getElementById('erpSelect');
-      const liste = obtenirListeFiltree();
-      sel.innerHTML = "";
-
-      if (liste.length === 0) {
-        sel.innerHTML = '<option value="">Aucun bâtiment pour ce filtre</option>';
-        return;
+        return { valides, restants, derogation };
       }
 
-      liste.forEach(erp => {
-        const opt = document.createElement('option');
-        opt.value = erp.id;
-        // Inscription directe du pourcentage Ad'Ap dans le menu déroulant
-        opt.innerText = `${erp.nom} (${erp.classe_erp || 'Cat ' + erp.categorie}) — ${erp.acces_apres} Ad'Ap [${erp.statut_adap}]`;
-        if (erp.id === auditActuel.erpId) opt.selected = true;
-        sel.appendChild(opt);
-      });
-    }
+      const separation = commentaire.split(/reste à faire\s*:|travaux importants restant à faire\s*:|travaux restant à faire\s*:|travaux à faire\s*:|travaux importants à faire\s*:/i);
+      let texteFait = separation.length > 1 ? separation[0].trim() : "";
+      let texteAfaire = separation.length > 1 ? separation[1].trim() : commentaire.trim();
 
-    function changerErpSelectionne(id) {
-      const erp = auditActuel.parc.find(e => e.id === id);
-      if (!erp) return;
-
-      auditActuel.erpId = erp.id;
-      auditActuel.nom = erp.nom;
-      document.getElementById('nomERP').value = erp.nom;
-      document.getElementById('displayErpNom').innerText = erp.nom;
-
-      // Affichage du Bilan détaillé des Travaux
-      const adapBox = document.getElementById('adapInfoBox');
-      adapBox.style.display = "block";
-      document.getElementById('adapErpTitle').innerText = erp.nom;
-      document.getElementById('adapBudgetTvx').innerText = `Budget travaux Ad'Ap exécutés : ${erp.montant_adap}`;
-
-      // Inscription en grand des pourcentages
-      document.getElementById('adapTauxApres').innerText = erp.acces_apres || '100 %';
-      document.getElementById('adapTaux2015').innerText = erp.acces_2015 || 'N/A';
-
-      const badge = document.getElementById('adapStatutBadge');
-      badge.innerText = erp.statut_adap;
-      badge.className = (erp.statut_adap === 'Réalisé') ? 'adap-badge badge-realise' : 'adap-badge badge-encours';
-
-      const bilan = analyserBilanTravaux(erp.statut_adap, erp.commentaire_adap);
-      
-      const ulDone = document.getElementById('listeValides');
-      ulDone.innerHTML = bilan.valides.map(t => `<li>${t}</li>`).join('');
-
-      const ulTodo = document.getElementById('listeRestants');
-      if (bilan.restants.length > 0) {
-        ulTodo.innerHTML = bilan.restants.map(t => `<li>${t}</li>`).join('');
-      } else {
-        ulTodo.innerHTML = `<li>Aucun travaux restant préconisé</li>`;
+      const splitDerog = texteAfaire.split(/demande de dérogation|dérogation/i);
+      if (splitDerog.length > 1) {
+        texteAfaire = splitDerog[0].trim();
+        derogation = "Demande de dérogation " + splitDerog[1].trim().replace(/^[\s,;:]+/, '').replace(/\.+$/, '');
       }
 
-      const blocDerog = document.getElementById('blocDerogation');
-      if (bilan.derogation) {
-        blocDerog.style.display = "block";
-        document.getElementById('texteDerogation').innerText = bilan.derogation;
-      } else {
-        blocDerog.style.display = "none";
-      }
-
-      if (erp.categorie === "5") changerProfil('existant_5');
-      else changerProfil('existant_1_4');
-
-      auditActuel.etages = erp.niveaux && erp.niveaux.length > 0 ? erp.niveaux : ["RDC"];
-      auditActuel.etageActif = auditActuel.etages[0];
-      auditActuel.evaluations = JSON.parse(JSON.stringify(erp.evaluations || {}));
-
-      rendreOngletsEtages();
-      rendreCriteres();
-      sauvegarderLocal();
-    }
-
-    function mettreAJourNom(val) {
-      auditActuel.nom = val || "Audit Sans Titre";
-      document.getElementById('displayErpNom').innerText = auditActuel.nom;
-      sauvegarderLocal();
-    }
-
-    function changerProfil(nouveauProfil) {
-      auditActuel.profil = nouveauProfil;
-      document.querySelectorAll('.profile-tab').forEach(el => el.classList.remove('active'));
-      const activeTab = document.getElementById(`prof_${nouveauProfil}`);
-      if (activeTab) activeTab.classList.add('active');
-      
-      const badge = document.getElementById('currentCategoryBadge');
-      if (nouveauProfil === 'neuf') badge.innerText = "Neuf (Arrêté 2017)";
-      else if (nouveauProfil === 'existant_1_4') badge.innerText = "Existant (Cat 1 à 4)";
-      else badge.innerText = "Existant (5e Catégorie)";
-
-      rendreCriteres();
-      sauvegarderLocal();
-    }
-
-    function selectionnerEtage(etage) {
-      auditActuel.etageActif = etage;
-      document.querySelectorAll('.etage-btn').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = Array.from(document.querySelectorAll('.etage-btn')).find(b => b.innerText.includes(etage));
-      if (activeBtn) activeBtn.classList.add('active');
-      rendreCriteres();
-    }
-
-    function ajouterEtage() {
-      const nom = prompt("Désignation du niveau à ajouter (ex: R+1, Sous-sol, Mezzanine) :");
-      if (!nom || auditActuel.etages.includes(nom)) return;
-      auditActuel.etages.push(nom);
-      rendreOngletsEtages();
-      selectionnerEtage(nom);
-      sauvegarderLocal();
-    }
-
-    function rendreOngletsEtages() {
-      const cont = document.getElementById('etagesConteneur');
-      cont.innerHTML = "";
-      auditActuel.etages.forEach(et => {
-        const btn = document.createElement('button');
-        btn.type = "button";
-        btn.className = `etage-btn ${auditActuel.etageActif === et ? 'active' : ''}`;
-        btn.innerText = et;
-        btn.onclick = () => selectionnerEtage(et);
-        cont.appendChild(btn);
-      });
-    }
-
-    function rendreCriteres() {
-      const cont = document.getElementById('listeCriteres');
-      cont.innerHTML = "";
-
-      if (!auditActuel.evaluations[auditActuel.etageActif]) {
-        auditActuel.evaluations[auditActuel.etageActif] = {};
-      }
-      const evalEtage = auditActuel.evaluations[auditActuel.etageActif];
-
-      REFERENTIEL_COMPLET.forEach(bloc => {
-        const secHeader = document.createElement('div');
-        secHeader.className = "section-header";
-        secHeader.innerText = bloc.section;
-        cont.appendChild(secHeader);
-
-        bloc.criteres.forEach(crit => {
-          const etat = evalEtage[crit.id] || { status: null, note: "", photos: [] };
-          const regleSpecifique = crit[auditActuel.profil] || crit.desc;
-
-          const card = document.createElement('div');
-          card.className = "criterion-item";
-          card.innerHTML = `
-            <div class="crit-title">${crit.titre}</div>
-            <div class="crit-desc">${crit.desc}</div>
-            <div style="background:#0f172a; padding:6px 10px; border-radius:6px; font-size:0.75rem; color:#38bdf8; margin-bottom:8px; border-left:3px solid var(--primary);">
-              <strong>Règle profil :</strong> ${regleSpecifique}
-            </div>
-
-            <div class="status-btns">
-              <div class="status-btn c ${etat.status === 'C' ? 'active' : ''}" onclick="definirStatut('${crit.id}', 'C')">Conforme</div>
-              <div class="status-btn nc ${etat.status === 'NC' ? 'active' : ''}" onclick="definirStatut('${crit.id}', 'NC')">Non Conforme</div>
-              <div class="status-btn so ${etat.status === 'SO' ? 'active' : ''}" onclick="definirStatut('${crit.id}', 'SO')">Sans Objet</div>
-            </div>
-
-            <div class="print-status">Constat : <strong>${etat.status || 'Non vérifié'}</strong></div>
-
-            <textarea placeholder="Constats techniques, cotes relevées, réserves..." style="margin-bottom:6px; height:50px;" oninput="majNote('${crit.id}', this.value)">${etat.note || ''}</textarea>
-
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <label style="margin:0; cursor:pointer; font-size:0.75rem; color:var(--primary-light);">
-                📷 Prendre une photo
-                <input type="file" accept="image/*" capture="environment" style="display:none" onchange="ajouterPhoto('${crit.id}', event)">
-              </label>
-              <div class="photo-preview-wrap" id="photos_${crit.id}">
-                ${(etat.photos || []).map(src => `<img src="${src}" class="photo-thumb">`).join('')}
-              </div>
-            </div>
-          `;
-          cont.appendChild(card);
+      if (texteFait) {
+        texteFait.split(/[.;]/).forEach(s => {
+          const item = s.trim();
+          if (item && !item.toLowerCase().startsWith("etude")) valides.push(item);
         });
-      });
+      }
+      if (valides.length === 0) {
+        valides.push("Diagnostic initial Ad'Ap réalisé (phase d'études achevée)");
+      }
 
-      calculerScore();
-    }
-
-    function definirStatut(critId, statut) {
-      if (!auditActuel.evaluations[auditActuel.etageActif]) auditActuel.evaluations[auditActuel.etageActif] = {};
-      if (!auditActuel.evaluations[auditActuel.etageActif][critId]) auditActuel.evaluations[auditActuel.etageActif][critId] = { status: null, note: "", photos: [] };
-      auditActuel.evaluations[auditActuel.etageActif][critId].status = statut;
-      rendreCriteres();
-      sauvegarderLocal();
-    }
-
-    function majNote(critId, val) {
-      if (!auditActuel.evaluations[auditActuel.etageActif]) auditActuel.evaluations[auditActuel.etageActif] = {};
-      if (!auditActuel.evaluations[auditActuel.etageActif][critId]) auditActuel.evaluations[auditActuel.etageActif][critId] = { status: null, note: "", photos: [] };
-      auditActuel.evaluations[auditActuel.etageActif][critId].note = val;
-      sauvegarderLocal();
-    }
-
-    function ajouterPhoto(critId, ev) {
-      const file = ev.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const maxDim = 800;
-          let w = img.width, h = img.height;
-          if (w > h && w > maxDim) { h *= maxDim / w; w = maxDim; }
-          else if (h > maxDim) { w *= maxDim / h; h = maxDim; }
-          canvas.width = w; canvas.height = h;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, w, h);
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
-
-          if (!auditActuel.evaluations[auditActuel.etageActif]) auditActuel.evaluations[auditActuel.etageActif] = {};
-          if (!auditActuel.evaluations[auditActuel.etageActif][critId]) auditActuel.evaluations[auditActuel.etageActif][critId] = { status: null, note: "", photos: [] };
-          if (!auditActuel.evaluations[auditActuel.etageActif][critId].photos) auditActuel.evaluations[auditActuel.etageActif][critId].photos = [];
-          auditActuel.evaluations[auditActuel.etageActif][critId].photos.push(dataUrl);
-          rendreCriteres();
-          sauvegarderLocal();
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function calculerScore() {
-      let conformes = 0;
-      let nonConformes = 0;
-
-      Object.keys(auditActuel.evaluations).forEach(et => {
-        const obj = auditActuel.evaluations[et];
-        Object.keys(obj).forEach(cId => {
-          const s = obj[cId].status;
-          if (s === 'C') conformes++;
-          else if (s === 'NC') nonConformes++;
+      if (texteAfaire) {
+        texteAfaire.split(/[,.;]/).forEach(s => {
+          const item = s.trim();
+          if (item && !item.toLowerCase().startsWith("etude en cours") && !item.toLowerCase().startsWith("voir avec")) {
+            restants.push(item);
+          }
         });
-      });
+      }
 
-      const total = conformes + nonConformes;
-      const score = total > 0 ? Math.round((conformes / total) * 100) : 0;
-
-      document.getElementById('gaugeBar').style.width = `${score}%`;
-      document.getElementById('gaugeScore').innerText = `${score} %`;
-    }
-
-    function rendreInterface() {
-      document.getElementById('displayErpNom').innerText = auditActuel.nom || 'Sélectionner un ERP';
-      document.getElementById('nomERP').value = auditActuel.nom || '';
-      document.getElementById(`prof_${auditActuel.profil}`).click();
-      rendreOngletsEtages();
-      rendreCriteres();
-    }
-
-    function exporterAuditJSON() {
-      const blob = new Blob([JSON.stringify(auditActuel, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Audit_${auditActuel.nom.replace(/\\s+/g, '_')}_${auditActuel.date}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function importerAuditJSON(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          auditActuel = JSON.parse(e.target.result);
-          mettreAJourKpisParc();
-          remplirSelecteurParc();
-          rendreInterface();
-          alert("Audit rechargé avec succès !");
-        } catch (err) {
-          alert("Erreur de décodage du fichier JSON.");
-        }
-      };
-      reader.readAsText(file);
-    }
-
-    function exporterSyntheseCSV() {
-      let csv = "Zone/Niveau;Critere;Statut;Constat\\n";
-      Object.keys(auditActuel.evaluations).forEach(et => {
-        const obj = auditActuel.evaluations[et];
-        Object.keys(obj).forEach(cId => {
-          const item = obj[cId];
-          csv += `"${et}";"${cId}";"${item.status || ''}";"${(item.note || '').replace(/"/g, '""')}"\\n`;
-        });
-      });
-
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Synthese_${auditActuel.nom.replace(/\\s+/g, '_')}.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        const swBlob = new Blob([`
-          self.addEventListener('install', e => self.skipWaiting());
-          self.addEventListener('activate', e => self.clients.claim());
-          self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
-        `], { type: 'application/javascript' });
-        navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
-      });
+      return { valides, restants, derogation };
     }
   </script>
 </body>
