@@ -1,256 +1,972 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Audit Accessibilité ERP - Ville d'Aubagne2</title>
+  <title>Audit & Chiffrage Accessibilité ERP - Ville d'Aubagne</title>
 
   <!-- PWA Mobile -->
-  <meta name="theme-color" content="#1e293b">
+  <meta name="theme-color" content="#0f172a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Audit Aubagne">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%232563eb'><rect width='100' height='100' rx='20' fill='%230f172a'/><text x='50' y='65' font-size='50' text-anchor='middle' fill='%2360a5fa'>♿</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%232563eb'><rect width='100' height='100' rx='22' fill='%230f172a'/><text x='50' y='68' font-size='54' text-anchor='middle' fill='%2338bdf8'>♿</text></svg>">
 
   <style>
     :root {
-      --bg: #0b1120;
-      --card-bg: #1e293b;
-      --card-border: #334155;
-      --text: #f1f5f9;
+      --bg: #070b14;
+      --bg-gradient: radial-gradient(circle at 50% 0%, #172554 0%, #070b14 55%);
+      --card-bg: rgba(30, 41, 59, 0.75);
+      --card-solid: #1e293b;
+      --card-border: rgba(148, 163, 184, 0.16);
+      --text: #f8fafc;
       --text-muted: #94a3b8;
-      --primary: #2563eb;
+      --primary: #3b82f6;
       --primary-light: #60a5fa;
       --primary-dark: #1d4ed8;
-      --conform-color: #0284c7;
-      --nc-color: #dc2626;
+      --conform-color: #10b981;
+      --conform-bg: rgba(16, 185, 129, 0.14);
+      --nc-color: #ef4444;
+      --nc-bg: rgba(239, 68, 68, 0.14);
       --so-color: #64748b;
-      --warn-color: #d97706;
+      --so-bg: rgba(100, 116, 139, 0.16);
+      --warn-color: #f59e0b;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
 
+    body {
+      background-color: var(--bg);
+      background-image: var(--bg-gradient);
+      background-attachment: fixed;
+      color: var(--text);
+      padding-bottom: 105px;
+      line-height: 1.45;
+    }
+
+    /* HEADER STICKY GLASSMORPHISM */
     header {
-      background: #0f172a;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--card-border);
-      padding: 12px 16px;
+      padding: 12px 18px;
       position: sticky;
       top: 0;
       z-index: 100;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
     }
-    .header-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-    .header-left { display: flex; align-items: center; gap: 10px; }
-
-    .gauge-wrapper { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
-    .gauge-bar-bg { flex: 1; height: 10px; background: #334155; border-radius: 5px; overflow: hidden; }
-    .gauge-bar-fill { height: 100%; width: 0%; background: var(--primary); transition: width 0.3s ease; }
-    .gauge-text { font-size: 0.85rem; font-weight: 700; color: var(--primary-light); min-width: 48px; text-align: right; }
-
-    .container { padding: 14px; max-width: 900px; margin: 0 auto; }
-    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
-    .card-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; color: var(--primary-light); display: flex; justify-content: space-between; align-items: center; }
-
-    label { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px; }
-    input, select, textarea {
-      width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: #fff; padding: 10px; font-size: 0.9rem; margin-bottom: 10px;
+    .header-inner {
+      max-width: 980px;
+      margin: 0 auto;
     }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); }
-
-    .parc-dashboard {
-      background: #0f1e36;
-      border: 1px solid #1e3a5f;
-      border-radius: 10px;
-      padding: 12px;
-      margin-bottom: 12px;
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
     }
-    .parc-dashboard-title {
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-badges {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .category-pill {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-end;
+      background: rgba(30, 58, 138, 0.45);
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+    .budget-pill {
+      background: rgba(120, 53, 15, 0.45);
+      border: 1px solid rgba(251, 191, 36, 0.4);
+    }
+    .category-pill-main {
       font-size: 0.8rem;
-      font-weight: 700;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.3px;
+    }
+    .category-pill-sub {
+      font-size: 0.68rem;
       color: var(--primary-light);
+      font-weight: 600;
+    }
+
+    /* JAUGE D'EN-TÊTE */
+    .gauge-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .gauge-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 8px;
+      white-space: nowrap;
+    }
+    .gauge-bar-bg {
+      flex: 1;
+      height: 10px;
+      background: rgba(51, 65, 85, 0.7);
+      border-radius: 999px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+    }
+    .gauge-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #3b82f6, #10b981);
+      border-radius: 999px;
+      transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .gauge-text {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #38bdf8;
+      min-width: 48px;
+      text-align: right;
+    }
+
+    /* CONTENEUR & CARTES */
+    .container {
+      padding: 16px;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 5px;
+    }
+    input, select, textarea {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: var(--radius-md);
+      color: #fff;
+      padding: 10px 12px;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    /* DASHBOARD PATRIMOINE */
+    .parc-dashboard {
+      background: linear-gradient(145deg, rgba(15, 30, 54, 0.9), rgba(15, 23, 42, 0.95));
+      border: 1px solid rgba(59, 130, 246, 0.28);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+    .parc-dashboard-title {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--primary-light);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
     .parc-kpis {
       display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    @media(min-width: 640px) {
+      .parc-kpis {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    .kpi-card {
+      background: rgba(9, 19, 34, 0.75);
+      border: 1px solid rgba(56, 189, 248, 0.15);
+      border-radius: var(--radius-md);
+      padding: 10px 8px;
+      text-align: center;
+    }
+    .kpi-val {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .kpi-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+      font-weight: 500;
+    }
+    .kpi-afaire { color: #fbbf24; }
+    .kpi-realise { color: #34d399; }
+    .kpi-budget { color: #f87171; }
+
+    .parc-bar-wrap {
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      display: flex;
+      background: #0f172a;
+      margin-bottom: 8px;
+    }
+    .parc-bar-realise {
+      background: linear-gradient(90deg, #059669, #10b981);
+      height: 100%;
+      transition: width 0.4s ease;
+    }
+    .parc-bar-afaire {
+      background: linear-gradient(90deg, #d97706, #f59e0b);
+      height: 100%;
+      transition: width 0.4s ease;
+    }
+    .parc-bar-legend {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* FILTRES ET RECHERCHE */
+    .filter-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .filter-btn {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 9px 6px;
+      font-size: 0.8rem;
+      text-align: center;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover {
+      border-color: rgba(148, 163, 184, 0.4);
+      color: #fff;
+    }
+    .filter-btn.active {
+      background: rgba(37, 99, 235, 0.25);
+      color: #fff;
+      border-color: var(--primary-light);
+    }
+    .filter-btn.btn-afaire.active {
+      background: rgba(180, 83, 9, 0.35);
+      color: #fde68a;
+      border-color: #f59e0b;
+    }
+    .filter-btn.btn-realise.active {
+      background: rgba(5, 150, 105, 0.3);
+      color: #a7f3d0;
+      border-color: #10b981;
+    }
+
+    .search-select-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    @media(min-width: 640px) {
+      .search-select-grid {
+        grid-template-columns: 1fr 1.6fr;
+      }
+    }
+
+    /* BILAN AD'AP & MODULE FINANCIER */
+    .adap-bilan-box {
+      background: rgba(9, 19, 34, 0.85);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin: 4px 0 14px 0;
+    }
+    .bilan-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+    }
+    .adap-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 5px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+    .badge-realise {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+    .badge-encours {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .pourcentage-adap-banner {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      background: rgba(15, 30, 54, 0.7);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .pct-box-val {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #38bdf8;
+    }
+    .pct-box-lbl {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    /* ENCART ESTIMATION FINANCIÈRE DES TRAVAUX RESTANTS */
+    .finance-summary-box {
+      background: linear-gradient(135deg, rgba(30, 27, 75, 0.75), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .finance-summary-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #fbbf24;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .finance-kpis {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .finance-kpi-item {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 8px;
+      padding: 8px 6px;
+    }
+    .finance-kpi-lbl {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+    .finance-kpi-val {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #fff;
+      margin-top: 2px;
+    }
+    .finance-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.76rem;
+      margin-top: 6px;
+    }
+    .finance-table th {
+      text-align: left;
+      color: var(--text-muted);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+      padding: 4px 6px;
+    }
+    .finance-table td {
+      padding: 5px 6px;
+      border-bottom: 1px dashed rgba(148, 163, 184, 0.12);
+      color: #e2e8f0;
+    }
+    .finance-table td.num, .finance-table th.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bilan-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    @media(min-width: 640px) {
+      .bilan-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .bilan-bloc-done {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: var(--radius-md);
+      padding: 12px;
+    }
+    .bilan-bloc-todo {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: var(--radius-md);
+      padding: 12px;
+    }
+    .bilan-bloc-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .title-done { color: #34d399; }
+    .title-todo { color: #fbbf24; }
+
+    .bilan-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+    .bilan-list li {
+      margin-bottom: 5px;
+      padding-left: 16px;
+      position: relative;
+      color: #e2e8f0;
+    }
+    .bilan-list-done li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #34d399;
+      font-weight: bold;
+    }
+    .bilan-list-todo li::before {
+      content: "⚠";
+      position: absolute;
+      left: 0;
+      color: #fbbf24;
+      font-weight: bold;
+    }
+
+    .derogation-tag {
+      background: rgba(220, 38, 38, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.78rem;
+      color: #fca5a5;
+      margin-top: 10px;
+    }
+
+    /* PROFILS & ÉTAGES */
+    .profile-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .profile-tab {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 9px 6px;
+      font-size: 0.78rem;
+      text-align: center;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .profile-tab.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary-light);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    }
+
+    .etage-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .etage-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      flex: 1;
+    }
+    .etage-btn {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 7px 16px;
+      font-size: 0.84rem;
+      border-radius: 999px;
+      white-space: nowrap;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    .etage-btn.active {
+      background: var(--primary);
+      border-color: var(--primary-light);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(59, 130, 246, 0.4);
+    }
+    .btn-add-etage {
+      background: rgba(51, 65, 85, 0.8);
+      border: 1px dashed rgba(148, 163, 184, 0.4);
+      color: #e2e8f0;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    /* FILTRE DES CRITÈRES D'AUDIT */
+    .crit-filter-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      margin-bottom: 14px;
+      padding-bottom: 4px;
+    }
+    .crit-flt-pill {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .crit-flt-pill.active {
+      background: #e2e8f0;
+      color: #0f172a;
+      border-color: #fff;
+    }
+
+    /* CRITÈRES */
+    .section-header {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--primary-light);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin: 22px 0 10px 0;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .criterion-item {
+      background: rgba(22, 32, 50, 0.85);
+      border: 1px solid var(--card-border);
+      border-left: 4px solid var(--so-color);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 12px;
+      transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+    .criterion-item.status-c {
+      border-left-color: var(--conform-color);
+    }
+    .criterion-item.status-nc {
+      border-left-color: var(--nc-color);
+      background: linear-gradient(90deg, rgba(239, 68, 68, 0.08) 0%, rgba(22, 32, 50, 0.92) 35%);
+    }
+    .criterion-item.status-so {
+      border-left-color: var(--so-color);
+      opacity: 0.88;
+    }
+
+    .crit-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .crit-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .crit-bpu-ref {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      background: rgba(15, 23, 42, 0.7);
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      white-space: nowrap;
+    }
+    .crit-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .status-btns {
+      display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
       margin-bottom: 10px;
     }
-    .kpi-card {
-      background: #091322;
-      border: 1px solid #233857;
-      border-radius: 8px;
-      padding: 8px 10px;
-      text-align: center;
-    }
-    .kpi-val { font-size: 1.15rem; font-weight: 800; color: #fff; }
-    .kpi-label { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
-    .kpi-afaire { color: #fbbf24; }
-    .kpi-realise { color: #38bdf8; }
-
-    .parc-bar-wrap { height: 10px; border-radius: 5px; overflow: hidden; display: flex; background: #1e293b; margin-bottom: 6px; }
-    .parc-bar-realise { background: #0284c7; height: 100%; transition: width 0.3s; }
-    .parc-bar-afaire { background: #d97706; height: 100%; transition: width 0.3s; }
-    .parc-bar-legend { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); }
-
-    .filter-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; }
-    .filter-btn {
-      background: #091322; border: 1px solid #334155; color: var(--text-muted); padding: 8px 6px; font-size: 0.78rem; text-align: center; border-radius: 8px; cursor: pointer; font-weight: 700;
-    }
-    .filter-btn.active { background: #1e3a5f; color: #fff; border-color: var(--primary-light); }
-    .filter-btn.btn-afaire.active { background: #78350f; color: #fef3c7; border-color: #f59e0b; }
-    .filter-btn.btn-realise.active { background: #075985; color: #e0f2fe; border-color: #38bdf8; }
-
-    .adap-bilan-box {
-      background: #091322;
-      border: 1px solid #1e3a5f;
-      border-radius: 10px;
-      padding: 12px;
-      margin-bottom: 12px;
-    }
-    .bilan-header {
-      display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #1e293b;
-    }
-    .adap-badge { font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; }
-    .badge-realise { background: #0369a1; color: #fff; }
-    .badge-encours { background: #b45309; color: #fff; }
-
-    .pourcentage-adap-banner {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: #0f1e36; border: 1px solid #1e3a5f; border-radius: 8px; padding: 8px 12px; margin-bottom: 10px;
-    }
-    .pct-box-val { font-size: 1.25rem; font-weight: 800; color: #38bdf8; }
-    .pct-box-lbl { font-size: 0.72rem; color: var(--text-muted); }
-
-    .bilan-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-    @media(min-width: 600px) { .bilan-grid { grid-template-columns: 1fr 1fr; } }
-
-    .bilan-bloc-done { background: #0c1b30; border: 1px solid #1d4ed8; border-radius: 8px; padding: 10px; }
-    .bilan-bloc-todo { background: #2a1508; border: 1px solid #b45309; border-radius: 8px; padding: 10px; }
-    .bilan-bloc-title { font-size: 0.8rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-    .title-done { color: #38bdf8; }
-    .title-todo { color: #f59e0b; }
-
-    .bilan-list { list-style: none; padding: 0; margin: 0; font-size: 0.78rem; line-height: 1.4; }
-    .bilan-list li { margin-bottom: 4px; padding-left: 14px; position: relative; }
-    .bilan-list-done li::before { content: "✓"; position: absolute; left: 0; color: #38bdf8; font-weight: bold; }
-    .bilan-list-todo li::before { content: "⚠"; position: absolute; left: 0; color: #f59e0b; font-weight: bold; }
-
-    .derogation-tag {
-      background: #311313; border: 1px solid #dc2626; border-radius: 6px; padding: 6px 8px; font-size: 0.75rem; color: #fca5a5; margin-top: 8px;
-    }
-
-    .profile-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
-    .profile-tab {
-      background: #0f172a; border: 1px solid #334155; color: var(--text-muted); padding: 8px 4px; font-size: 0.75rem; text-align: center; border-radius: 8px; cursor: pointer; font-weight: 600;
-    }
-    .profile-tab.active { background: var(--primary); color: #fff; border-color: var(--primary-light); }
-
-    .etage-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 12px; }
-    .etage-btn {
-      background: #0f172a; border: 1px solid #334155; color: #fff; padding: 6px 14px; font-size: 0.85rem; border-radius: 20px; white-space: nowrap; cursor: pointer; font-weight: 600;
-    }
-    .etage-btn.active { background: var(--primary-dark); border-color: var(--primary-light); color: #fff; }
-    .btn-add-etage { background: #334155; border: none; color: #fff; border-radius: 20px; padding: 6px 14px; font-size: 0.85rem; cursor: pointer; white-space: nowrap; }
-
-    .section-header {
-      font-size: 0.85rem; font-weight: 800; color: var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px;
-      margin: 16px 0 8px 0; padding-bottom: 4px; border-bottom: 1px solid var(--card-border); display: flex; align-items: center; gap: 6px;
-    }
-
-    .criterion-item { background: #162032; border: 1px solid #2d3c52; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
-    .crit-title { font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
-    .crit-desc { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.3; }
-
-    .status-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px; }
     .status-btn {
-      background: #0f172a; border: 1px solid #334155; color: var(--text-muted); padding: 10px 4px; font-size: 0.8rem; font-weight: 700; border-radius: 6px; cursor: pointer; text-align: center; min-height: 44px; display: flex; align-items: center; justify-content: center;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      color: var(--text-muted);
+      padding: 9px 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.15s ease;
     }
-    .status-btn.c.active { background: var(--conform-color); color: #fff; border-color: #38bdf8; }
-    .status-btn.nc.active { background: var(--nc-color); color: #fff; border-color: #f87171; }
-    .status-btn.so.active { background: var(--so-color); color: #fff; border-color: #94a3b8; }
+    .status-btn.c.active {
+      background: var(--conform-bg);
+      color: #34d399;
+      border-color: var(--conform-color);
+    }
+    .status-btn.nc.active {
+      background: var(--nc-bg);
+      color: #f87171;
+      border-color: var(--nc-color);
+    }
+    .status-btn.so.active {
+      background: var(--so-bg);
+      color: #cbd5e1;
+      border-color: #94a3b8;
+    }
+
+    /* BANDEAU DE CHIFFRAGE SUR CRITÈRE NON CONFORME */
+    .crit-cost-box {
+      display: none;
+      background: rgba(127, 29, 29, 0.22);
+      border: 1px solid rgba(248, 113, 113, 0.35);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .criterion-item.status-nc .crit-cost-box {
+      display: block;
+    }
+    .crit-cost-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      align-items: end;
+    }
+    .crit-cost-grid input {
+      margin-bottom: 0;
+      padding: 7px 8px;
+      font-size: 0.82rem;
+      text-align: right;
+      font-weight: 700;
+    }
+    .crit-cost-total {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(248, 113, 113, 0.4);
+      border-radius: 8px;
+      padding: 7px 10px;
+      text-align: right;
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: #fca5a5;
+    }
 
     .crit-note {
-      width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #cbd5e1; padding: 8px; font-size: 0.78rem; resize: vertical; min-height: 40px;
+      width: 100%;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 8px;
+      color: #e2e8f0;
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      resize: vertical;
+      min-height: 38px;
+      margin-bottom: 0;
     }
-    .crit-note:focus { outline: none; border-color: var(--primary); }
 
-    .photo-preview-wrap { display: flex; gap: 8px; overflow-x: auto; margin-top: 6px; }
-    .photo-thumb { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; border: 1px solid #475569; }
-
+    /* BARRE D'ACTIONS BASSE */
     .bottom-bar {
-      position: fixed; bottom: 0; left: 0; right: 0; background: #0f172a; border-top: 1px solid var(--card-border); padding: 10px 14px; display: flex; gap: 8px; z-index: 100;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid var(--card-border);
+      padding: 10px 16px;
+      z-index: 100;
+    }
+    .bottom-bar-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      display: flex;
+      gap: 8px;
     }
     .btn-action {
-      flex: 1; background: #334155; color: #fff; border: 1px solid #475569; border-radius: 8px; padding: 10px 4px; font-size: 0.78rem; font-weight: 600; text-align: center; cursor: pointer; min-height: 44px;
+      flex: 1;
+      background: rgba(51, 65, 85, 0.8);
+      color: #f1f5f9;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: var(--radius-md);
+      padding: 10px 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      min-height: 44px;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
-    .btn-primary { background: var(--primary); border-color: var(--primary-light); }
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      border-color: #60a5fa;
+      color: #fff;
+    }
 
-    @media print {
-      body { background: #fff !important; color: #000 !important; padding: 0 !important; }
-      header, .bottom-bar, .profile-tabs, .etage-scroll, .btn-add-etage, input[type="file"], .status-btns, .filter-tabs, .parc-dashboard, .crit-note { display: none !important; }
-      .card, .criterion-item, .adap-bilan-box { background: #fff !important; border: 1px solid #ccc !important; color: #000 !important; break-inside: avoid; }
-      .crit-title, .section-header { color: #000 !important; }
-      .print-status { display: block !important; font-weight: bold; margin-top: 4px; }
+    /* TOAST NOTIFICATION */
+    .toast {
+      position: fixed;
+      bottom: 76px;
+      right: 18px;
+      background: #10b981;
+      color: #06281e;
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 8px 14px;
+      border-radius: 999px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: all 0.25s ease;
+      z-index: 200;
     }
-    .print-status { display: none; font-size: 0.85rem; }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* IMPRESSION PDF PRO */
+    .print-only-header, .print-status {
+      display: none;
+    }
+    @media print {
+      body {
+        background: #fff !important;
+        background-image: none !important;
+        color: #0f172a !important;
+        padding: 0 !important;
+        font-size: 10.5pt;
+      }
+      header, .bottom-bar, .profile-tabs, .etage-bar, .filter-tabs,
+      .parc-dashboard, .crit-filter-bar, .status-btns, .crit-note,
+      .crit-cost-box, .search-select-grid, .no-print, .toast {
+        display: none !important;
+      }
+      .container {
+        max-width: 100% !important;
+        padding: 0 !important;
+      }
+      .print-only-header {
+        display: flex !important;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #0f172a;
+        padding-bottom: 12px;
+        margin-bottom: 16px;
+      }
+      .card, .adap-bilan-box, .criterion-item, .finance-summary-box, .finance-kpi-item {
+        background: #fff !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #0f172a !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+        margin-bottom: 8px !important;
+        padding: 10px !important;
+      }
+      .crit-title, .section-header, .bilan-list li, #adapErpTitle,
+      .finance-kpi-val, .finance-table td, .finance-table th, .finance-summary-header {
+        color: #0f172a !important;
+      }
+      .pct-box-val {
+        color: #0f172a !important;
+      }
+      .print-status {
+        display: block !important;
+        font-weight: 700;
+        font-size: 0.82rem;
+        margin-top: 6px;
+        padding-top: 6px;
+        border-top: 1px dashed #cbd5e1;
+      }
+    }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="header-top">
-      <div class="header-left">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 46" style="height:36px; width:auto;">
-          <g fill="none">
-            <rect x="2" y="2" width="42" height="42" rx="9" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5"/>
-            <path d="M12 34 L23 11 L34 34" stroke="#60a5fa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M16 26 L30 26" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
-            <circle cx="23" cy="20" r="2.5" fill="#93c5fd"/>
-            <text x="52" y="20" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="800" fill="#f8fafc" letter-spacing="1.2">AUBAGNE</text>
-            <text x="52" y="34" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="600" fill="#94a3b8" letter-spacing="2">VILLE D'AUBAGNE</text>
-          </g>
-        </svg>
+    <div class="header-inner">
+      <div class="header-top">
+        <div class="header-left">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 46" style="height:38px; width:auto;">
+            <g fill="none">
+              <rect x="2" y="2" width="42" height="42" rx="10" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5"/>
+              <path d="M12 34 L23 11 L34 34" stroke="#60a5fa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M16 26 L30 26" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="23" cy="20" r="2.5" fill="#93c5fd"/>
+              <text x="54" y="20" font-family="Inter, sans-serif" font-size="15" font-weight="800" fill="#f8fafc" letter-spacing="1.2">AUBAGNE</text>
+              <text x="54" y="34" font-family="Inter, sans-serif" font-size="8.5" font-weight="600" fill="#94a3b8" letter-spacing="1.8">AUDIT & CHIFFRAGE ERP</text>
+            </g>
+          </svg>
+        </div>
+        <div class="header-badges">
+          <div class="category-pill budget-pill">
+            <span class="category-pill-main" id="headerBudgetBadge">0 € HT</span>
+            <span class="category-pill-sub" style="color:#fde68a;">Reste à chiffrer (ERP)</span>
+          </div>
+          <div class="category-pill">
+            <span class="category-pill-main" id="currentCategoryBadge">5e Catégorie</span>
+            <span class="category-pill-sub" id="currentClassBadge">Classe ERP</span>
+          </div>
+        </div>
       </div>
-      <div style="text-align:right;">
-        <div style="font-size: 0.8rem; font-weight:700; color: #fff;" id="currentCategoryBadge">5e Catégorie</div>
-        <div style="font-size: 0.7rem; color: var(--primary-light);">Arrêté ERP</div>
-      </div>
-    </div>
 
-    <div class="gauge-wrapper">
-      <div class="gauge-bar-bg">
-        <div id="gaugeBar" class="gauge-bar-fill"></div>
+      <div class="gauge-wrapper">
+        <span class="gauge-label">Conformité audit :</span>
+        <div class="gauge-bar-bg">
+          <div id="gaugeBar" class="gauge-bar-fill"></div>
+        </div>
+        <div id="gaugeScore" class="gauge-text">0 %</div>
       </div>
-      <div id="gaugeScore" class="gauge-text">0 %</div>
     </div>
   </header>
 
   <div class="container">
 
+    <!-- EN-TÊTE DÉDIÉ À L'IMPRESSION PDF -->
+    <div class="print-only-header">
+      <div>
+        <h1 style="font-size:1.3rem;">Rapport d'Audit & Chiffrage Accessibilité ERP — Ville d'Aubagne</h1>
+        <p id="printSubHeader" style="font-size:0.9rem; color:#475569;"></p>
+      </div>
+      <div style="text-align:right;">
+        <strong id="printScoreHeader" style="font-size:1.15rem; display:block;"></strong>
+        <span id="printBudgetHeader" style="font-size:0.95rem; font-weight:700;"></span>
+      </div>
+    </div>
+
+    <!-- SYNTHÈSE DU PATRIMOINE -->
     <div class="parc-dashboard">
       <div class="parc-dashboard-title">
-        <span>Synthèse du Patrimoine Communal</span>
-        <span style="font-size:0.75rem; color:#93c5fd;" id="totalErpCount">0 ERP</span>
+        <span>🏛️ Synthèse du Patrimoine Communal (Ad'Ap & Budget)</span>
+        <span style="font-size:0.78rem; color:#93c5fd;" id="totalErpCount">0 ERP</span>
       </div>
 
       <div class="parc-kpis">
         <div class="kpi-card">
           <div class="kpi-val" id="kpiTotal">0</div>
-          <div class="kpi-label">Total Bâtiments</div>
+          <div class="kpi-label">Total Établissements</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-val kpi-afaire" id="kpiAfaires">0</div>
-          <div class="kpi-label">À faire / En cours</div>
+          <div class="kpi-label">En cours / À faire</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-val kpi-realise" id="kpiRealises">0</div>
           <div class="kpi-label">Travaux Réalisés</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val kpi-budget" id="kpiParcBudgetHT">0 €</div>
+          <div class="kpi-label">Reste à financer Parc (HT)</div>
         </div>
       </div>
 
@@ -259,109 +975,179 @@
         <div id="barAfaires" class="parc-bar-afaire" style="width: 0%;"></div>
       </div>
       <div class="parc-bar-legend">
-        <span style="color:#38bdf8;">■ Réalisés : <strong id="pctRealise">0 %</strong></span>
-        <span style="color:#fbbf24;">■ Restant à faire : <strong id="pctAfaires">0 %</strong></span>
+        <span style="color:#34d399;">● Réalisés : <strong id="pctRealise">0 %</strong></span>
+        <span style="color:#fbbf24;">● En cours / À faire : <strong id="pctAfaires">0 %</strong></span>
       </div>
     </div>
 
+    <!-- SÉLECTION DU BÂTIMENT -->
     <div class="card">
-      <div class="card-title">
-        <span>Sélection du bâtiment</span>
-        <button type="button" class="btn-action" style="flex:none; padding:4px 8px; font-size:0.75rem; min-height:28px;" onclick="reinitialiserParcAubagne()">🔄 Réinitialiser le parc</button>
+      <div class="card-title no-print">
+        <span>🏢 Sélection & Fiche Établissement</span>
+        <button type="button" class="btn-action" style="flex:none; padding:5px 10px; font-size:0.75rem; min-height:30px;" onclick="reinitialiserParcAubagne()">🔄 Réinitialiser le parc</button>
       </div>
 
-      <label>Filtrer la liste des bâtiments :</label>
-      <div class="filter-tabs">
-        <div class="filter-btn active" id="flt_tous" onclick="changerFiltre('tous')">Tous (<span id="cnt_tous">0</span>)</div>
-        <div class="filter-btn btn-afaire" id="flt_encours" onclick="changerFiltre('encours')">À faire (<span id="cnt_encours">0</span>)</div>
-        <div class="filter-btn btn-realise" id="flt_realise" onclick="changerFiltre('realise')">Réalisés (<span id="cnt_realise">0</span>)</div>
+      <div class="no-print">
+        <label>Filtrer par avancement Ad'Ap :</label>
+        <div class="filter-tabs">
+          <div class="filter-btn active" id="flt_tous" onclick="changerFiltre('tous')">Tous (<span id="cnt_tous">0</span>)</div>
+          <div class="filter-btn btn-afaire" id="flt_encours" onclick="changerFiltre('encours')">À faire (<span id="cnt_encours">0</span>)</div>
+          <div class="filter-btn btn-realise" id="flt_realise" onclick="changerFiltre('realise')">Réalisés (<span id="cnt_realise">0</span>)</div>
+        </div>
+
+        <div class="search-select-grid">
+          <div>
+            <label for="searchErp">Recherche rapide :</label>
+            <input type="search" id="searchErp" placeholder="🔍 Filtrer par nom ou secteur..." oninput="remplirSelectErp()">
+          </div>
+          <div>
+            <label for="erpSelect">Établissement sélectionné :</label>
+            <select id="erpSelect" onchange="changerErpSelectionne(this.value)"></select>
+          </div>
+        </div>
       </div>
 
-      <label>Choisir un bâtiment :</label>
-      <select id="erpSelect" onchange="changerErpSelectionne(this.value)">
-      </select>
-
+      <!-- BILAN AD'AP & ESTIMATION FINANCIÈRE -->
       <div id="adapInfoBox" class="adap-bilan-box" style="display:none;">
         <div class="bilan-header">
           <div>
-            <span style="font-size:0.85rem; font-weight:800; color:#fff;" id="adapErpTitle">Bâtiment</span>
-            <span style="font-size:0.75rem; color:var(--text-muted); display:block;" id="adapBudgetTvx">Budget travaux réalisés : 0 €</span>
+            <span style="font-size:1rem; font-weight:800; color:#fff;" id="adapErpTitle">Bâtiment</span>
+            <span style="font-size:0.76rem; color:var(--text-muted); display:block; margin-top:2px;" id="adapPatrimoine">Patrimoine</span>
+            <span style="font-size:0.78rem; color:#93c5fd; display:block; margin-top:2px; font-weight:600;" id="adapBudgetTvx">Budget travaux déjà réalisés : 0 €</span>
           </div>
           <span id="adapStatutBadge" class="adap-badge badge-realise">Réalisé</span>
         </div>
 
         <div class="pourcentage-adap-banner">
           <div>
-            <div class="pct-box-lbl">Taux cible Ad'Ap :</div>
+            <div class="pct-box-lbl">Diagnostic initial (2015)</div>
+            <div class="pct-box-val" style="color:#94a3b8;" id="adapTaux2015">0 %</div>
+          </div>
+          <div style="border-left:1px solid rgba(148,163,184,0.2); border-right:1px solid rgba(148,163,184,0.2);">
+            <div class="pct-box-lbl">Taux cible Ad'Ap</div>
             <div class="pct-box-val" id="adapTauxApres">100 %</div>
           </div>
-          <div style="border-left:1px solid #1e3a5f; padding-left:10px;">
-            <div class="pct-box-lbl">Diagnostic initial (2015) :</div>
-            <div class="pct-box-val" style="color:#94a3b8;" id="adapTaux2015">0 %</div>
+          <div>
+            <div class="pct-box-lbl">Conformité Audit Actuel</div>
+            <div class="pct-box-val" style="color:#34d399;" id="adapTauxReel">100 %</div>
+          </div>
+        </div>
+
+        <!-- MODULE SYNTHÈSE FINANCIÈRE DES NON-CONFORMITÉS -->
+        <div class="finance-summary-box" id="financeSummaryBox">
+          <div class="finance-summary-header">
+            <span>💶 Estimation Chiffrée des Travaux Restants (Critères NC)</span>
+            <span id="financeNbPostes">0 poste(s) NC</span>
+          </div>
+          <div class="finance-kpis">
+            <div class="finance-kpi-item">
+              <div class="finance-kpi-lbl">Total Travaux HT</div>
+              <div class="finance-kpi-val" style="color:#fbbf24;" id="finTotalHT">0 €</div>
+            </div>
+            <div class="finance-kpi-item">
+              <div class="finance-kpi-lbl">TVA (20 %)</div>
+              <div class="finance-kpi-val" style="color:#94a3b8;" id="finTVA">0 €</div>
+            </div>
+            <div class="finance-kpi-item">
+              <div class="finance-kpi-lbl">Total Estimé TTC</div>
+              <div class="finance-kpi-val" style="color:#f87171;" id="finTotalTTC">0 €</div>
+            </div>
+          </div>
+          <div id="financeTableWrap" style="display:none;">
+            <table class="finance-table">
+              <thead>
+                <tr>
+                  <th>Niveau</th>
+                  <th>Poste / Critère Non Conforme</th>
+                  <th class="num">Qté</th>
+                  <th class="num">P.U. HT</th>
+                  <th class="num">Total HT</th>
+                </tr>
+              </thead>
+              <tbody id="financeTableBody"></tbody>
+            </table>
           </div>
         </div>
 
         <div class="bilan-grid">
           <div class="bilan-bloc-done">
             <div class="bilan-bloc-title title-done">
-              <span>✓ Validé / Réalisé</span>
+              <span>✓ Validé / Réalisé (Historique Ad'Ap)</span>
             </div>
-            <ul class="bilan-list bilan-list-done" id="listeValides">
-            </ul>
+            <ul class="bilan-list bilan-list-done" id="listeValides"></ul>
           </div>
 
           <div class="bilan-bloc-todo">
             <div class="bilan-bloc-title title-todo">
-              <span>⚠ Reste à faire</span>
+              <span>⚠ Observations Ad'Ap initiales</span>
             </div>
-            <ul class="bilan-list bilan-list-todo" id="listeRestants">
-            </ul>
+            <ul class="bilan-list bilan-list-todo" id="listeRestants"></ul>
           </div>
         </div>
 
         <div id="blocDerogation" class="derogation-tag" style="display:none;">
-          <strong>Dossier de dérogation :</strong> <span id="texteDerogation"></span>
+          <strong>⚖️ Dossier de dérogation :</strong> <span id="texteDerogation"></span>
         </div>
       </div>
 
-      <div style="display:grid; grid-template-columns: 2fr 1fr; gap:8px;">
+      <div class="no-print" style="display:grid; grid-template-columns: 2fr 1fr; gap:10px; margin-top:8px;">
         <div>
-          <label>Nom du bâtiment :</label>
-          <input type="text" id="nomERP" placeholder="ex: Théâtre Le Comoedia" oninput="mettreAJourNom(this.value)">
+          <label for="nomERP">Intitulé de l'établissement :</label>
+          <input type="text" id="nomERP" style="margin-bottom:0;" placeholder="ex: Théâtre Le Comoedia" oninput="mettreAJourNom(this.value)">
         </div>
         <div>
-          <label>Date de visite :</label>
-          <input type="date" id="dateAudit" onchange="mettreAJourDate(this.value)">
+          <label for="dateAudit">Date d'audit :</label>
+          <input type="date" id="dateAudit" style="margin-bottom:0;" onchange="mettreAJourDate(this.value)">
         </div>
       </div>
     </div>
 
-    <div class="card">
-      <label>Profil réglementaire appliqué :</label>
-      <div class="profile-tabs">
-        <div class="profile-tab" id="prof_neuf" onclick="changerProfil('neuf')">Neuf (Arrêté 2017)</div>
-        <div class="profile-tab" id="prof_existant_1_4" onclick="changerProfil('existant_1_4')">Existant (Cat 1-4)</div>
-        <div class="profile-tab active" id="prof_existant_5" onclick="changerProfil('existant_5')">Existant (5e Cat)</div>
+    <!-- PROFIL & NIVEAUX -->
+    <div class="card no-print">
+      <div style="display:grid; grid-template-columns: 1fr; gap:14px;">
+        <div>
+          <label>Cadre réglementaire applicable :</label>
+          <div class="profile-tabs">
+            <div class="profile-tab" id="prof_neuf" onclick="changerProfil('neuf')">Neuf (Arrêté 2017)</div>
+            <div class="profile-tab" id="prof_existant_1_4" onclick="changerProfil('existant_1_4')">Existant (Cat. 1 à 4)</div>
+            <div class="profile-tab active" id="prof_existant_5" onclick="changerProfil('existant_5')">Existant (5e Cat. / IOP)</div>
+          </div>
+        </div>
+
+        <div>
+          <label>Niveau / zone inspectée :</label>
+          <div class="etage-bar">
+            <div class="etage-scroll" id="etagesConteneur"></div>
+            <button type="button" class="btn-add-etage" onclick="ajouterEtage()">+ Ajouter un niveau</button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-title"><span>Niveau évalué pour les locaux</span></div>
-      <div class="etage-scroll" id="etagesConteneur">
-      </div>
-      <button type="button" class="btn-add-etage" onclick="ajouterEtage()">+ Ajouter un étage / sous-sol</button>
+    <!-- FILTRE RAPIDE DES CRITÈRES -->
+    <div class="crit-filter-bar no-print">
+      <button type="button" class="crit-flt-pill active" id="cflt_ALL" onclick="changerFiltreCritere('ALL')">Tous les critères (<span id="ccnt_ALL">25</span>)</button>
+      <button type="button" class="crit-flt-pill" id="cflt_NC" onclick="changerFiltreCritere('NC')">✗ Non conformes & Chiffrage (<span id="ccnt_NC">0</span>)</button>
+      <button type="button" class="crit-flt-pill" id="cflt_C" onclick="changerFiltreCritere('C')">✓ Conformes (<span id="ccnt_C">0</span>)</button>
+      <button type="button" class="crit-flt-pill" id="cflt_SO" onclick="changerFiltreCritere('SO')">○ Sans objet (<span id="ccnt_SO">0</span>)</button>
     </div>
 
+    <!-- GRILLE DES CRITÈRES -->
     <div id="listeCriteres"></div>
   </div>
 
+  <!-- BARRE D'ACTIONS FIXE -->
   <div class="bottom-bar">
-    <button type="button" class="btn-action" onclick="document.getElementById('jsonInput').click()">📂 Ouvrir</button>
-    <button type="button" class="btn-action" onclick="exporterAuditJSON()">💾 Sauvegarder</button>
-    <button type="button" class="btn-action" onclick="exporterSyntheseCSV()">📊 CSV</button>
-    <button type="button" class="btn-action btn-primary" onclick="window.print()">🖨 PDF</button>
-    <input type="file" id="jsonInput" accept=".json" style="display:none" onchange="importerAuditJSON(event)">
+    <div class="bottom-bar-inner">
+      <button type="button" class="btn-action" onclick="document.getElementById('jsonInput').click()">📂 Importer</button>
+      <button type="button" class="btn-action" onclick="exporterAuditJSON()">💾 Export JSON</button>
+      <button type="button" class="btn-action" onclick="exporterSyntheseCSV()">📊 Export CSV Chiffré</button>
+      <button type="button" class="btn-action btn-primary" onclick="window.print()">🖨 Rapport PDF</button>
+      <input type="file" id="jsonInput" accept=".json" style="display:none" onchange="importerAuditJSON(event)">
+    </div>
   </div>
+
+  <div id="toast" class="toast">✓ Modifications enregistrées</div>
 
   <script>
     // ============================================================
@@ -381,7 +1167,7 @@ Parc des 3 Diamants et esp. de proximité de la Tourtelle (Arpèges, Anjou, …)
 P'Arc en Ciel, au Pin Vert;Patrimoine culturel et vie des quartiers;IOP;N/A;100 %;Réalisé;0;RDC;Travaux faits en régie + entretien régulier
 Maison de Quartier La Tourtelle;Patrimoine culturel et vie des quartiers;5°;23 %;97 %;Réalisé;6909;RDC;Travaux réalisés
 Maison de Quartier Lavoir du Pin Vert;Patrimoine culturel et vie des quartiers;5°;21 %;94 %;Réalisé;11724;RDC;Travaux réalisés
-Boulodromes Mimi Mariotti, Castors et  Beaudinard;Patrimoine sportif;IOP;N/A;100 %;Réalisé;0;RDC;Travaux faits + entretien régulier
+Boulodromes Mimi Mariotti, Castors et Beaudinard;Patrimoine sportif;IOP;N/A;100 %;Réalisé;0;RDC;Travaux faits + entretien régulier
 Gymnase Mouren;Patrimoine sportif;X3;25 %;87 %;Réalisé;11570;RDC;Travaux réalisés
 Crèche des Bergeronnettes (Secteur 1);Patrimoine scolaire et petite enfance;R5;30 %;95 %;Réalisé;6959;RDC;Travaux réalisés
 Ecole maternelle Bernard Palissy (Secteur 2);Patrimoine scolaire et petite enfance;R4;32 %;100 %;Réalisé;33130;RDC;Travaux réalisés
@@ -406,7 +1192,7 @@ Maison de Quartier Bernard Palissy;Patrimoine culturel et vie des quartiers;5°;
 Maison de Quartier Château Blanc;Patrimoine culturel et vie des quartiers;5°;21 %;52 %;Réalisé;1905;RDC;Travaux réalisés
 Gymnase du Charrel;Patrimoine sportif;X3;14 %;98 %;Démarré / en cours;3843;RDC,R+1;Travaux phase 1 réalisés. Reste à faire vestiaires et sanitaires. Demande de dérogation pour accès des UFR à l'étage
 Gymnase Serge Mesonès;Patrimoine sportif;X3;30 %;98 %;Démarré / en cours;18657;RDC;Travaux phase 1 réalisés. Reste à faire vestiaires et sanitaires.
-Complexe sportif de la Botte;Patrimoine sportif;IOP;N/A;100 %;Démarré / en cours;27082;RDC;Reprises de sols en 2017 + entretien régulier ,  parking PMR en 2021. Aménagement des Berges de l'Huveaune à venir avec création de passerelles adaptées aux PMR.
+Complexe sportif de la Botte;Patrimoine sportif;IOP;N/A;100 %;Démarré / en cours;27082;RDC;Reprises de sols en 2017 + entretien régulier , parking PMR en 2021. Aménagement des Berges de l'Huveaune à venir avec création de passerelles adaptées aux PMR.
 Ecole maternelle Pin Vert (Secteur 1);Patrimoine scolaire et petite enfance;R3;45 %;99 %;Réalisé;28557;RDC;Travaux réalisés
 Ecole primaire Pin Vert (Secteur 1);Patrimoine scolaire et petite enfance;R3;0 %;83 %;Réalisé;62549;RDC,R+1;Travaux 1° phase et WC PMR réalisés. Demande de dérogation pour l'étage, disproportion manifeste : travaux d'aménagement et ascenseur très chers, perte de place dans le hall, déjà 4 classes + BCD + réfectoire en RdC
 Pôle enfance;Patrimoine administr et divers;5°;30 %;95 %;Réalisé;9280;RDC;Travaux réalisés
@@ -422,11 +1208,11 @@ Salle de boxe du Charrel;Patrimoine sportif;5°;13 %;83 %;Réalisé;0;RDC;Travau
 Ecole maternelle Victor Hugo (Secteur 1);Patrimoine scolaire et petite enfance;R4;27 %;77 %;Démarré / en cours;2468;RDC;Travaux importants restant à faire : modification du SAS, élargissement de passages, menuiseries ext. et int. avec portes tiercées, seuils, création WC PMR, équipement escaliers, vitrophanie. Etude en cours
 Ecole élémentaire Camp Major I (Secteur 4);Patrimoine scolaire et petite enfance;R4;27 %;84 %;Démarré / en cours;4939;RDC;Travaux importants restant à faire : création d'un WC PMR sous le préau, équipement de tous les escaliers int. et ext., reprises seuils, remplacement poignées de portes. Etude en cours
 Ecole maternelle Marie Mauron (Secteur 5);Patrimoine scolaire et petite enfance;R5;21 %;82 %;Réalisé;30993;RDC;Travaux réalisés
-Centre aéré des Espillières;Patrimoine scolaire et petite enfance;5°;6 %;84 %;Démarré / en cours;0;RDC;Travaux importants restant à faire : aménagements extérieurs, rampe d'accès, élargissement passages, menuiseries int. et ext. avec portes tiercées, équipement de tous les escaliers,  mise à niveau sanit. PMR, signalétique, vitrophanie. Etude en cours
-Centre de vacances de la Ville d'Aubagne;Patrimoine scolaire et petite enfance;R4;10 %;93 %;Démarré / en cours;0;RDC,R+1,R+2;Travaux importants restant à faire : aménagements extérieurs, rampes d'accès, ascenseur accès R+1, élargissement passages, menuiseries int. et ext. avec portes tiercées, équipement de tous les escaliers,  création de sanit. PMR, création de 2 chambres adaptées PMR, y compris salles d'eau, signalétique, vitrophanie. Etude en cours. Demande de dérogation pour accès  R+2.
+Centre aéré des Espillières;Patrimoine scolaire et petite enfance;5°;6 %;84 %;Démarré / en cours;0;RDC;Travaux importants restant à faire : aménagements extérieurs, rampe d'accès, élargissement passages, menuiseries int. et ext. avec portes tiercées, équipement de tous les escaliers, mise à niveau sanit. PMR, signalétique, vitrophanie. Etude en cours
+Centre de vacances de la Ville d'Aubagne;Patrimoine scolaire et petite enfance;R4;10 %;93 %;Démarré / en cours;0;RDC,R+1,R+2;Travaux importants restant à faire : aménagements extérieurs, rampes d'accès, ascenseur accès R+1, élargissement passages, menuiseries int. et ext. avec portes tiercées, équipement de tous les escaliers, création de sanit. PMR, création de 2 chambres adaptées PMR, y compris salles d'eau, signalétique, vitrophanie. Etude en cours. Demande de dérogation pour accès R+2.
 Médiathèque Marcel Pagnol;Patrimoine culturel et vie des quartiers;S4;24 %;99 %;Réalisé;0;RDC;Travaux réalisés
 Groupe scolaire Antide Boyer (Secteur 1);Patrimoine scolaire et petite enfance;R3;32 %;99 %;Démarré / en cours;51508;RDC,R+1;Visiophone installé en 2017. Sanitaires PMR 2020. Travaux importants restant à faire : ascenseur accès R+1, rampes d'accès, équipement de tous les escaliers, menuiseries int. et ext. avec portes tiercées, seuils, vitrophanie. Etude en cours
-Ecole maternelle Mermoz (Secteur 2);Patrimoine scolaire et petite enfance;R4;37 %;92 %;Démarré / en cours;9161;RDC,R+1;Visiophone installé en 2017.  Parvis en 2022. Travaux importants restant à faire : ascenseur accès R+1 (1 pr tout le groupe scolaire), équipement de tous les escaliers, menuiseries int. et ext. avec portes tiercées, création d'un WC PMR. Etude en cours
+Ecole maternelle Mermoz (Secteur 2);Patrimoine scolaire et petite enfance;R4;37 %;92 %;Démarré / en cours;9161;RDC,R+1;Visiophone installé en 2017. Parvis en 2022. Travaux importants restant à faire : ascenseur accès R+1 (1 pr tout le groupe scolaire), équipement de tous les escaliers, menuiseries int. et ext. avec portes tiercées, création d'un WC PMR. Etude en cours
 Ecole élémentaire Mermoz (Secteur 2);Patrimoine scolaire et petite enfance;R4;26 %;97 %;Démarré / en cours;76399;RDC,R+1;Visiophones installés en 2017, rampes d'accès entrées et cour en 2019, WC PMR 2020 et 2021. Travaux restant à faire : équipement de tous les escaliers, rampe d'accès, menuiseries int. et ext. avec portes tiercées. Etude en cours. Demande de dérogation pour l'étage, disproportion manifeste : ascenseur cher, déjà 5 classes + BCD + réfectoire accessibles en RdC (9 classes au R+1)
 Hôtel de ville;Patrimoine administr et divers;5°;11 %;95 %;Réalisé;2100;RDC;Travaux réalisés
 Trésorerie principale;Patrimoine administr et divers;5°;59 %;95 %;Réalisé;0;RDC;Travaux réalisés / Sorti du patrimoine (non affecté)
@@ -457,34 +1243,159 @@ Conservatoire;Patrimoine culturel et vie des quartiers;5°;0 %;0 %;Démarré / e
 Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en cours;0;RDC;Travaux à faire : mise à niveau WC PMR, équipement escalier, remplacement poignées, vitrophanie. Etude en cours`;
 
     // ============================================================
-    // RÉFÉRENTIEL DES 25 CRITÈRES D'AUDIT
+    // RÉFÉRENTIEL DES 25 CRITÈRES D'AUDIT + BORDEREAU DES PRIX (BPU HT)
     // ============================================================
     const CRITERES = {
-      stationnement: { section: "Extérieur & abords", titre: "Stationnement PMR", desc: "Présence d'au moins une place réservée (3,30 m min) avec signalétique horizontale et verticale." },
-      cheminement_ext: { section: "Extérieur & abords", titre: "Cheminement extérieur", desc: "Revêtement stable, largeur ≥ 1,40 m, pentes ≤ 5 %, bandes de vigilance aux traversées." },
-      entree_seuil: { section: "Entrée", titre: "Entrée & seuil", desc: "Seuil ≤ 2 cm chanfreiné, sas accessible, porte d'entrée ≥ 0,90 m de passage utile." },
-      accueil_banque: { section: "Accueil", titre: "Accueil / banque", desc: "Comptoir adapté à 0,80 m de haut sur 0,60 m de large ou visiophone/interphonie." },
-      circulations_horiz: { section: "Circulations intérieures", titre: "Circulations horizontales", desc: "Couloirs ≥ 1,40 m (1,20 m entre meubles), aires de rotation Ø 1,50 m." },
-      portes_interieures: { section: "Circulations intérieures", titre: "Portes intérieures", desc: "Passage utile ≥ 0,83 m, poignées préhensibles, portes tiercées si nécessaire." },
-      sanitaires_pmr: { section: "Sanitaires", titre: "Sanitaires PMR", desc: "Cabinet accessible, barre d'appui, lavabo suspendu, espace de manœuvre Ø 1,50 m." },
-      ascenseur_dimension: { section: "Ascenseur", titre: "Dimension cabine", desc: "Cabine ≥ 1,10 m × 1,40 m, miroir sur paroi opposée à la porte." },
-      ascenseur_commandes: { section: "Ascenseur", titre: "Commandes d'ascenseur", desc: "Boutons à 0,90-1,30 m, indication braille et relief, annonce sonore d'étage." },
-      ascenseur_bimodalite: { section: "Ascenseur", titre: "Bimodalité (visuelle/sonore)", desc: "Annonces visuelles et sonores des étages et du sens de déplacement." },
-      escaliers_dimensions: { section: "Escaliers", titre: "Dimensions des marches", desc: "Hauteur ≤ 16 cm, giron ≥ 28 cm, nez de marches contrastés et antidérapants." },
-      escaliers_bev: { section: "Escaliers", titre: "Bande d'éveil de vigilance (BEV)", desc: "BEV podotactile à 0,50 m du nez de la 1ère marche en tête de descente." },
-      escaliers_nez_contremarches: { section: "Escaliers", titre: "Nez de marches & contremarches", desc: "Nez contrastés, antidérapants et non glissants ; contremarches pleines et contrastées." },
-      escaliers_mains_courantes: { section: "Escaliers", titre: "Mains courantes", desc: "Mains courantes continues des deux côtés, préhensiles, Ø 3-4 cm, à 0,80-1,00 m." },
-      eas_presence: { section: "Espace d'attente sécurisé (EAS)", titre: "Présence d'un EAS", desc: "EAS obligatoire si évacuation verticale non accessible aux PSH (étages)." },
-      eas_interphonie: { section: "Espace d'attente sécurisé (EAS)", titre: "Interphonie de l'EAS", desc: "Dispositif de communication visuelle et sonore avec les secours." },
-      garde_corps_etage: { section: "Sécurité", titre: "Garde-corps des étages", desc: "Hauteur ≥ 1,00 m, non franchissable, non grimpable, remplissage sûr." },
-      obstacles_sous_escalier: { section: "Sécurité", titre: "Obstacles sous escalier", desc: "Espace sous escalier détectable (canne ou obstacle à < 0,90 m)." },
-      eclairage_ext_accueil: { section: "Ambiance", titre: "Éclairage extérieur & accueil", desc: "Éclairement ≥ 20 lux au sol, homogène, sans éblouissement." },
-      acoustique_reverb: { section: "Ambiance", titre: "Acoustique / réverbération", desc: "Temps de réverbération maîtrisé, matériaux absorbants en zone d'accueil." },
-      signalétique_etage: { section: "Signalétique", titre: "Signalétique des étages", desc: "Repérage des niveaux en gros caractères, braille et relief, contraste ≥ 70 %." },
-      signalétique_vitrages: { section: "Signalétique", titre: "Vitrophanie", desc: "Bandes contrastées à 1,10 m et 1,60 m sur les surfaces vitrées." },
-      securite_alarmes: { section: "Sécurité", titre: "Alarmes visuelles & sonores", desc: "Alarme incendie avec signalisation visuelle (flash) et sonore (BEAL)." },
-      prestations_etage: { section: "Prestations", titre: "Prestations à l'étage", desc: "Si prestations à l'étage : ascenseur ou EPMR obligatoire pour y accéder." },
-      registre_rpa: { section: "Administratif", titre: "Registre Public d'Accessibilité (RPA)", desc: "Registre tenu à jour, consultable sur place, couvrant tous les prestataires." }
+      stationnement: {
+        section: "Extérieur & abords",
+        titre: "Stationnement PMR",
+        desc: "Présence d'au moins une place réservée (3,30 m min) avec signalétique horizontale et verticale.",
+        pu: 2500, unite: "Place"
+      },
+      cheminement_ext: {
+        section: "Extérieur & abords",
+        titre: "Cheminement extérieur & rampes",
+        desc: "Revêtement stable, largeur ≥ 1,40 m, pentes ≤ 5 %, bandes de vigilance aux traversées.",
+        pu: 4500, unite: "Forfait"
+      },
+      entree_seuil: {
+        section: "Entrée & Accueil",
+        titre: "Entrée, SAS & seuil",
+        desc: "Seuil ≤ 2 cm chanfreiné, sas accessible, porte d'entrée ≥ 0,90 m de passage utile.",
+        pu: 1800, unite: "Accès"
+      },
+      accueil_banque: {
+        section: "Entrée & Accueil",
+        titre: "Accueil / banque / visiophonie",
+        desc: "Comptoir adapté à 0,80 m de haut sur 0,60 m de large ou visiophone/interphonie.",
+        pu: 2200, unite: "Ens."
+      },
+      circulations_horiz: {
+        section: "Circulations intérieures",
+        titre: "Circulations horizontales",
+        desc: "Couloirs ≥ 1,40 m (1,20 m entre meubles), aires de rotation Ø 1,50 m.",
+        pu: 2800, unite: "Zone"
+      },
+      portes_interieures: {
+        section: "Circulations intérieures",
+        titre: "Portes intérieures & blocs-portes tiercés",
+        desc: "Passage utile ≥ 0,83 m, poignées préhensibles, portes tiercées si nécessaire.",
+        pu: 1600, unite: "U (Bloc-porte)"
+      },
+      sanitaires_pmr: {
+        section: "Sanitaires",
+        titre: "Sanitaires PMR",
+        desc: "Cabinet accessible, barre d'appui, lavabo suspendu, espace de manœuvre Ø 1,50 m.",
+        pu: 8500, unite: "Cabinet"
+      },
+      ascenseur_dimension: {
+        section: "Ascenseur / Élévateur",
+        titre: "Création / Remplacement Ascenseur ou EPMR",
+        desc: "Cabine ≥ 1,10 m × 1,40 m, miroir sur paroi opposée à la porte.",
+        pu: 38000, unite: "Appareil"
+      },
+      ascenseur_commandes: {
+        section: "Ascenseur / Élévateur",
+        titre: "Commandes d'ascenseur (Braille / Relief)",
+        desc: "Boutons à 0,90-1,30 m, indication braille et relief, boîtiers paliers.",
+        pu: 1800, unite: "Forfait"
+      },
+      ascenseur_bimodalite: {
+        section: "Ascenseur / Élévateur",
+        titre: "Bimodalité ascenseur (visuelle/sonore)",
+        desc: "Annonces visuelles et sonores des étages et du sens de déplacement.",
+        pu: 1200, unite: "Forfait"
+      },
+      escaliers_dimensions: {
+        section: "Escaliers",
+        titre: "Reprise géométrique des marches",
+        desc: "Hauteur ≤ 16 cm, giron ≥ 28 cm, reprise de volée.",
+        pu: 2400, unite: "Volée"
+      },
+      escaliers_bev: {
+        section: "Escaliers",
+        titre: "Bande d'éveil de vigilance (BEV)",
+        desc: "BEV podotactile à 0,50 m du nez de la 1ère marche en tête de descente.",
+        pu: 450, unite: "Volée"
+      },
+      escaliers_nez_contremarches: {
+        section: "Escaliers",
+        titre: "Nez de marches & contremarches",
+        desc: "Nez contrastés, antidérapants et non glissants ; contremarches pleines et contrastées.",
+        pu: 850, unite: "Volée"
+      },
+      escaliers_mains_courantes: {
+        section: "Escaliers",
+        titre: "Mains courantes doubles",
+        desc: "Mains courantes continues des deux côtés, préhensibles, Ø 3-4 cm, à 0,80-1,00 m.",
+        pu: 1600, unite: "Volée"
+      },
+      eas_presence: {
+        section: "Espace d'attente sécurisé (EAS)",
+        titre: "Aménagement d'un EAS",
+        desc: "EAS obligatoire si évacuation verticale non accessible aux PSH (étages).",
+        pu: 3500, unite: "Local"
+      },
+      eas_interphonie: {
+        section: "Espace d'attente sécurisé (EAS)",
+        titre: "Interphonie de sécurité de l'EAS",
+        desc: "Dispositif de communication visuelle et sonore avec les secours.",
+        pu: 1500, unite: "U"
+      },
+      garde_corps_etage: {
+        section: "Sécurité & Évacuation",
+        titre: "Garde-corps des étages",
+        desc: "Hauteur ≥ 1,00 m, non franchissable, non grimpable, remplissage sûr.",
+        pu: 2200, unite: "Forfait"
+      },
+      obstacles_sous_escalier: {
+        section: "Sécurité & Évacuation",
+        titre: "Protection obstacles sous escalier",
+        desc: "Espace sous escalier détectable (canne ou obstacle à moins de 0,90 m).",
+        pu: 950, unite: "U"
+      },
+      securite_alarmes: {
+        section: "Sécurité & Évacuation",
+        titre: "Alarmes visuelles & sonores (Flash/BEAL)",
+        desc: "Alarme incendie avec signalisation visuelle (flash) et sonore.",
+        pu: 1900, unite: "Ens."
+      },
+      eclairage_ext_accueil: {
+        section: "Ambiance & Confort",
+        titre: "Mise aux normes éclairage ext. & accueil",
+        desc: "Éclairement ≥ 20 lux ext. / ≥ 100-200 lux int., homogène, sans éblouissement.",
+        pu: 1400, unite: "Forfait"
+      },
+      acoustique_reverb: {
+        section: "Ambiance & Confort",
+        titre: "Traitement acoustique / réverbération",
+        desc: "Temps de réverbération maîtrisé, matériaux absorbants en zone d'accueil.",
+        pu: 2600, unite: "Zone"
+      },
+      signaletique_etage: {
+        section: "Signalétique & Vitrophanie",
+        titre: "Signalétique directionnelle & étages",
+        desc: "Repérage des niveaux en gros caractères, braille et relief, contraste ≥ 70 %.",
+        pu: 650, unite: "Forfait"
+      },
+      signaletique_vitrages: {
+        section: "Signalétique & Vitrophanie",
+        titre: "Vitrophanie sur surfaces vitrées",
+        desc: "Bandes contrastées à 1,10 m et 1,60 m sur les surfaces vitrées.",
+        pu: 550, unite: "Forfait"
+      },
+      prestations_etage: {
+        section: "Prestations & Administratif",
+        titre: "Relocalisation ou adaptation des prestations",
+        desc: "Si prestations à l'étage : organisation alternative au RDC ou équipement adapté.",
+        pu: 2000, unite: "Forfait"
+      },
+      registre_rpa: {
+        section: "Prestations & Administratif",
+        titre: "Registre Public d'Accessibilité (RPA)",
+        desc: "Élaboration et mise à disposition du Registre Public d'Accessibilité.",
+        pu: 400, unite: "Dossier"
+      }
     };
 
     const ORDRE_CRITERES = Object.keys(CRITERES);
@@ -495,13 +1406,19 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
     let parc = [];
     let erpSelectionneId = null;
     let filtreActif = 'tous';
+    let filtreCritereActif = 'ALL';
     let etageActuel = 'RDC';
     let profilActuel = 'existant_5';
+    let toastTimer = null;
 
-    const STORAGE_KEY = 'audit_aubagne_erp_v1';
+    const STORAGE_KEY = 'audit_aubagne_erp_v3_chiffrage';
+
+    function formaterEuros(montant) {
+      return Math.round(montant || 0).toLocaleString('fr-FR') + " €";
+    }
 
     // ============================================================
-    // PARSING DU PARC CSV
+    // PARSING DU PARC CSV & INITIALISATION DES COÛTS UNITAIRES
     // ============================================================
     function parserParc(csvText) {
       const allCritIds = ORDRE_CRITERES;
@@ -527,91 +1444,94 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
         const evals = {};
         const niveaux = nivStr.split(',').map(s => s.trim());
 
-        niveaux.forEach(n => {
+        niveaux.forEach((n, idxNiv) => {
           evals[n] = {};
           allCritIds.forEach(cid => {
             evals[n][cid] = {
               status: "C",
-              note: isRealise ? "Conforme - Travaux Ad'Ap réalisés et réceptionnés" : "Conforme / existant validé Ad'Ap"
+              note: isRealise ? "Conforme - Travaux Ad'Ap réalisés et réceptionnés" : "Conforme / existant validé Ad'Ap",
+              qte: 1,
+              pu: CRITERES[cid].pu
             };
           });
 
           if (cat === "5" || isIop) {
-            evals[n].ascenseur_dimension = { status: "SO", note: "Sans objet (Établissement de plain-pied ou prestations assurées au RDC)" };
-            evals[n].ascenseur_commandes = { status: "SO", note: "Sans objet" };
-            evals[n].ascenseur_bimodalite = { status: "SO", note: "Sans objet" };
-            evals[n].prestations_etage = { status: "SO", note: "Sans objet (Prestations assurées au RDC)" };
+            evals[n].ascenseur_dimension = { status: "SO", note: "Sans objet (Établissement de plain-pied ou prestations assurées au RDC)", qte: 1, pu: CRITERES.ascenseur_dimension.pu };
+            evals[n].ascenseur_commandes = { status: "SO", note: "Sans objet", qte: 1, pu: CRITERES.ascenseur_commandes.pu };
+            evals[n].ascenseur_bimodalite = { status: "SO", note: "Sans objet", qte: 1, pu: CRITERES.ascenseur_bimodalite.pu };
+            evals[n].prestations_etage = { status: "SO", note: "Sans objet (Prestations assurées au RDC)", qte: 1, pu: CRITERES.prestations_etage.pu };
           }
 
           if (isIop) {
-            evals[n].sanitaires_pmr = { status: "SO", note: "Sans objet (Espace extérieur sans sanitaires publics)" };
-            evals[n].accueil_banque = { status: "SO", note: "Sans objet (Espace extérieur sans guichet)" };
-            evals[n].acoustique_reverb = { status: "SO", note: "Sans objet" };
-            evals[n].obstacles_sous_escalier = { status: "SO", note: "Sans objet" };
-            evals[n].securite_alarmes = { status: "SO", note: "Sans objet" };
+            evals[n].sanitaires_pmr = { status: "SO", note: "Sans objet (Espace extérieur sans sanitaires publics)", qte: 1, pu: CRITERES.sanitaires_pmr.pu };
+            evals[n].accueil_banque = { status: "SO", note: "Sans objet (Espace extérieur sans guichet)", qte: 1, pu: CRITERES.accueil_banque.pu };
+            evals[n].acoustique_reverb = { status: "SO", note: "Sans objet", qte: 1, pu: CRITERES.acoustique_reverb.pu };
+            evals[n].obstacles_sous_escalier = { status: "SO", note: "Sans objet", qte: 1, pu: CRITERES.obstacles_sous_escalier.pu };
+            evals[n].securite_alarmes = { status: "SO", note: "Sans objet", qte: 1, pu: CRITERES.securite_alarmes.pu };
           }
 
           if (!isRealise) {
-            evals[n].registre_rpa = { status: "NC", note: "Reste à faire : mise à jour du Registre Public d'Accessibilité" };
+            // Le RPA et les aménagements extérieurs ne sont comptabilisés qu'au RDC (idxNiv === 0) pour éviter de doubler le budget sur R+1
+            if (idxNiv === 0) {
+              evals[n].registre_rpa = { status: "NC", note: "Reste à faire : mise à jour du Registre Public d'Accessibilité", qte: 1, pu: CRITERES.registre_rpa.pu };
+            }
 
-            if (cLow.includes("parking") || cLow.includes("place pmr")) {
-              evals[n].stationnement = { status: "NC", note: "Reste à faire : aménagement et marquage d'une place réservée PMR (3,30 m)" };
+            if (idxNiv === 0 && (cLow.includes("parking") || cLow.includes("place pmr"))) {
+              evals[n].stationnement = { status: "NC", note: "Reste à faire : aménagement et marquage d'une place réservée PMR (3,30 m)", qte: 1, pu: CRITERES.stationnement.pu };
             }
 
             if (cLow.includes("visiophone")) {
-              evals[n].accueil_banque = { status: "C", note: "Validé : visiophone et interphonie d'accueil installés" };
+              evals[n].accueil_banque = { status: "C", note: "Validé : visiophone et interphonie d'accueil installés", qte: 1, pu: CRITERES.accueil_banque.pu };
             }
-            if (cLow.includes("seuil")) {
-              evals[n].entree_seuil = { status: "NC", note: "Reste à faire : reprise et chanfreinage du seuil d'entrée (≤ 2 cm)" };
+            if (idxNiv === 0 && (cLow.includes("seuil") || cLow.includes("sas"))) {
+              evals[n].entree_seuil = { status: "NC", note: "Reste à faire : reprise du seuil / modification du SAS d'entrée", qte: 1, pu: CRITERES.entree_seuil.pu };
             }
-            if (cLow.includes("sas")) {
-              evals[n].entree_seuil = { status: "NC", note: "Reste à faire : modification et mise aux normes du SAS d'entrée" };
-            }
-            if (cLow.includes("rampe")) {
+            if (idxNiv === 0 && cLow.includes("rampe")) {
               if (cLow.includes("rampes en 20") || cLow.includes("rampes d'accès entrées et cour en 2019")) {
-                evals[n].cheminement_ext = { status: "C", note: "Validé : rampes d'accès réalisées lors de la phase précédente" };
+                evals[n].cheminement_ext = { status: "C", note: "Validé : rampes d'accès réalisées lors de la phase précédente", qte: 1, pu: CRITERES.cheminement_ext.pu };
               } else {
-                evals[n].cheminement_ext = { status: "NC", note: "Reste à faire : création d'une rampe d'accès PMR conforme (pente ≤ 5 %)" };
+                evals[n].cheminement_ext = { status: "NC", note: "Reste à faire : création d'une rampe d'accès PMR conforme (pente ≤ 5 %)", qte: 1, pu: CRITERES.cheminement_ext.pu };
               }
             }
 
             if (cLow.includes("escalier") || cLow.includes("marche")) {
-              evals[n].escaliers_dimensions = { status: "NC", note: "Reste à faire : mise en conformité des marches d'escalier" };
-              evals[n].escaliers_bev = { status: "NC", note: "Reste à faire : pose de bande podotactile (BEV) à 50 cm en tête de descente" };
-              evals[n].escaliers_nez_contremarches = { status: "NC", note: "Reste à faire : nez de marches antidérapants et contremarches contrastées" };
-              evals[n].escaliers_mains_courantes = { status: "NC", note: "Reste à faire : mains courantes continues préhensibles des deux côtés" };
+              evals[n].escaliers_bev = { status: "NC", note: "Reste à faire : pose de bande podotactile (BEV) à 50 cm en tête de descente", qte: 1, pu: CRITERES.escaliers_bev.pu };
+              evals[n].escaliers_nez_contremarches = { status: "NC", note: "Reste à faire : nez de marches antidérapants et contremarches contrastées", qte: 1, pu: CRITERES.escaliers_nez_contremarches.pu };
+              evals[n].escaliers_mains_courantes = { status: "NC", note: "Reste à faire : mains courantes continues préhensibles des deux côtés", qte: 1, pu: CRITERES.escaliers_mains_courantes.pu };
             }
 
             if (cLow.includes("ascenseur") || cLow.includes("dérogation") || cLow.includes("disproportion")) {
               const isDerog = (cLow.includes("dérogation") || cLow.includes("disproportion"));
               const stAsc = isDerog ? "SO" : "NC";
               const noteAsc = isDerog ? "Sans objet : dossier de dérogation Ad'Ap pour disproportion manifeste (étage)" : "Reste à faire : installation ascenseur / EPMR d'accès aux étages";
-              evals[n].ascenseur_dimension = { status: stAsc, note: noteAsc };
-              evals[n].ascenseur_commandes = { status: stAsc, note: noteAsc };
-              evals[n].ascenseur_bimodalite = { status: stAsc, note: noteAsc };
-              evals[n].prestations_etage = { status: stAsc, note: isDerog ? "Sans objet : dérogation pour disproportion manifeste" : "Reste à faire : prestations de l'étage à rendre accessibles" };
+              // L'investissement principal de l'appareil ascenseur est porté sur le RDC (idxNiv === 0)
+              evals[n].ascenseur_dimension = { status: (idxNiv === 0 ? stAsc : "SO"), note: noteAsc, qte: 1, pu: CRITERES.ascenseur_dimension.pu };
+              evals[n].ascenseur_commandes = { status: "SO", note: "Inclus dans le lot ascenseur principal", qte: 1, pu: CRITERES.ascenseur_commandes.pu };
+              evals[n].ascenseur_bimodalite = { status: "SO", note: "Inclus dans le lot ascenseur principal", qte: 1, pu: CRITERES.ascenseur_bimodalite.pu };
+              evals[n].prestations_etage = { status: "SO", note: isDerog ? "Sans objet : dérogation pour disproportion manifeste" : "Assuré par la création de l'ascenseur", qte: 1, pu: CRITERES.prestations_etage.pu };
             }
 
             if (cLow.includes("garde-corps")) {
-              evals[n].garde_corps_etage = { status: "NC", note: "Reste à faire : pose et rehausse des garde-corps antichute (≥ 1,00 m)" };
+              evals[n].garde_corps_etage = { status: "NC", note: "Reste à faire : pose et rehausse des garde-corps antichute (≥ 1,00 m)", qte: 1, pu: CRITERES.garde_corps_etage.pu };
             }
 
-            if (cLow.includes("sanit") || cLow.includes("wc")) {
+            if (idxNiv === 0 && (cLow.includes("sanit") || cLow.includes("wc"))) {
+              const nbWc = cLow.includes("3 wc pmr") ? 3 : 1;
               if (cLow.includes("wc pmr en 20") && !cLow.includes("création de 3 wc pmr") && !cLow.includes("reste à faire")) {
-                evals[n].sanitaires_pmr = { status: "C", note: "Validé : WC PMR adapté déjà réalisé" };
+                evals[n].sanitaires_pmr = { status: "C", note: "Validé : WC PMR adapté déjà réalisé", qte: 1, pu: CRITERES.sanitaires_pmr.pu };
               } else {
-                evals[n].sanitaires_pmr = { status: "NC", note: "Reste à faire : création ou mise à niveau du cabinet d'aisances PMR" };
+                evals[n].sanitaires_pmr = { status: "NC", note: "Reste à faire : création ou mise à niveau de cabinet(s) d'aisances PMR", qte: nbWc, pu: CRITERES.sanitaires_pmr.pu };
               }
             }
 
             if (cLow.includes("porte") || cLow.includes("passage") || cLow.includes("menuiserie")) {
-              evals[n].portes_interieures = { status: "NC", note: "Reste à faire : remplacement blocs-portes et portes tiercées (passage utile ≥ 0,83 m)" };
-              evals[n].circulations_horiz = { status: "NC", note: "Reste à faire : élargissement des dégagements et circulations intérieures" };
+              evals[n].portes_interieures = { status: "NC", note: "Reste à faire : remplacement blocs-portes et portes tiercées (passage utile ≥ 0,83 m)", qte: 2, pu: CRITERES.portes_interieures.pu };
+              evals[n].circulations_horiz = { status: "NC", note: "Reste à faire : élargissement des dégagements et circulations intérieures", qte: 1, pu: CRITERES.circulations_horiz.pu };
             }
 
-            if (cLow.includes("vitrophanie") || cLow.includes("signalétique") || cLow.includes("signaletique")) {
-              evals[n].signaletique_vitrages = { status: "NC", note: "Reste à faire : pose de bandes de vitrophanie contrastées (1,10 et 1,60 m)" };
-              evals[n].signaletique_etage = { status: "NC", note: "Reste à faire : signalétique directionnelle et repérage des niveaux" };
+            if (idxNiv === 0 && (cLow.includes("vitrophanie") || cLow.includes("signalétique") || cLow.includes("signaletique"))) {
+              evals[n].signaletique_vitrages = { status: "NC", note: "Reste à faire : pose de bandes de vitrophanie contrastées (1,10 et 1,60 m)", qte: 1, pu: CRITERES.signaletique_vitrages.pu };
+              evals[n].signaletique_etage = { status: "NC", note: "Reste à faire : signalétique directionnelle et repérage des niveaux", qte: 1, pu: CRITERES.signaletique_etage.pu };
             }
           }
         });
@@ -619,7 +1539,7 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
         parcParsed.push({
           id: "erp_" + i,
           nom: nom,
-          adresse: pat ? `Aubagne (${pat})` : "Aubagne",
+          patrimoine: pat || "Autres bâtiments",
           categorie: cat,
           classe_erp: cls,
           acces_2015: a15,
@@ -633,6 +1553,46 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
         });
       }
       return parcParsed;
+    }
+
+    // ============================================================
+    // CALCUL FINANCIER AUTOMATIQUE (PAR ERP ET SUR TOUT LE PARC)
+    // ============================================================
+    function calculerBudgetErp(erp) {
+      let totalHT = 0;
+      const lignes = [];
+
+      if (!erp || !erp.evaluations) return { totalHT: 0, tva: 0, totalTTC: 0, lignes: [] };
+
+      Object.keys(erp.evaluations).forEach(niv => {
+        const evalsNiv = erp.evaluations[niv];
+        ORDRE_CRITERES.forEach(cid => {
+          const ev = evalsNiv[cid];
+          if (ev && ev.status === 'NC') {
+            const qte = (typeof ev.qte === 'number' && !isNaN(ev.qte)) ? ev.qte : 1;
+            const pu = (typeof ev.pu === 'number' && !isNaN(ev.pu)) ? ev.pu : (CRITERES[cid]?.pu || 0);
+            const sousTotal = qte * pu;
+            totalHT += sousTotal;
+            lignes.push({
+              niveau: niv,
+              cid: cid,
+              titre: CRITERES[cid]?.titre || cid,
+              unite: CRITERES[cid]?.unite || 'U',
+              qte: qte,
+              pu: pu,
+              totalHT: sousTotal
+            });
+          }
+        });
+      });
+
+      const tva = totalHT * 0.20;
+      const totalTTC = totalHT + tva;
+      return { totalHT, tva, totalTTC, lignes };
+    }
+
+    function calculerBudgetGlobalParcHT() {
+      return parc.reduce((acc, erp) => acc + calculerBudgetErp(erp).totalHT, 0);
     }
 
     // ============================================================
@@ -690,6 +1650,17 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
       const sauvegarde = chargerLocalStorage();
       if (sauvegarde && Array.isArray(sauvegarde.parc) && sauvegarde.parc.length > 0) {
         parc = sauvegarde.parc;
+        // Rétrocompatibilité : garantir que qte et pu existent sur chaque évaluation
+        parc.forEach(e => {
+          Object.values(e.evaluations || {}).forEach(niv => {
+            ORDRE_CRITERES.forEach(cid => {
+              if (niv[cid]) {
+                if (typeof niv[cid].qte !== 'number') niv[cid].qte = 1;
+                if (typeof niv[cid].pu !== 'number') niv[cid].pu = CRITERES[cid].pu;
+              }
+            });
+          });
+        });
         filtreActif = sauvegarde.filtreActif || 'tous';
         profilActuel = sauvegarde.profilActuel || 'existant_5';
         erpSelectionneId = sauvegarde.erpSelectionneId || (parc.length > 0 ? parc[0].id : null);
@@ -701,17 +1672,25 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
       }
 
       mettreAJourKPIs();
-      remplirSelectErp();
-      afficherProfilActif();
       afficherFiltreActif();
+      remplirSelectErp();
 
       if (erpSelectionneId) {
         afficherErp();
       }
-      mettreAJourJauge();
+      mettreAJourJaugeEtBudget();
     }
 
-    function sauvegarderLocalStorage() {
+    function afficherToast(msg = "✓ Modifications enregistrées") {
+      const t = document.getElementById('toast');
+      if (!t) return;
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+    }
+
+    function sauvegarderLocalStorage(showFeedback = false) {
       try {
         const data = {
           parc,
@@ -722,6 +1701,7 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
           dateSauvegarde: new Date().toISOString()
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        if (showFeedback) afficherToast();
       } catch (e) {
         console.warn("Impossible de sauvegarder localement :", e);
       }
@@ -749,50 +1729,77 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
       const aFaire = total - realises;
       const pctR = total > 0 ? (realises / total * 100) : 0;
       const pctA = total > 0 ? (aFaire / total * 100) : 0;
+      const budgetParcHT = calculerBudgetGlobalParcHT();
 
       document.getElementById('totalErpCount').textContent = total + " ERP";
       document.getElementById('kpiTotal').textContent = total;
       document.getElementById('kpiAfaires').textContent = aFaire + " (" + Math.round(pctA) + " %)";
       document.getElementById('kpiRealises').textContent = realises + " (" + Math.round(pctR) + " %)";
+      document.getElementById('kpiParcBudgetHT').textContent = formaterEuros(budgetParcHT);
+
       document.getElementById('barRealise').style.width = pctR.toFixed(1) + "%";
       document.getElementById('barAfaires').style.width = pctA.toFixed(1) + "%";
       document.getElementById('pctRealise').textContent = pctR.toFixed(1).replace('.', ',') + " %";
       document.getElementById('pctAfaires').textContent = pctA.toFixed(1).replace('.', ',') + " %";
 
-      document.getElementById('cnt_tous').textContent = parc.length;
-      document.getElementById('cnt_encours').textContent = parc.filter(e => e.statut_adap !== "Réalisé").length;
-      document.getElementById('cnt_realise').textContent = parc.filter(e => e.statut_adap === "Réalisé").length;
+      document.getElementById('cnt_tous').textContent = total;
+      document.getElementById('cnt_encours').textContent = aFaire;
+      document.getElementById('cnt_realise').textContent = realises;
     }
 
     function remplirSelectErp() {
       const select = document.getElementById('erpSelect');
+      const searchVal = (document.getElementById('searchErp')?.value || '').toLowerCase().trim();
       select.innerHTML = '';
+
       const liste = parc.filter(e => {
-        if (filtreActif === 'tous') return true;
-        if (filtreActif === 'encours') return e.statut_adap !== "Réalisé";
-        if (filtreActif === 'realise') return e.statut_adap === "Réalisé";
+        if (filtreActif === 'encours' && e.statut_adap === "Réalisé") return false;
+        if (filtreActif === 'realise' && e.statut_adap !== "Réalisé") return false;
+        if (searchVal) {
+          const matchNom = e.nom.toLowerCase().includes(searchVal);
+          const matchPat = (e.patrimoine || '').toLowerCase().includes(searchVal);
+          const matchCls = (e.classe_erp || '').toLowerCase().includes(searchVal);
+          return matchNom || matchPat || matchCls;
+        }
         return true;
       });
 
       if (liste.length === 0) {
         const opt = document.createElement('option');
-        opt.textContent = "(aucun bâtiment)";
+        opt.textContent = "Aucun établissement ne correspond à la recherche";
         opt.value = "";
         select.appendChild(opt);
         return;
       }
 
+      const groupes = {};
       liste.forEach(e => {
-        const opt = document.createElement('option');
-        opt.value = e.id;
-        opt.textContent = e.nom + " — " + e.statut_adap;
-        if (e.id === erpSelectionneId) opt.selected = true;
-        select.appendChild(opt);
+        const g = e.patrimoine || "Autres";
+        if (!groupes[g]) groupes[g] = [];
+        groupes[g].push(e);
+      });
+
+      Object.keys(groupes).forEach(nomGroupe => {
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = nomGroupe;
+        groupes[nomGroupe].forEach(e => {
+          const opt = document.createElement('option');
+          opt.value = e.id;
+          const icone = e.statut_adap === "Réalisé" ? "✓ " : "⏳ ";
+          const bErp = calculerBudgetErp(e).totalHT;
+          const suffixeBudget = bErp > 0 ? ` — Reste : ${formaterEuros(bErp)} HT` : "";
+          opt.textContent = `${icone}${e.nom} (${e.classe_erp})${suffixeBudget}`;
+          if (e.id === erpSelectionneId) opt.selected = true;
+          optgroup.appendChild(opt);
+        });
+        select.appendChild(optgroup);
       });
 
       if (!erpSelectionneId || !liste.find(e => e.id === erpSelectionneId)) {
         erpSelectionneId = liste[0].id;
         select.value = erpSelectionneId;
+        afficherErp();
+        mettreAJourJaugeEtBudget();
       }
     }
 
@@ -808,20 +1815,31 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
 
     function afficherFiltreActif() {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      const id = 'flt_' + filtreActif;
-      const el = document.getElementById(id);
+      const el = document.getElementById('flt_' + filtreActif);
       if (el) el.classList.add('active');
+    }
+
+    function changerFiltreCritere(fc) {
+      filtreCritereActif = fc;
+      document.querySelectorAll('.crit-flt-pill').forEach(b => b.classList.remove('active'));
+      const el = document.getElementById('cflt_' + fc);
+      if (el) el.classList.add('active');
+      appliquerVisibiliteCriteres();
     }
 
     function changerErpSelectionne(id) {
       if (!id) return;
       erpSelectionneId = id;
       const erp = getErpParId(id);
-      if (erp && !erp.niveaux.includes(etageActuel)) {
-        etageActuel = erp.niveaux[0] || 'RDC';
+      if (erp) {
+        if (!erp.niveaux.includes(etageActuel)) {
+          etageActuel = erp.niveaux[0] || 'RDC';
+        }
+        profilActuel = (erp.categorie === "5") ? 'existant_5' : 'existant_1_4';
+        afficherProfilActif();
       }
       afficherErp();
-      mettreAJourJauge();
+      mettreAJourJaugeEtBudget();
       sauvegarderLocalStorage();
     }
 
@@ -829,9 +1847,8 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
       const erp = getErpParId(erpSelectionneId);
       if (!erp) return;
       erp.nom = nom;
-      remplirSelectErp();
       document.getElementById('adapErpTitle').textContent = nom;
-      mettreAJourJauge();
+      remplirSelectErp();
       sauvegarderLocalStorage();
     }
 
@@ -839,19 +1856,18 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
       const erp = getErpParId(erpSelectionneId);
       if (!erp) return;
       erp.dateAudit = date;
-      sauvegarderLocalStorage();
+      sauvegarderLocalStorage(true);
     }
 
     function changerProfil(p) {
       profilActuel = p;
       afficherProfilActif();
-      sauvegarderLocalStorage();
+      sauvegarderLocalStorage(true);
     }
 
     function afficherProfilActif() {
       document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
-      const id = 'prof_' + profilActuel;
-      const el = document.getElementById(id);
+      const el = document.getElementById('prof_' + profilActuel);
       if (el) el.classList.add('active');
     }
 
@@ -864,39 +1880,39 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
 
     function ajouterEtage() {
       const erp = getErpParId(erpSelectionneId);
-      if (!erp) { alert("Sélectionnez d'abord un bâtiment."); return; }
-      const nom = prompt("Nom du nouvel étage (ex: R+1, Sous-sol, ...) :", "R+1");
+      if (!erp) return;
+      const nom = prompt("Nom du nouveau niveau (ex: R+1, Sous-sol, Extérieur) :", "R+1");
       if (!nom) return;
       const n = nom.trim();
       if (erp.niveaux.includes(n)) {
-        alert("Cet étage existe déjà.");
+        alert("Ce niveau existe déjà pour cet établissement.");
         return;
       }
       erp.niveaux.push(n);
-      // Initialiser les critères pour ce niveau
       erp.evaluations[n] = {};
       ORDRE_CRITERES.forEach(cid => {
-        erp.evaluations[n][cid] = { status: "C", note: "À évaluer" };
+        erp.evaluations[n][cid] = { status: "C", note: "À vérifier sur site", qte: 1, pu: CRITERES[cid].pu };
       });
       etageActuel = n;
       afficherErp();
-      sauvegarderLocalStorage();
+      mettreAJourJaugeEtBudget();
+      sauvegarderLocalStorage(true);
     }
 
     function reinitialiserParcAubagne() {
-      if (!confirm("Réinitialiser tout le parc aux données initiales ? Toutes les modifications seront perdues.")) return;
+      if (!confirm("Réinitialiser tout le parc et les chiffrages aux données initiales de la Ville d'Aubagne ?")) return;
       localStorage.removeItem(STORAGE_KEY);
       parc = parserParc(DONNEES_PARC_AUBAGNE);
       filtreActif = 'tous';
-      profilActuel = 'existant_5';
+      filtreCritereActif = 'ALL';
       erpSelectionneId = parc.length > 0 ? parc[0].id : null;
       etageActuel = 'RDC';
       mettreAJourKPIs();
-      remplirSelectErp();
-      afficherProfilActif();
       afficherFiltreActif();
+      remplirSelectErp();
       if (erpSelectionneId) afficherErp();
-      mettreAJourJauge();
+      mettreAJourJaugeEtBudget();
+      afficherToast("🔄 Parc et BPU réinitialisés");
     }
 
     // ============================================================
@@ -909,15 +1925,17 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
       document.getElementById('nomERP').value = erp.nom;
       document.getElementById('dateAudit').value = erp.dateAudit || "";
       document.getElementById('currentCategoryBadge').textContent = erp.categorie + "e Catégorie";
+      document.getElementById('currentClassBadge').textContent = "Type / Classe : " + erp.classe_erp;
       document.getElementById('adapErpTitle').textContent = erp.nom;
-      document.getElementById('adapBudgetTvx').textContent = "Budget travaux réalisés : " + erp.montant_adap;
+      document.getElementById('adapPatrimoine').textContent = erp.patrimoine + " • Niveaux : " + erp.niveaux.join(', ');
+      document.getElementById('adapBudgetTvx').textContent = "Budget travaux déjà réalisés : " + erp.montant_adap;
 
       const badge = document.getElementById('adapStatutBadge');
       if (erp.statut_adap === "Réalisé") {
-        badge.textContent = "Réalisé";
+        badge.textContent = "✓ Ad'Ap Réalisé";
         badge.className = "adap-badge badge-realise";
       } else {
-        badge.textContent = "En cours";
+        badge.textContent = "⏳ En cours / À faire";
         badge.className = "adap-badge badge-encours";
       }
 
@@ -929,16 +1947,25 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
       const lr = document.getElementById('listeRestants');
       lv.innerHTML = '';
       lr.innerHTML = '';
+
       bilan.valides.forEach(v => {
         const li = document.createElement('li');
         li.textContent = v;
         lv.appendChild(li);
       });
-      bilan.restants.forEach(r => {
+
+      if (bilan.restants.length === 0) {
         const li = document.createElement('li');
-        li.textContent = r;
+        li.textContent = "Aucune réserve majeure identifiée au planning Ad'Ap";
+        li.style.color = "#94a3b8";
         lr.appendChild(li);
-      });
+      } else {
+        bilan.restants.forEach(r => {
+          const li = document.createElement('li');
+          li.textContent = r;
+          lr.appendChild(li);
+        });
+      }
 
       const blocDerog = document.getElementById('blocDerogation');
       if (bilan.derogation) {
@@ -950,6 +1977,7 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
 
       document.getElementById('adapInfoBox').style.display = 'block';
 
+      afficherProfilActif();
       afficherEtages();
       afficherCriteres();
     }
@@ -964,14 +1992,14 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'etage-btn' + (n === etageActuel ? ' active' : '');
-        btn.textContent = n;
+        btn.textContent = "Niveau " + n;
         btn.onclick = () => selectionnerEtage(n);
         conteneur.appendChild(btn);
       });
     }
 
     // ============================================================
-    // AFFICHAGE DES CRITÈRES
+    // AFFICHAGE DES CRITÈRES ET DU CHIFFRAGE UNITAIRE
     // ============================================================
     function afficherCriteres() {
       const erp = getErpParId(erpSelectionneId);
@@ -985,23 +2013,34 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
       let sectionCourante = "";
       ORDRE_CRITERES.forEach(cid => {
         const crit = CRITERES[cid];
-        const eval_ = evalsNiveau[cid] || { status: "C", note: "" };
+        const eval_ = evalsNiveau[cid] || { status: "C", note: "", qte: 1, pu: crit.pu };
+        if (typeof eval_.qte !== 'number') eval_.qte = 1;
+        if (typeof eval_.pu !== 'number') eval_.pu = crit.pu;
 
         if (crit.section !== sectionCourante) {
           sectionCourante = crit.section;
           const h = document.createElement('div');
           h.className = 'section-header';
-          h.textContent = crit.section;
+          h.innerHTML = `<span>${crit.section}</span><span style="font-size:0.72rem; color:var(--text-muted); font-weight:600;">Niveau : ${etageActuel}</span>`;
           conteneur.appendChild(h);
         }
 
         const item = document.createElement('div');
-        item.className = 'criterion-item';
+        item.className = `criterion-item status-${eval_.status.toLowerCase()}`;
+        item.id = `crit_card_${cid}`;
+        item.dataset.status = eval_.status;
 
+        const header = document.createElement('div');
+        header.className = 'crit-header';
         const title = document.createElement('div');
         title.className = 'crit-title';
         title.textContent = crit.titre;
-        item.appendChild(title);
+        const bpuRef = document.createElement('span');
+        bpuRef.className = 'crit-bpu-ref';
+        bpuRef.textContent = `BPU : ${formaterEuros(crit.pu)} / ${crit.unite}`;
+        header.appendChild(title);
+        header.appendChild(bpuRef);
+        item.appendChild(header);
 
         const desc = document.createElement('div');
         desc.className = 'crit-desc';
@@ -1014,6 +2053,7 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
         ['C', 'NC', 'SO'].forEach(st => {
           const b = document.createElement('button');
           b.type = 'button';
+          b.dataset.st = st;
           b.className = 'status-btn ' + st.toLowerCase() + (eval_.status === st ? ' active' : '');
           b.textContent = st === 'C' ? '✓ Conforme' : (st === 'NC' ? '✗ Non conforme' : '○ Sans objet');
           b.onclick = () => changerStatutCritere(cid, st);
@@ -1021,23 +2061,73 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
         });
         item.appendChild(btns);
 
+        // Bandeau de chiffrage unitaire (affiché si status === NC)
+        const costBox = document.createElement('div');
+        costBox.className = 'crit-cost-box';
+        costBox.innerHTML = `
+          <div class="crit-cost-grid">
+            <div>
+              <label>Quantité (${crit.unite}) :</label>
+              <input type="number" min="0" step="1" id="qte_${cid}" value="${eval_.qte}">
+            </div>
+            <div>
+              <label>Prix Unitaire HT (€) :</label>
+              <input type="number" min="0" step="50" id="pu_${cid}" value="${eval_.pu}">
+            </div>
+            <div>
+              <label>Montant estimé HT :</label>
+              <div class="crit-cost-total" id="tot_${cid}">${formaterEuros(eval_.qte * eval_.pu)}</div>
+            </div>
+          </div>
+        `;
+        item.appendChild(costBox);
+
+        // Écouteurs sur Quantité et Prix Unitaire
+        const inputQte = costBox.querySelector(`#qte_${cid}`);
+        const inputPu = costBox.querySelector(`#pu_${cid}`);
+        const majChiffrageLigne = () => {
+          eval_.qte = Math.max(0, parseFloat(inputQte.value) || 0);
+          eval_.pu = Math.max(0, parseFloat(inputPu.value) || 0);
+          document.getElementById(`tot_${cid}`).textContent = formaterEuros(eval_.qte * eval_.pu);
+          mettreAJourTexteImpression(cid, eval_);
+          mettreAJourJaugeEtBudget();
+          mettreAJourKPIs();
+          remplirSelectErp();
+          sauvegarderLocalStorage();
+        };
+        inputQte.oninput = majChiffrageLigne;
+        inputPu.oninput = majChiffrageLigne;
+
         const note = document.createElement('textarea');
         note.className = 'crit-note';
-        note.placeholder = "Observation, commentaire...";
+        note.placeholder = "Observation terrain, réserve, côte mesurée...";
         note.value = eval_.note || "";
         note.oninput = () => {
           eval_.note = note.value;
+          mettreAJourTexteImpression(cid, eval_);
           sauvegarderLocalStorage();
         };
         item.appendChild(note);
 
         const printSt = document.createElement('div');
         printSt.className = 'print-status';
-        printSt.textContent = "Statut : " + (eval_.status === 'C' ? 'Conforme' : (eval_.status === 'NC' ? 'Non conforme' : 'Sans objet')) + (eval_.note ? " — " + eval_.note : "");
+        printSt.id = `print_st_${cid}`;
         item.appendChild(printSt);
 
         conteneur.appendChild(item);
+        mettreAJourTexteImpression(cid, eval_);
       });
+
+      mettreAJourCompteursCriteres();
+      appliquerVisibiliteCriteres();
+    }
+
+    function mettreAJourTexteImpression(cid, eval_) {
+      const el = document.getElementById(`print_st_${cid}`);
+      if (!el) return;
+      const lib = eval_.status === 'C' ? '✓ Conforme' : (eval_.status === 'NC' ? '✗ Non conforme' : '○ Sans objet');
+      const coutTxt = eval_.status === 'NC' ? ` | Chiffrage : ${eval_.qte} × ${formaterEuros(eval_.pu)} = ${formaterEuros(eval_.qte * eval_.pu)} HT` : '';
+      el.textContent = `Statut : ${lib}${coutTxt}${eval_.note ? ' — Obs. : ' + eval_.note : ''}`;
     }
 
     function changerStatutCritere(cid, statut) {
@@ -1045,17 +2135,61 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
       if (!erp) return;
       if (!erp.evaluations[etageActuel]) erp.evaluations[etageActuel] = {};
       if (!erp.evaluations[etageActuel][cid]) {
-        erp.evaluations[etageActuel][cid] = { status: statut, note: "" };
+        erp.evaluations[etageActuel][cid] = { status: statut, note: "", qte: 1, pu: CRITERES[cid].pu };
       } else {
         erp.evaluations[etageActuel][cid].status = statut;
       }
-      afficherCriteres();
-      mettreAJourJauge();
-      sauvegarderLocalStorage();
+
+      const eval_ = erp.evaluations[etageActuel][cid];
+      const card = document.getElementById(`crit_card_${cid}`);
+      if (card) {
+        card.className = `criterion-item status-${statut.toLowerCase()}`;
+        card.dataset.status = statut;
+        card.querySelectorAll('.status-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.st === statut);
+        });
+        mettreAJourTexteImpression(cid, eval_);
+      }
+
+      mettreAJourCompteursCriteres();
+      appliquerVisibiliteCriteres();
+      mettreAJourJaugeEtBudget();
+      mettreAJourKPIs();
+      remplirSelectErp();
+      sauvegarderLocalStorage(true);
+    }
+
+    function mettreAJourCompteursCriteres() {
+      const erp = getErpParId(erpSelectionneId);
+      if (!erp || !erp.evaluations[etageActuel]) return;
+      const evals = erp.evaluations[etageActuel];
+      let c = 0, nc = 0, so = 0;
+
+      ORDRE_CRITERES.forEach(cid => {
+        const st = evals[cid]?.status || 'C';
+        if (st === 'C') c++;
+        else if (st === 'NC') nc++;
+        else if (st === 'SO') so++;
+      });
+
+      document.getElementById('ccnt_ALL').textContent = ORDRE_CRITERES.length;
+      document.getElementById('ccnt_NC').textContent = nc;
+      document.getElementById('ccnt_C').textContent = c;
+      document.getElementById('ccnt_SO').textContent = so;
+    }
+
+    function appliquerVisibiliteCriteres() {
+      document.querySelectorAll('.criterion-item').forEach(card => {
+        if (filtreCritereActif === 'ALL' || card.dataset.status === filtreCritereActif) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
     }
 
     // ============================================================
-    // CALCUL DE LA JAUDE GLOBALE
+    // CALCUL DE LA JAUGE GLOBALE & DU TABLEAU DE CHIFFRAGE
     // ============================================================
     function calculerConformiteErp(erp) {
       let c = 0, nc = 0;
@@ -1066,22 +2200,60 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
         });
       });
       const total = c + nc;
-      return total > 0 ? (c / total * 100) : 0;
+      return total > 0 ? (c / total * 100) : 100;
     }
 
-    function mettreAJourJauge() {
+    function mettreAJourJaugeEtBudget() {
       const erp = getErpParId(erpSelectionneId);
       const pct = erp ? calculerConformiteErp(erp) : 0;
+      const pctRound = Math.round(pct);
+      const budget = erp ? calculerBudgetErp(erp) : { totalHT: 0, tva: 0, totalTTC: 0, lignes: [] };
+
       document.getElementById('gaugeBar').style.width = pct.toFixed(1) + "%";
-      document.getElementById('gaugeScore').textContent = Math.round(pct) + " %";
+      document.getElementById('gaugeScore').textContent = pctRound + " %";
+      document.getElementById('adapTauxReel').textContent = pctRound + " %";
+      document.getElementById('headerBudgetBadge').textContent = formaterEuros(budget.totalHT) + " HT";
+
+      // Mise à jour de l'encart financier
+      document.getElementById('financeNbPostes').textContent = `${budget.lignes.length} poste(s) NC chiffré(s)`;
+      document.getElementById('finTotalHT').textContent = formaterEuros(budget.totalHT);
+      document.getElementById('finTVA').textContent = formaterEuros(budget.tva);
+      document.getElementById('finTotalTTC').textContent = formaterEuros(budget.totalTTC);
+
+      const tbody = document.getElementById('financeTableBody');
+      const tableWrap = document.getElementById('financeTableWrap');
+      tbody.innerHTML = '';
+
+      if (budget.lignes.length > 0) {
+        tableWrap.style.display = 'block';
+        budget.lignes.forEach(l => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>${l.niveau}</strong></td>
+            <td>${l.titre}</td>
+            <td class="num">${l.qte} ${l.unite}</td>
+            <td class="num">${formaterEuros(l.pu)}</td>
+            <td class="num" style="font-weight:700; color:#fbbf24;">${formaterEuros(l.totalHT)}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } else {
+        tableWrap.style.display = 'none';
+      }
+
+      if (erp) {
+        document.getElementById('printSubHeader').textContent = `${erp.nom} (${erp.classe_erp} - ${erp.categorie}e Cat.) • Niveau inspecté : ${etageActuel} • Date : ${erp.dateAudit || new Date().toLocaleDateString('fr-FR')}`;
+        document.getElementById('printScoreHeader').textContent = `Conformité : ${pctRound} %`;
+        document.getElementById('printBudgetHeader').textContent = `Travaux restants estimés : ${formaterEuros(budget.totalHT)} HT (${formaterEuros(budget.totalTTC)} TTC)`;
+      }
     }
 
     // ============================================================
-    // EXPORT / IMPORT
+    // EXPORT / IMPORT (AVEC COLONNES FINANCIÈRES)
     // ============================================================
     function exporterAuditJSON() {
       const data = {
-        version: 1,
+        version: 3,
         dateExport: new Date().toISOString(),
         parc: parc
       };
@@ -1089,30 +2261,34 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'audit_aubagne_' + new Date().toISOString().slice(0,10) + '.json';
+      a.download = 'audit_chiffrage_aubagne_' + new Date().toISOString().slice(0, 10) + '.json';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+      afficherToast("💾 Fichier JSON exporté");
     }
 
     function exporterSyntheseCSV() {
-      let csv = "Nom;Catégorie;Classe ERP;Statut Ad'Ap;Accès 2015;Accès après;Montant;Date audit;Conformité globale (%);Commentaire\n";
+      let csv = "Nom;Patrimoine;Catégorie;Classe ERP;Statut Ad'Ap;Accès 2015;Accès cible Ad'Ap;Travaux déjà réalisés;Conformité audit actuel (%);Nb postes NC;Reste à faire estimé (€ HT);Reste à faire estimé (€ TTC);Date audit;Commentaire\n";
       parc.forEach(e => {
         const conf = calculerConformiteErp(e).toFixed(1).replace('.', ',');
+        const b = calculerBudgetErp(e);
         const nom = '"' + (e.nom || '').replace(/"/g, '""') + '"';
+        const pat = '"' + (e.patrimoine || '').replace(/"/g, '""') + '"';
         const com = '"' + (e.commentaire_adap || '').replace(/"/g, '""') + '"';
-        csv += `${nom};${e.categorie};${e.classe_erp};${e.statut_adap};${e.acces_2015};${e.acces_apres};${e.montant_adap};${e.dateAudit || ''};${conf};${com}\n`;
+        csv += `${nom};${pat};${e.categorie};${e.classe_erp};${e.statut_adap};${e.acces_2015};${e.acces_apres};${e.montant_adap};${conf};${b.lignes.length};${Math.round(b.totalHT)};${Math.round(b.totalTTC)};${e.dateAudit || ''};${com}\n`;
       });
       const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'synthese_parc_aubagne_' + new Date().toISOString().slice(0,10) + '.csv';
+      a.download = 'synthese_financiere_parc_aubagne_' + new Date().toISOString().slice(0, 10) + '.csv';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+      afficherToast("📊 Synthèse CSV chiffrée exportée");
     }
 
     function importerAuditJSON(event) {
@@ -1133,9 +2309,9 @@ Espace Santé Jeunes;Patrimoine administr et divers;5°;16 %;89 %;Démarré / en
           mettreAJourKPIs();
           remplirSelectErp();
           if (erpSelectionneId) afficherErp();
-          mettreAJourJauge();
+          mettreAJourJaugeEtBudget();
           sauvegarderLocalStorage();
-          alert("Import réussi : " + parc.length + " bâtiments chargés.");
+          afficherToast("📂 " + parc.length + " ERP importés");
         } catch (err) {
           alert("Erreur lors de la lecture du fichier : " + err.message);
         }
